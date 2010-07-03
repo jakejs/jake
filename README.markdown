@@ -56,7 +56,7 @@ Here's an example:
     desc('This is the default task.');
     task('default', [], function (params) {
       sys.puts('This is the default task.');
-      sys.puts(sys.inspect(params));
+      sys.puts(sys.inspect(arguments));
     });
 
 Use `namespace` to create a namespace of tasks to perform. Call it with two arguments:
@@ -70,27 +70,62 @@ Here's an example:
     var sys = require('sys');
 
     desc('This is the default task.');
-    task('default', [], function (params) {
+    task('default', [], function () {
       sys.puts('This is the default task.');
-      sys.puts(sys.inspect(params));
+      sys.puts(sys.inspect(arguments));
     });
 
     namespace('foo', function () {
       desc('This the foo:bar task');
       task('bar', [], function () {
         sys.puts('doing foo:bar task');
-        sys.puts(sys.inspect(params));
+        sys.puts(sys.inspect(arguments));
       });
 
       desc('This the foo:baz task');
       task('baz', ['default', 'foo:bar'], function () {
         sys.puts('doing foo:baz task');
-        sys.puts(sys.inspect(params));
+        sys.puts(sys.inspect(arguments));
       });
 
     });
 
 In this example, the foo:baz task depends on both the default and the foo:bar task.
+
+### Passing parameters to jake
+
+Two kinds of parameters can be passed to Node-Jake: positional and named parameters.
+
+Any single parameters passed to the jake command after the task name are passed along to the task handler as positional arguments. For example, with the following Jakefile:
+
+    var sys = require('sys');
+
+    desc('This is an awesome task.');
+    task('awesome', [], function () {
+      sys.puts(sys.inspect(Array.prototype.slice.call(arguments)));
+    });
+
+You could run `jake` like this:
+
+    jake awesome foo bar baz
+
+And you'd get the following output:
+
+    [ 'foo', 'bar', 'baz' ]
+
+Any paramters passed to the jake command that contain a colon (:) or equals sign (=) will be added to a keyword/value object that is passed as a final argument to the task handler.
+
+With the above Jakefile, you could run `jake` like this:
+
+    jake awesome foo bar baz qux:zoobie frang:asdf
+
+And you'd get the following output:
+
+    [ 'foo'
+    , 'bar'
+    , 'baz'
+    , { qux: 'zoobie', frang: 'asdf' }
+    ]
 
 Running `jake` with no arguments runs the default task.
 

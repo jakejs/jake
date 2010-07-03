@@ -61,7 +61,7 @@ Here's an example:
 
 Use `namespace` to create a namespace of tasks to perform. Call it with two arguments:
 
-  namespace(name, namespaceTasks);
+    namespace(name, namespaceTasks);
 
 Where is `name` is the name of the namespace, and `namespaceTasks` is a function with calls inside it to `task` or `desc` definining all the tasks for that namespace.
 

@@ -1,4 +1,16 @@
-### Jake -- JavaScript Make
+### Node-Jake -- JavaScript build tool for Node.js
+
+### Installing
+
+Prerequisites: Node-Jake requires Node.js. (http://nodejs.org/)
+
+Get Node-Jake:
+
+    git clone git://github.com/mde/node-jake.git
+
+Build Node-Jake:
+
+    cd node-jake && make && sudo make install
 
 ### Basic usage
 
@@ -81,5 +93,17 @@ Here's an example:
 In this example, the foo:baz task depends on both the default and the foo:bar task.
 
 Running `jake` with no arguments runs the default task.
+
+### Related projects
+
+James Coglan's "Jake": http://github.com/jcoglan/jake
+
+Confusingly, this is a Ruby tool for building JavaScript packages from source code.
+
+280 North's Jake: http://github.com/280north/jake
+
+This is also a JavaScript port of Rake, which runs on the Narwhal platform.
+
+
 
 

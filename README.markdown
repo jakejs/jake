@@ -2,7 +2,7 @@
 
 ### Installing
 
-Prerequisites: Node-Jake requires Node.js. (http://nodejs.org/)
+Prerequisites: Node-Jake requires Node.js. (<http://nodejs.org/>)
 
 Get Node-Jake:
 
@@ -131,14 +131,16 @@ Running `jake` with no arguments runs the default task.
 
 ### Related projects
 
-James Coglan's "Jake": http://github.com/jcoglan/jake
+James Coglan's "Jake": <http://github.com/jcoglan/jake>
 
 Confusingly, this is a Ruby tool for building JavaScript packages from source code.
 
-280 North's Jake: http://github.com/280north/jake
+280 North's Jake: <http://github.com/280north/jake>
 
 This is also a JavaScript port of Rake, which runs on the Narwhal platform.
 
+### Author
 
+Matthew Eernisse, mde@fleegix.org
 
 

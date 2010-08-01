@@ -12,6 +12,12 @@ Build Node-Jake:
 
     cd node-jake && make && sudo make install
 
+### Installing with [npm](http://npmjs.org/)
+
+    npm install jake
+
+Or, get the code, and `npm link` in the code root.
+
 ### Basic usage
 
     jake [-f Jakefile] [-C directory] [--version] target (commands/options ...)

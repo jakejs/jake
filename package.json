@@ -1,0 +1,6 @@
+{ "name" : "jake"
+, "version" : "0.1.0"
+, "author" : "Matthew Eernisse <mde@fleegix.org> (http://fleegix.org)"
+, "main" : "./lib/jake"
+, "bin" : { "jake" : "./lib/jake.js" }
+}

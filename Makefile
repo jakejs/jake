@@ -23,11 +23,13 @@ build:
 	@echo 'Node-Jake built.'
 
 install:
-	@mkdir -p ~/.node_libraries/node-jake; cp ./lib/jake.js ~/.node_libraries/node-jake/jake.js; cp ./bin/jake /usr/local/bin; chmod 755 /usr/local/bin/jake; echo 'Node-Jake installed.'
+	@cp ./lib/jake.js /usr/local/bin/jake && \
+		chmod 755 /usr/local/bin/jake && \
+		echo 'Node-Jake installed.'
 
 clean:
 	@true
 
 uninstall:
-	@rm -fr ~/.node_libraries/node-jake; rm -f /usr/local/bin/jake; echo 'Node-Jake uninstalled.'
-
+	@rm -f /usr/local/bin/jake && \
+		echo 'Node-Jake uninstalled.'

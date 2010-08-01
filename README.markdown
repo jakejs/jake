@@ -20,7 +20,7 @@ Or, get the code, and `npm link` in the code root.
 
 ### Basic usage
 
-    jake [-f Jakefile] [-C directory] [--version] target (commands/options ...)
+    jake [options] target (commands/options ...)
 
 ### Description
 
@@ -33,7 +33,11 @@ Or, get the code, and `npm link` in the code root.
 
 ### Options
 
+    -V
     --version                   Display the program version.
+
+    -h
+    --help                      Display help information.
 
     -f *FILE*
     --jakefile *FILE*           Use FILE as the Jakefile.

@@ -1,12 +1,14 @@
 ### Node-Jake -- JavaScript build tool for Node.js
 
+This is a fork of <http://github.com/mde/node-jake>, mainly to add asynchronous support to tasks and their dependencies.
+
 ### Installing
 
 Prerequisites: Node-Jake requires Node.js. (<http://nodejs.org/>)
 
 Get Node-Jake:
 
-    git clone git://github.com/mde/node-jake.git
+    git clone git@github.com:EqualMedia/node-jake.git
 
 Build Node-Jake:
 
@@ -14,9 +16,7 @@ Build Node-Jake:
 
 ### Installing with [npm](http://npmjs.org/)
 
-    npm install jake
-
-Or, get the code, and `npm link` in the code root.
+Get the code, and `npm link` in the code root.
 
 ### Basic usage
 
@@ -51,11 +51,11 @@ Or, get the code, and `npm link` in the code root.
 ### Jakefile syntax
 
 
-Use `task` to define tasks. Call it with three arguments:
+Use `task` to define tasks. Call it with four arguments:
 
-    task(name, dependencies, handler);
+    task(name, dependencies, handler, async);
 
-Where `name` is the string name of the task, `dependencies` is an array of the dependencies, and `handler` is a function to run for the task.
+Where `name` is the string name of the task, `dependencies` is an array of the dependencies, and `handler` is a function to run for the task. `async` is optional, and when set to `true` (`async === true`) indicates the task executes asynchronously. Asynchronous tasks need to call `complete()` to signal they have completed.
 
 Use `desc` to add a string description of the task.
 
@@ -68,6 +68,13 @@ Here's an example:
       sys.puts('This is the default task.');
       sys.puts(sys.inspect(arguments));
     });
+
+And here's an example of an asynchronous task:
+
+    desc('This is an asynchronous task.');
+    task('asynchronous', [], function () {
+      setTimeout(complete, 1000);
+    }, true);
 
 Use `namespace` to create a namespace of tasks to perform. Call it with two arguments:
 
@@ -151,6 +158,6 @@ This is also a JavaScript port of Rake, which runs on the Narwhal platform.
 
 ### Author
 
-Matthew Eernisse, mde@fleegix.org
-
+* Matthew Eernisse, mde@fleegix.org
+* Mark Wubben/EqualMedia, mark.wubben@equalmedia.com
 

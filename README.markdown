@@ -158,6 +158,10 @@ This is also a JavaScript port of Rake, which runs on the Narwhal platform.
 
 ### Author
 
-* Matthew Eernisse, mde@fleegix.org
-* Mark Wubben/EqualMedia, mark.wubben@equalmedia.com
+Matthew Eernisse, mde@fleegix.org
+
+### Contributors
+
+Mark Wubben/EqualMedia, mark.wubben@equalmedia.com
+
 

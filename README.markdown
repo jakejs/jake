@@ -162,6 +162,6 @@ Matthew Eernisse, mde@fleegix.org
 
 ### Contributors
 
-Mark Wubben/EqualMedia, mark.wubben@equalmedia.com
+Mark Wubben / EqualMedia, mark.wubben@equalmedia.com
 
 

@@ -1,5 +1,5 @@
 { "name" : "jake"
-, "version" : "0.1.4"
+, "version" : "0.1.5"
 , "author" : "Matthew Eernisse <mde@fleegix.org> (http://fleegix.org)"
 , "main" : "./lib/jake"
 , "bin" : { "jake" : "./lib/jake.js" }

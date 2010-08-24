@@ -51,13 +51,13 @@ Or, get the code, and `npm link` in the code root.
 ### Jakefile syntax
 
 
-Use `task` to define tasks. Call it with three arguments:
+Use `task` to define tasks. Call it with three arguments (and one more optional argument):
 
-    task(name, dependencies, handler);
+    task(name, dependencies, handler, [async]);
 
 Where `name` is the string name of the task, `dependencies` is an array of the dependencies, and `handler` is a function to run for the task.
 
-The `async` arg is optional, and when set to `true` (`async === true`) indicates the task executes asynchronously. Asynchronous tasks need to call `complete()` to signal they have completed.
+The `async` argument is optional, and when set to `true` (`async === true`) indicates the task executes asynchronously. Asynchronous tasks need to call `complete()` to signal they have completed.
 
 
 Use `desc` to add a string description of the task.

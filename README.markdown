@@ -1,14 +1,12 @@
 ### Node-Jake -- JavaScript build tool for Node.js
 
-This is a fork of <http://github.com/mde/node-jake>, mainly to add asynchronous support to tasks and their dependencies.
-
 ### Installing
 
 Prerequisites: Node-Jake requires Node.js. (<http://nodejs.org/>)
 
 Get Node-Jake:
 
-    git clone git@github.com:EqualMedia/node-jake.git
+    git clone git://github.com/mde/node-jake.git
 
 Build Node-Jake:
 
@@ -16,7 +14,9 @@ Build Node-Jake:
 
 ### Installing with [npm](http://npmjs.org/)
 
-Get the code, and `npm link` in the code root.
+    npm install jake
+
+Or, get the code, and `npm link` in the code root.
 
 ### Basic usage
 
@@ -51,11 +51,14 @@ Get the code, and `npm link` in the code root.
 ### Jakefile syntax
 
 
-Use `task` to define tasks. Call it with four arguments:
+Use `task` to define tasks. Call it with three arguments:
 
-    task(name, dependencies, handler, async);
+    task(name, dependencies, handler);
 
-Where `name` is the string name of the task, `dependencies` is an array of the dependencies, and `handler` is a function to run for the task. `async` is optional, and when set to `true` (`async === true`) indicates the task executes asynchronously. Asynchronous tasks need to call `complete()` to signal they have completed.
+Where `name` is the string name of the task, `dependencies` is an array of the dependencies, and `handler` is a function to run for the task.
+
+The `async` arg is optional, and when set to `true` (`async === true`) indicates the task executes asynchronously. Asynchronous tasks need to call `complete()` to signal they have completed.
+
 
 Use `desc` to add a string description of the task.
 
@@ -163,5 +166,4 @@ Matthew Eernisse, mde@fleegix.org
 ### Contributors
 
 Mark Wubben / EqualMedia, mark.wubben@equalmedia.com
-
 

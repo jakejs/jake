@@ -1,14 +1,14 @@
-### Node-Jake -- JavaScript build tool for Node.js
+### Jake -- JavaScript build tool for Node.js
 
 ### Installing
 
-Prerequisites: Node-Jake requires Node.js. (<http://nodejs.org/>)
+Prerequisites: Jake requires Node.js. (<http://nodejs.org/>)
 
-Get Node-Jake:
+Get Jake:
 
     git clone git://github.com/mde/node-jake.git
 
-Build Node-Jake:
+Build Jake:
 
     cd node-jake && make && sudo make install
 
@@ -30,6 +30,7 @@ Or, get the code, and `npm link` in the code root.
         * Jakefiles are in standard JavaScript syntax
         * Tasks with prerequisites
         * Namespaces for tasks
+        * Async task execution 
 
 ### Options
 
@@ -114,7 +115,7 @@ In this example, the foo:baz task depends on both the default and the foo:bar ta
 
 ### Passing parameters to jake
 
-Two kinds of parameters can be passed to Node-Jake: positional and named parameters.
+Two kinds of parameters can be passed to Jake: positional and named parameters.
 
 Any single parameters passed to the jake command after the task name are passed along to the task handler as positional arguments. For example, with the following Jakefile:
 

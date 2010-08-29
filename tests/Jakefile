@@ -1,0 +1,32 @@
+var sys = require('sys');
+
+desc('This is the default task.');
+task('default', [], function () {
+  console.log('Running the default task.');
+  console.log(sys.inspect(arguments));
+});
+
+namespace('foo', function () {
+  desc('This the foo:bar task');
+  task('bar', ['default', 'foo:baz', 'foo:qux'], function () {
+    console.log('doing foo:bar task');
+    console.log(sys.inspect(arguments));
+  });
+
+  desc('This the foo:baz task');
+  task('baz', [], function () {
+    console.log('doing foo:baz task');
+    console.log(sys.inspect(arguments));
+  });
+
+  desc('This the foo:qux task');
+  task('qux', [], function () {
+    console.log('starting async foo:qux task');
+    console.log(sys.inspect(arguments));
+    setTimeout(function () {
+      console.log('completing async foo:qux task');
+      complete();
+    }, 100); 
+  }, true);
+
+});

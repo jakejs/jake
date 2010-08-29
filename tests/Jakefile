@@ -26,7 +26,7 @@ namespace('foo', function () {
     setTimeout(function () {
       console.log('completing async foo:qux task');
       complete();
-    }, 100); 
+    }, 0); 
   }, true);
 
 });

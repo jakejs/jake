@@ -8,7 +8,7 @@ task('default', [], function () {
 
 namespace('foo', function () {
   desc('This the foo:bar task');
-  task('bar', ['default', 'foo:baz', 'foo:qux'], function () {
+  task('bar', ['default', 'foo:qux', 'foo:baz'], function () {
     console.log('doing foo:bar task');
     console.log(sys.inspect(arguments));
   });

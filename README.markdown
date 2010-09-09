@@ -30,7 +30,7 @@ Or, get the code, and `npm link` in the code root.
         * Jakefiles are in standard JavaScript syntax
         * Tasks with prerequisites
         * Namespaces for tasks
-        * Async task execution 
+        * Async task execution
 
 ### Options
 
@@ -149,6 +149,18 @@ And you'd get the following output:
     ]
 
 Running `jake` with no arguments runs the default task.
+
+### Handling also CoffeeScript Jakefile
+
+Here's an example (Jakefile.coffee):
+
+    sys = require('sys')
+
+    desc 'This is the default task.'
+    task 'default', [], (params) ->
+      console.log 'Ths is the default task.'
+      console.log(sys.inspect(arguments))
+
 
 ### Related projects
 

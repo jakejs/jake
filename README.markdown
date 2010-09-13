@@ -113,6 +113,33 @@ Here's an example:
 
 In this example, the foo:baz task depends on both the default and the foo:bar task.
 
+
+Use `invoke` to run any task in the middle of running another task. Call it with two arguments:
+
+    invoke(name, args);
+
+Where is `name` is the name of the task (with namespace ex. 'foo:baz'), and `args` is a array of arguments for task.
+
+Here's an example:
+
+    var sys = require('sys');
+
+    desc('This is the default task.');
+    task('default', [], function () {
+      sys.puts('This is the default task.');
+      sys.puts(sys.inspect(arguments));
+      invoke('foo:bar', ['param'])
+    });
+
+    namespace('foo', function () {
+      desc('This the foo:bar task');
+      task('bar', [], function (param) {
+        sys.puts('doing foo:bar task with param: ' + param);
+        sys.puts(sys.inspect(arguments));
+      });
+    });
+
+
 ### Passing parameters to jake
 
 Two kinds of parameters can be passed to Jake: positional and named parameters.
@@ -160,6 +187,15 @@ Here's an example (Jakefile.coffee):
     task 'default', [], (params) ->
       console.log 'Ths is the default task.'
       console.log(sys.inspect(arguments))
+      invoke 'new', []
+
+    task 'new', [], ->
+      console.log 'ello from new'
+      invoke 'foo:next', ['param']
+
+    namespace 'foo', ->
+      task 'next', [], (param) ->
+        console.log 'ello from next with param: ' + param
 
 
 ### Related projects

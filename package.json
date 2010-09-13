@@ -3,5 +3,4 @@
 , "author" : "Matthew Eernisse <mde@fleegix.org> (http://fleegix.org)"
 , "main" : "./lib/jake"
 , "bin" : { "jake" : "./lib/jake.js" }
-, "dependencies": { "coffee-script" : "" }
 }

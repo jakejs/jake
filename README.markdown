@@ -150,9 +150,11 @@ And you'd get the following output:
 
 Running `jake` with no arguments runs the default task.
 
-### Handling also CoffeeScript Jakefile
+### CoffeeScript Jakefiles
 
-Here's an example (Jakefile.coffee):
+Jake can also handle Jakefiles in CoffeeScript. Be sure to make it Jakefile.coffee so Jake knows it's in CoffeeScript.
+
+Here's an example:
 
     sys = require('sys')
 
@@ -169,7 +171,6 @@ Here's an example (Jakefile.coffee):
     namespace 'foo', ->
       task 'next', [], (param) ->
         console.log 'ello from next with param: ' + param
-
 
 ### Related projects
 

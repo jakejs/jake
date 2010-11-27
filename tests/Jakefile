@@ -1,4 +1,5 @@
-var sys = require('sys');
+var sys = require('sys'),
+    fs  = require('fs');
 
 desc('This is the default task.');
 task('default', [], function () {
@@ -28,6 +29,14 @@ desc('This is the uiop task. It depends on the default');
 task('uiop', ['default'], function () {
   console.log('Running the uiop task.');
   console.log(sys.inspect(arguments));
+});
+
+desc('File task, concating two files together');
+file('concat.txt', ['src1.txt', 'src2.txt'], function() {
+  console.log('doing concat.txt file-task');
+  var data1 = fs.readFileSync('src1.txt');
+  var data2 = fs.readFileSync('src2.txt');
+  fs.writeFileSync('concat.txt', data1 + data2);
 });
 
 namespace('foo', function () {

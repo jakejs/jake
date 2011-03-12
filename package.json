@@ -1,6 +1,6 @@
 { "name" : "jake"
-, "version" : "0.1.8"
-, "author" : "Matthew Eernisse <mde@fleegix.org> (http://fleegix.org)"
+, "version" : "0.1.9"
+, "author" : "Sascha Teske <sascha.teske@gmail.com>, Matthew Eernisse <mde@fleegix.org> (http://fleegix.org)"
 , "main" : "./lib/jake"
 , "bin" : { "jake" : "./lib/jake.js" }
 }

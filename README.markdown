@@ -190,7 +190,8 @@ Matthew Eernisse, mde@fleegix.org
 
 ### Contributors
 
-Mark Wubben / EqualMedia, mark.wubben@equalmedia.com
-Patrick Walton pcwalton@mimiga.net
-Andrzej Sliwa andrzej.sliwa@i-tool.eu
+Mark Wubben / EqualMedia <mark.wubben@equalmedia.com>
+Patrick Walton <pcwalton@mimiga.net>
+Andrzej Sliwa <andrzej.sliwa@i-tool.eu>
+Nikolay V. Nemshilov aka St <nemshilov@gmail.com>
 

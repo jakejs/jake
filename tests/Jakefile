@@ -2,7 +2,7 @@ var sys = require('sys'),
     fs  = require('fs');
 
 desc('This is the default task.');
-task('default', [], function () {
+task('default', function () {
   console.log('Running the default task.');
   console.log(sys.inspect(arguments));
 });
@@ -47,13 +47,13 @@ namespace('foo', function () {
   });
 
   desc('This the foo:baz task');
-  task('baz', [], function () {
+  task('baz', function () {
     console.log('doing foo:baz task');
     console.log(sys.inspect(arguments));
   });
 
   desc('This the foo:qux task');
-  task('qux', [], function () {
+  task('qux', function () {
     console.log('starting async foo:qux task');
     console.log(sys.inspect(arguments));
     setTimeout(function () {

@@ -39,6 +39,11 @@ file('concat.txt', ['src1.txt', 'src2.txt'], function() {
   fs.writeFileSync('concat.txt', data1 + data2);
 });
 
+desc('Failing task.');
+task('failure', function () {
+  fail('Holy shit.');
+});
+
 namespace('foo', function () {
   desc('This the foo:bar task');
   task('bar', ['default', 'foo:qux', 'foo:baz'], function () {

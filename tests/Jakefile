@@ -44,6 +44,11 @@ task('failure', function () {
   fail('Holy shit.');
 });
 
+desc('Jake task lookup by name.');
+task('lookup', function () {
+  console.dir(jake.Task['foo:bar']);
+});
+
 namespace('foo', function () {
   desc('This the foo:bar task');
   task('bar', ['default', 'foo:qux', 'foo:baz'], function () {

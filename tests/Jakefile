@@ -94,7 +94,7 @@ namespace('foo', function () {
     setTimeout(function () {
       console.log('completing async foo:qux task');
       complete();
-    }, 0); 
+    }, 0);
   }, true);
 
 });

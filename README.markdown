@@ -152,6 +152,73 @@ And you'd get the following output:
 
 Running `jake` with no arguments runs the default task.
 
+### Running tasks from within other tasks
+
+Jake supports the ability to run a task from within another task via the `invoke` and `execute` methods.
+
+The `invoke` method will run the desired task, along with its dependencies:
+
+    desc('Calls the foo:bar task and its dependencies.');
+    task('invokeFooBar', [], function () {
+      // Calls foo:bar and its deps
+      jake.Task['foo:bar'].invoke();
+    });
+
+It will only run the task once, even if you call `invoke` repeatedly.
+
+    desc('Calls the foo:bar task and its dependencies.');
+    task('invokeFooBar', [], function () {
+      // Calls foo:bar and its deps
+      jake.Task['foo:bar'].invoke();
+      // Does nothing
+      jake.Task['foo:bar'].invoke();
+    });
+
+The `execute` method will run the desired task without its dependencies:
+
+    desc('Calls the foo:bar task without its dependencies.');
+    task('executeFooBar', [], function () {
+      // Calls foo:bar without its deps
+      jake.Task['foo:baz'].execute();
+    });
+
+Calling `execute` repeatedly will run the desired task repeatedly.
+
+    desc('Calls the foo:bar task without its dependencies.');
+    task('executeFooBar', [], function () {
+      // Calls foo:bar without its deps
+      jake.Task['foo:baz'].execute();
+      // Can keep running this over and over
+      jake.Task['foo:baz'].execute();
+      jake.Task['foo:baz'].execute();
+    });
+
+If you want to run the task and its dependencies more than once, you can use `invoke` with the `reenable` method.
+
+    desc('Calls the foo:bar task and its dependencies.');
+    task('invokeFooBar', [], function () {
+      // Calls foo:bar and its deps
+      jake.Task['foo:bar'].invoke();
+      // Does nothing
+      jake.Task['foo:bar'].invoke();
+      // Only re-runs foo:bar, but not its dependencies
+      jake.Task['foo:bar'].reenable();
+      jake.Task['foo:bar'].invoke();
+    });
+
+The `reenable` method takes a single Boolean arg, a 'deep' flag, which reenables the task's dependencies if set to true.
+
+    desc('Calls the foo:bar task and its dependencies.');
+    task('invokeFooBar', [], function () {
+      // Calls foo:bar and its deps
+      jake.Task['foo:bar'].invoke();
+      // Does nothing
+      jake.Task['foo:bar'].invoke();
+      // Only re-runs foo:bar, but not its dependencies
+      jake.Task['foo:bar'].reenable(true);
+      jake.Task['foo:bar'].invoke();
+    });
+
 ### CoffeeScript Jakefiles
 
 Jake can also handle Jakefiles in CoffeeScript. Be sure to make it Jakefile.coffee so Jake knows it's in CoffeeScript.

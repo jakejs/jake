@@ -219,6 +219,17 @@ The `reenable` method takes a single Boolean arg, a 'deep' flag, which reenables
       jake.Task['foo:bar'].invoke();
     });
 
+### Aborting a task
+
+You can abort a task by calling the `fail` function, and Jake will abort the currently running task. You can pass a customized error message to `fail`:
+
+    desc('This task fails.');
+    task('failTask', [], function () {
+      fail('Yikes. Something back happened.');
+    });
+
+Uncaught errors will also abort the currently running task.
+
 ### CoffeeScript Jakefiles
 
 Jake can also handle Jakefiles in CoffeeScript. Be sure to make it Jakefile.coffee so Jake knows it's in CoffeeScript.

@@ -1,6 +1,11 @@
+/*
+	fork from https://github.com/bengourley/Node-Deployment/blob/master/Jakefile.js
+	
+	original author : bengourley
+	github : https://github.com/bengourley/Node-Deployment
+*/
+
 var sys = require('sys');
-
-
 
 desc('Install required npm modules');
 task('default', [], function () {

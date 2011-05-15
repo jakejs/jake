@@ -20,7 +20,7 @@
 all: build
 
 build:
-	@echo 'Node-Jake built.'
+	@echo 'Jake built.'
 
 install:
 	@cp ./lib/jake.js /usr/local/bin/jake && \

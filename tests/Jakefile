@@ -5,6 +5,7 @@ desc('This is the default task.');
 task('default', function () {
   console.log('doing default task.');
   console.log(sys.inspect(arguments));
+  console.log(process.env.foo);
 });
 
 desc('This is the asdf task. It depends on both qwer and the default');

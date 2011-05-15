@@ -115,7 +115,7 @@ In this example, the foo:baz task depends on both the default and the foo:bar ta
 
 Parameters can be passed to Jake two ways: plain arguments, and environment variables.
 
-To pass positional arguments to the Jake tasks, enclose them in square braces, separated by commas, after the name of the task the command-line. For example, with the following Jakefile:
+To pass positional arguments to the Jake tasks, enclose them in square braces, separated by commas, after the name of the task on the command-line. For example, with the following Jakefile:
 
     desc('This is an awesome task.');
     task('awesome', [], function () {
@@ -218,6 +218,15 @@ The `reenable` method takes a single Boolean arg, a 'deep' flag, which reenables
       // Only re-runs foo:bar, but not its dependencies
       jake.Task['foo:bar'].reenable(true);
       jake.Task['foo:bar'].invoke();
+    });
+
+It's easy to pass params on to a sub-task run via `invoke` or `execute`:
+
+    desc('Passes params on to other tasks.');
+    task('passParams', [], function () {
+      var t = jake.Task['foo:bar'];
+      // Calls foo:bar, passing along current args
+      t.invoke.apply(t, arguments);
     });
 
 ### Aborting a task

@@ -25,11 +25,11 @@ build:
 install:
 	@cp ./lib/jake.js /usr/local/bin/jake && \
 		chmod 755 /usr/local/bin/jake && \
-		echo 'Node-Jake installed.'
+		echo 'Jake installed.'
 
 clean:
 	@true
 
 uninstall:
 	@rm -f /usr/local/bin/jake && \
-		echo 'Node-Jake uninstalled.'
+		echo 'Jake uninstalled.'

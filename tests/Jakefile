@@ -64,27 +64,31 @@ namespace('foo', function () {
 
   desc('This the foo:zoobie task');
   task('zoobie', function () {
+    var t;
     console.log('doing foo:zoobie task');
     console.log(sys.inspect(arguments));
-    jake.Task['zxcv'].invoke();
-    jake.Task['zxcv'].invoke();
+    t = jake.Task.zxcv;
+    t.invoke.apply(t, arguments);
+    t.invoke.apply(t, arguments);
   });
 
   desc('This the foo:frang task');
   task('frang', function () {
     console.log('doing foo:zoobie task');
     console.log(sys.inspect(arguments));
-    jake.Task['zxcv'].execute();
-    jake.Task['zxcv'].execute();
+    t = jake.Task.zxcv;
+    t.execute.apply(t, arguments);
+    t.execute.apply(t, arguments);
   });
 
   desc('This the foo:fonebone task');
   task('fonebone', function () {
     console.log('doing foo:fonebone task');
     console.log(sys.inspect(arguments));
-    jake.Task['zxcv'].invoke();
-    jake.Task['zxcv'].reenable();
-    jake.Task['zxcv'].invoke();
+    t = jake.Task.zxcv;
+    t.invoke.apply(t, arguments);
+    t.reenable();
+    t.invoke.apply(t, arguments);
   });
 
   desc('This the foo:qux task');

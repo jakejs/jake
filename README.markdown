@@ -240,6 +240,27 @@ You can abort a task by calling the `fail` function, and Jake will abort the cur
 
 Uncaught errors will also abort the currently running task.
 
+### Showing the list of tasks
+
+Passing `jake` the -T or --tasks flag will display the full list of tasks avaliable in a Jakefile, along with their descriptions:
+
+    $ jake -T
+    jake default       # This is the default task.
+    jake asdf          # This is the asdf task. It depends on both qwer and the default
+    jake concat.txt    # File task, concating two files together
+    jake failure       # Failing task.
+    jake lookup        # Jake task lookup by name.
+    jake foo:bar       # This the foo:bar task
+    jake foo:fonebone  # This the foo:fonebone task
+
+Setting a value for -T/--tasks will filter the list by that value:
+
+    $ jake -T foo
+    jake foo:bar       # This the foo:bar task
+    jake foo:fonebone  # This the foo:fonebone task
+
+The list displayed will be all tasks whose namespace/name contain the filter-string.
+
 ### CoffeeScript Jakefiles
 
 Jake can also handle Jakefiles in CoffeeScript. Be sure to make it Jakefile.coffee so Jake knows it's in CoffeeScript.

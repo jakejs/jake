@@ -9,31 +9,31 @@ task('default', function () {
 });
 
 desc('This is the asdf task. It depends on both qwer and the default');
-task('asdf', ['qwer', 'default'], function () {
+task({'asdf': ['qwer', 'default']}, function () {
   console.log('doing asdf task.');
   console.log(sys.inspect(arguments));
 });
 
 desc('This is the qwer task. It depends on zxcv, uiop, and the default');
-task('qwer', ['zxcv', 'uiop', 'default'], function () {
+task({'qwer': ['zxcv', 'uiop', 'default']}, function () {
   console.log('doing qwer task.');
   console.log(sys.inspect(arguments));
 });
 
 desc('This is the zxcv task. It depends on the default');
-task('zxcv', ['default', 'uiop'], function () {
+task({'zxcv': ['default', 'uiop']}, function () {
   console.log('doing zxcv task.');
   console.log(sys.inspect(arguments));
 });
 
 desc('This is the uiop task. It depends on the default');
-task('uiop', ['default'], function () {
+task({'uiop': ['default']}, function () {
   console.log('doing uiop task.');
   console.log(sys.inspect(arguments));
 });
 
 desc('File task, concating two files together');
-file('concat.txt', ['src1.txt', 'src2.txt'], function() {
+file({'concat.txt': ['src1.txt', 'src2.txt']}, function() {
   console.log('doing concat.txt file-task');
   var data1 = fs.readFileSync('src1.txt');
   var data2 = fs.readFileSync('src2.txt');
@@ -52,13 +52,13 @@ task('lookup', function () {
 
 namespace('foo', function () {
   desc('This the foo:bar task');
-  task('bar', ['default', 'foo:qux', 'foo:baz'], function () {
+  task({'bar': ['default', 'foo:qux', 'foo:baz']}, function () {
     console.log('doing foo:bar task');
     console.log(sys.inspect(arguments));
   });
 
   desc('This the foo:baz task');
-  task('baz', ['default'], function () {
+  task({'baz': ['default']}, function () {
     console.log('doing foo:baz task');
     console.log(sys.inspect(arguments));
   });

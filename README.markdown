@@ -239,6 +239,15 @@ You can abort a task by calling the `fail` function, and Jake will abort the cur
       fail('Yikes. Something back happened.');
     });
 
+You can also pass an optional exit status-code to the fail command, like so:
+
+    desc('This task fails with an exit-status of 42.');
+    task('failTaskQuestionCustomStatus', function () {
+      fail('What is the answer?', 42);
+    });
+
+The process will exit with a status of 42.
+
 Uncaught errors will also abort the currently running task.
 
 ### Showing the list of tasks

@@ -52,15 +52,15 @@ Or, get the code, and `npm link` in the code root.
 ### Jakefile syntax
 
 
-Use `task` or `file` to define tasks. Call it with three arguments (and one more optional argument):
+Use `task` or `file` to define tasks. Call it with two arguments (and one optional argument):
 
-    task(name, dependencies, handler, [async]);
+    task(name/prerequisites, action, [async]);
 
-Where `name` is the string name of the task (or file), `dependencies` is an array of the dependencies, and `handler` is a function to run for the task.
+The `name/prerequisites` argument can be either a simple String with the name of the task, or an Object literal where the single key is the name of the ask, and the value is an array of prerequisites. The `action` is a function defininng the action to take for the task.
 
 The `async` argument is optional, and when set to `true` (`async === true`) indicates the task executes asynchronously. Asynchronous tasks need to call `complete()` to signal they have completed.
 
-Tasks created with `task` are always executed when asked for (or depended on). Tasks created with `file` are only executed if no file with the given name exists or if any of the files it depends on are more recent than the file named by the task. Also, if any dependency is a regular task, the file task will always be executed.
+Tasks created with `task` are always executed when asked for (or are a prerequisite). Tasks created with `file` are only executed if no file with the given name exists or if any of its file-prerequisites are more recent than the file named by the task. Also, if any prerequisite is a regular task, the file task will always be executed.
 
 
 Use `desc` to add a string description of the task.
@@ -68,15 +68,19 @@ Use `desc` to add a string description of the task.
 Here's an example:
 
     desc('This is the default task.');
-    task('default', [], function (params) {
+    task('default', function (params) {
       console.log('This is the default task.');
-      console.log(arguments);
+    });
+
+    desc('This task has prerequisites.');
+    task({'hasPrereqs': ['foo', 'bar', 'baz']}, function (params) {
+      console.log('Ran some prereqs first.');
     });
 
 And here's an example of an asynchronous task:
 
     desc('This is an asynchronous task.');
-    task('asynchronous', [], function () {
+    task('asyncTask', function () {
       setTimeout(complete, 1000);
     }, true);
 
@@ -89,27 +93,24 @@ Where is `name` is the name of the namespace, and `namespaceTasks` is a function
 Here's an example:
 
     desc('This is the default task.');
-    task('default', [], function () {
+    task('default', function () {
       console.log('This is the default task.');
-      console.log(arguments);
     });
 
     namespace('foo', function () {
       desc('This the foo:bar task');
-      task('bar', [], function () {
+      task('bar', function () {
         console.log('doing foo:bar task');
-        console.log(arguments);
       });
 
       desc('This the foo:baz task');
-      task('baz', ['default', 'foo:bar'], function () {
+      task({'baz': ['default', 'foo:bar']}, function () {
         console.log('doing foo:baz task');
-        console.log(arguments);
       });
 
     });
 
-In this example, the foo:baz task depends on both the default and the foo:bar task.
+In this example, the foo:baz task depends on the the default and foo:bar tasks.
 
 ### Passing parameters to jake
 
@@ -118,7 +119,7 @@ Parameters can be passed to Jake two ways: plain arguments, and environment vari
 To pass positional arguments to the Jake tasks, enclose them in square braces, separated by commas, after the name of the task on the command-line. For example, with the following Jakefile:
 
     desc('This is an awesome task.');
-    task('awesome', [], function () {
+    task('awesome', function () {
       console.log(Array.prototype.slice.call(arguments));
     });
 
@@ -137,7 +138,7 @@ Any paramters passed after the Jake task that contain a colon (:) or equals sign
 With the following Jakefile:
 
     desc('This is an awesome task.');
-    task('awesome', [], function () {
+    task('awesome', function () {
       console.log(Array.prototype.slice.call(arguments));
       console.log(process.env.qux + ' ... ' + process.env.frang);
     });
@@ -157,65 +158,65 @@ Running `jake` with no arguments runs the default task.
 
 Jake supports the ability to run a task from within another task via the `invoke` and `execute` methods.
 
-The `invoke` method will run the desired task, along with its dependencies:
+The `invoke` method will run the desired task, along with its prerequisites:
 
-    desc('Calls the foo:bar task and its dependencies.');
-    task('invokeFooBar', [], function () {
-      // Calls foo:bar and its deps
+    desc('Calls the foo:bar task and its prerequisites.');
+    task('invokeFooBar', function () {
+      // Calls foo:bar and its prereqs
       jake.Task['foo:bar'].invoke();
     });
 
 It will only run the task once, even if you call `invoke` repeatedly.
 
-    desc('Calls the foo:bar task and its dependencies.');
-    task('invokeFooBar', [], function () {
-      // Calls foo:bar and its deps
+    desc('Calls the foo:bar task and its prerequisites.');
+    task('invokeFooBar', function () {
+      // Calls foo:bar and its prereqs 
       jake.Task['foo:bar'].invoke();
       // Does nothing
       jake.Task['foo:bar'].invoke();
     });
 
-The `execute` method will run the desired task without its dependencies:
+The `execute` method will run the desired task without its prerequisites:
 
-    desc('Calls the foo:bar task without its dependencies.');
-    task('executeFooBar', [], function () {
-      // Calls foo:bar without its deps
+    desc('Calls the foo:bar task without its prerequisites.');
+    task('executeFooBar', function () {
+      // Calls foo:bar without its prereqs
       jake.Task['foo:baz'].execute();
     });
 
 Calling `execute` repeatedly will run the desired task repeatedly.
 
-    desc('Calls the foo:bar task without its dependencies.');
-    task('executeFooBar', [], function () {
-      // Calls foo:bar without its deps
+    desc('Calls the foo:bar task without its prerequisites.');
+    task('executeFooBar', function () {
+      // Calls foo:bar without its prereqs
       jake.Task['foo:baz'].execute();
       // Can keep running this over and over
       jake.Task['foo:baz'].execute();
       jake.Task['foo:baz'].execute();
     });
 
-If you want to run the task and its dependencies more than once, you can use `invoke` with the `reenable` method.
+If you want to run the task and its prerequisites more than once, you can use `invoke` with the `reenable` method.
 
-    desc('Calls the foo:bar task and its dependencies.');
-    task('invokeFooBar', [], function () {
-      // Calls foo:bar and its deps
+    desc('Calls the foo:bar task and its prerequisites.');
+    task('invokeFooBar', function () {
+      // Calls foo:bar and its prereqs
       jake.Task['foo:bar'].invoke();
       // Does nothing
       jake.Task['foo:bar'].invoke();
-      // Only re-runs foo:bar, but not its dependencies
+      // Only re-runs foo:bar, but not its prerequisites
       jake.Task['foo:bar'].reenable();
       jake.Task['foo:bar'].invoke();
     });
 
-The `reenable` method takes a single Boolean arg, a 'deep' flag, which reenables the task's dependencies if set to true.
+The `reenable` method takes a single Boolean arg, a 'deep' flag, which reenables the task's prerequisites if set to true.
 
-    desc('Calls the foo:bar task and its dependencies.');
-    task('invokeFooBar', [], function () {
-      // Calls foo:bar and its deps
+    desc('Calls the foo:bar task and its prerequisites.');
+    task('invokeFooBar', function () {
+      // Calls foo:bar and its prereqs
       jake.Task['foo:bar'].invoke();
       // Does nothing
       jake.Task['foo:bar'].invoke();
-      // Only re-runs foo:bar, but not its dependencies
+      // Only re-runs foo:bar, but not its prerequisites
       jake.Task['foo:bar'].reenable(true);
       jake.Task['foo:bar'].invoke();
     });
@@ -223,7 +224,7 @@ The `reenable` method takes a single Boolean arg, a 'deep' flag, which reenables
 It's easy to pass params on to a sub-task run via `invoke` or `execute`:
 
     desc('Passes params on to other tasks.');
-    task('passParams', [], function () {
+    task('passParams', function () {
       var t = jake.Task['foo:bar'];
       // Calls foo:bar, passing along current args
       t.invoke.apply(t, arguments);
@@ -234,7 +235,7 @@ It's easy to pass params on to a sub-task run via `invoke` or `execute`:
 You can abort a task by calling the `fail` function, and Jake will abort the currently running task. You can pass a customized error message to `fail`:
 
     desc('This task fails.');
-    task('failTask', [], function () {
+    task('failTask', function () {
       fail('Yikes. Something back happened.');
     });
 
@@ -246,7 +247,7 @@ Passing `jake` the -T or --tasks flag will display the full list of tasks avalia
 
     $ jake -T
     jake default       # This is the default task.
-    jake asdf          # This is the asdf task. It depends on both qwer and the default
+    jake asdf          # This is the asdf task.
     jake concat.txt    # File task, concating two files together
     jake failure       # Failing task.
     jake lookup        # Jake task lookup by name.
@@ -270,17 +271,17 @@ Here's an example:
     sys = require('sys')
 
     desc 'This is the default task.'
-    task 'default', [], (params) ->
+    task 'default', (params) ->
       console.log 'Ths is the default task.'
       console.log(sys.inspect(arguments))
       invoke 'new', []
 
-    task 'new', [], ->
+    task 'new', ->
       console.log 'ello from new'
       invoke 'foo:next', ['param']
 
     namespace 'foo', ->
-      task 'next', [], (param) ->
+      task 'next', (param) ->
         console.log 'ello from next with param: ' + param
 
 ### Related projects

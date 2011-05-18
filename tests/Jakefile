@@ -63,6 +63,12 @@ namespace('foo', function () {
     console.log(sys.inspect(arguments));
   });
 
+  desc('This tests the legacy string+array syntax');
+  task('legacy', ['foo:baz', 'default'], function () {
+    console.log('doing foo:legacy task');
+    console.log(sys.inspect(arguments));
+  });
+
   desc('This the foo:zoobie task');
   task('zoobie', function () {
     var t;

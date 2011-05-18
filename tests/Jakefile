@@ -42,7 +42,7 @@ file({'concat.txt': ['src1.txt', 'src2.txt']}, function() {
 
 desc('Failing task.');
 task('failure', function () {
-  fail('Holy shit.');
+  fail('Holy shit.', 42);
 });
 
 desc('Jake task lookup by name.');

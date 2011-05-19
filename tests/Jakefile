@@ -9,9 +9,9 @@ task('default', function () {
 });
 
 desc('This is the asdf task. It depends on both qwer and the default');
-task({'asdf': ['qwer', 'default']}, function () {
+task({'asdf': ['qwer', 'default']}, function (a, b, c) {
   console.log('doing asdf task.');
-  console.log(sys.inspect(arguments));
+  console.log(a, b, c);
 });
 
 desc('This is the qwer task. It depends on zxcv, uiop, and the default');

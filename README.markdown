@@ -51,6 +51,9 @@ Or, get the code, and `npm link` in the code root.
 
 ### Jakefile syntax
 
+A Jakefile is just executable JavaScript. You can include whatever JavaScript you want in it.
+
+### Tasks
 
 Use `task` or `file` to define tasks. Call it with two arguments (and one optional argument):
 
@@ -83,6 +86,19 @@ And here's an example of an asynchronous task:
     task('asyncTask', function () {
       setTimeout(complete, 1000);
     }, true);
+
+### File-tasks
+
+File-tasks create a file from one or more other files. With a file-task, Jake checks both that the file exists, and also that it is not older than the files specified by any prerequisite tasks. File-tasks are particularly useful for compiling something from a tree of source files.
+
+Create a file task by calling `file`.
+
+    desc('This builds a minified JS file for production.');
+    file({'foo-minified.js': ['foo-bar.js', 'foo-baz.js']}, function () {
+      // Code to concat and minify goes here
+    });
+
+### Namespaces
 
 Use `namespace` to create a namespace of tasks to perform. Call it with two arguments:
 

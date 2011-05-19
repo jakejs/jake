@@ -6,11 +6,11 @@ Prerequisites: Jake requires Node.js. (<http://nodejs.org/>)
 
 Get Jake:
 
-    git clone git://github.com/mde/node-jake.git
+    git clone git://github.com/mde/jake.git
 
 Build Jake:
 
-    cd node-jake && make && sudo make install
+    cd jake && make && sudo make install
 
 ### Installing with [npm](http://npmjs.org/)
 

@@ -39,7 +39,6 @@ var JAKE_VERSION = '0.1.12'
   , exists
   , tasks;
 
-
 process.addListener('uncaughtException', function (err) {
   var msg;
   console.error('jake aborted.');
@@ -644,9 +643,6 @@ optsReg = [
   }
 , { full: 'version'
   , abbr: 'V'
-  }
-, { full: 'environment'
-  , abbr: 'e'
   }
 ];
 

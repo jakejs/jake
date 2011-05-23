@@ -135,8 +135,8 @@ Parameters can be passed to Jake two ways: plain arguments, and environment vari
 To pass positional arguments to the Jake tasks, enclose them in square braces, separated by commas, after the name of the task on the command-line. For example, with the following Jakefile:
 
     desc('This is an awesome task.');
-    task('awesome', function () {
-      console.log(Array.prototype.slice.call(arguments));
+    task('awesome', function (a, b, c) {
+      console.log(a, b, c);
     });
 
 You could run `jake` like this:
@@ -145,7 +145,7 @@ You could run `jake` like this:
 
 And you'd get the following output:
 
-    [ 'foo', 'bar', 'baz' ]
+    foo bar baz
 
 Note that you *cannot* uses spaces between the commas separating the parameters.
 
@@ -154,9 +154,9 @@ Any paramters passed after the Jake task that contain a colon (:) or equals sign
 With the following Jakefile:
 
     desc('This is an awesome task.');
-    task('awesome', function () {
-      console.log(Array.prototype.slice.call(arguments));
-      console.log(process.env.qux + ' ... ' + process.env.frang);
+    task('awesome', function (a, b, c) {
+      console.log(a, b, c);
+      console.log(process.env.qux, process.env.frang);
     });
 
 You could run `jake` like this:
@@ -165,9 +165,8 @@ You could run `jake` like this:
 
 And you'd get the following output:
 
-    [ 'foo', 'bar', 'baz' ]
-    'zoobie ... asdf'
-
+    foo bar baz
+    zoobie asdf
 Running `jake` with no arguments runs the default task.
 
 ### Running tasks from within other tasks

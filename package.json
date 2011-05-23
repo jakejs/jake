@@ -1,6 +1,11 @@
-{ "name" : "jake"
-, "version" : "0.1.12"
-, "author" : "Matthew Eernisse <mde@fleegix.org> (http://fleegix.org)"
-, "main" : "./lib/jake"
-, "bin" : { "jake" : "./lib/jake.js" }
+{ "name": "jake"
+, "version": "0.1.12"
+, "author": "Matthew Eernisse <mde@fleegix.org> (http://fleegix.org)"
+, "bin": { "jake": "./bin/jake" }
+, "main": "./lib"
+, "repository": {
+    "type": "git"
+  , "url": "https://github.com/mde/jake.git"
+  }
+, "preferGlobal": true
 }

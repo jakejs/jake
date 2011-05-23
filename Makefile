@@ -1,5 +1,5 @@
 #
-# Node-Jake JavaScript build tool 
+# Jake JavaScript build tool
 # Copyright 2112 Matthew Eernisse (mde@fleegix.org)
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,7 +15,7 @@
 # limitations under the License.
 #
 
-.PHONY: all build install clean uninstall 
+.PHONY: all build install clean uninstall
 
 all: build
 
@@ -23,8 +23,10 @@ build:
 	@echo 'Jake built.'
 
 install:
-	@cp ./lib/jake.js /usr/local/bin/jake && \
-		chmod 755 /usr/local/bin/jake && \
+	@mkdir -p /usr/local/lib/node_modules/jake && \
+		cp -R ./* /usr/local/lib/node_modules/jake/ && \
+		ln -snf /usr/local/lib/node_modules/jake/bin/jake /usr/local/bin/jake && \
+		chmod 755 /usr/local/lib/node_modules/jake/bin/jake && \
 		echo 'Jake installed.'
 
 clean:

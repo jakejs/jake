@@ -90,21 +90,6 @@ usage = ''
     + '';
 
 
-/**
- * @constructor
- * A Jake task
- */
-jake.Task = function (name, prereqs, handler, async, isFile) {
-  this.name = name;
-  this.fullName = null;
-  this.prereqs = prereqs;
-  this.handler = handler;
-  this.desription = null;
-  this.async = async === true;
-  this.isFile = isFile;
-  this.done = false;
-};
-
 jake.Task.prototype = new (function () {
   this.invoke = function () {
     jake.runTask(this.fullName, arguments, true);
@@ -119,35 +104,6 @@ jake.Task.prototype = new (function () {
     jake.reenableTask(this.fullName, deep);
   };
 })();
-
-jake.taskOrFile = function () {
-  var task
-    , args = Array.prototype.slice.call(arguments)
-    , type = args.shift()
-    , name = args.shift()
-    // Dependencies may be passed as an optional arg
-    // after task name in old syntax
-    , prereqs = typeof args[0] != 'function' ?
-        args.shift() : []
-    , handler = args.shift()
-    , async =  args.shift()
-    , isFile = (type == 'file');
-
-  // Parse newer syntax, e.g.: {'name': ['depA', 'depB']}
-  if (typeof name != 'string') {
-    for (var p in name) {
-      prereqs = prereqs.concat(name[p]);
-      name = p;
-    }
-  }
-
-  task = new jake.Task(name, prereqs, handler, async, isFile);
-  if (jake.currentTaskDescription) {
-    task.description = jake.currentTaskDescription;
-    jake.currentTaskDescription = null;
-  }
-  jake.currentNamespace.tasks[name] = task;
-};
 
 var task = function (name, prereqs, handler, async) {
   var args = Array.prototype.slice.call(arguments)

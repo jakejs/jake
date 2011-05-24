@@ -1,7 +1,7 @@
 { "name": "jake"
 , "version": "0.1.12"
 , "author": "Matthew Eernisse <mde@fleegix.org> (http://fleegix.org)"
-, "bin": { "jake": "./bin/jake" }
+, "bin": { "jake": "./bin/jake.js" }
 , "main": "./lib"
 , "repository": {
     "type": "git"

@@ -58,8 +58,6 @@ process.addListener('uncaughtException', function (err) {
   process.exit(jake.errorCode || 1);
 });
 
-var Namespace = jake.Namespace;
-
 exists = function () {
   var cwd = process.cwd();
   if (path.existsSync(jakefile) || path.existsSync(jakefile + '.js') ||
@@ -89,22 +87,6 @@ usage = ''
     + '  -V, --version              Outputs Jake version\n'
     + '';
 
-
-jake.Task.prototype = new (function () {
-  this.invoke = function () {
-    jake.runTask(this.fullName, arguments, true);
-  };
-
-  this.execute = function () {
-    jake.reenableTask(this.fullName, true);
-    jake.runTask(this.fullName, arguments, false);
-  };
-
-  this.reenable = function (deep) {
-    jake.reenableTask(this.fullName, deep);
-  };
-})();
-
 var task = function (name, prereqs, handler, async) {
   var args = Array.prototype.slice.call(arguments)
     , type;
@@ -124,7 +106,7 @@ var desc = function (str) {
 
 var namespace = function (name, nextLevelDown) {
   var curr = jake.currentNamespace
-    , ns = new Namespace(name, curr);
+    , ns = new jake.Namespace(name, curr);
   curr.childNamespaces[name] = ns;
   jake.currentNamespace = ns;
   nextLevelDown();
@@ -176,46 +158,73 @@ for (var i = 0, ii = globals.length; i < ii; i++) {
 optsReg = [
   { full: 'directory'
   , abbr: 'C'
+  , expectValue: true
   }
 , { full: 'jakefile'
   , abbr: 'f'
+  , expectValue: true
   }
 , { full: 'tasks'
   , abbr: 'T'
+  , expectValue: false
   }
 , { full: 'trace'
   , abbr: 't'
+  , expectValue: false
   }
 , { full: 'help'
   , abbr: 'h'
+  , expectValue: false
   }
 , { full: 'version'
   , abbr: 'V'
+  , expectValue: false
   }
 ];
 
-Parser = new parseopts.Parser(optsReg);
-parsed = Parser.parse(args);
-opts = Parser.opts;
-cmds = Parser.cmds;
-taskName = cmds.shift();
-dirname = opts.directory || process.cwd();
-process.chdir(dirname);
-//taskName = taskName || 'default';
+// Parse cmdline input
+(function () {
+  var arg
+    , env = {}
+    , argItems;
 
-if (taskName) {
-  taskArr = taskName.split('[');
-  taskName = taskArr[0];
-  // Parse any args
-  if (taskArr[1]) {
-    taskArgs = taskArr[1].replace(/\]$/, '');
-    taskArgs = taskArgs.split(',');
+  // Pull env vars off the end, grab the task name
+  // Everthing before that is opts
+  for (var i = args.length - 1; i > -1; i--) {
+    arg = args[i];
+    argItems = arg.split('=');
+    if (argItems.length > 1) {
+      env[argItems[0]] = argItems[1];
+      args.pop();
+    }
+    else {
+      break;
+    }
   }
-}
+  envVars = env;
 
-// Enhance env with any env vars passed in
-var envVars = jake.parseEnvVars(cmds);
-for (var p in envVars) { process.env[p] = envVars[p]; }
+  // Enhance env with any env vars passed in
+  for (var p in envVars) { process.env[p] = envVars[p]; }
+
+  Parser = new parseopts.Parser(optsReg);
+  parsed = Parser.parse(args);
+  opts = Parser.opts;
+  taskName = Parser.cmd;
+  dirname = opts.directory || process.cwd();
+  process.chdir(dirname);
+  //taskName = taskName || 'default';
+
+  if (taskName) {
+    taskArr = taskName.split('[');
+    taskName = taskArr[0];
+    // Parse any args
+    if (taskArr[1]) {
+      taskArgs = taskArr[1].replace(/\]$/, '');
+      taskArgs = taskArgs.split(',');
+    }
+  }
+
+})();
 
 jakefile = opts.jakefile ?
     opts.jakefile.replace(/\.js$/, '').replace(/\.coffee$/, '') : 'Jakefile';
@@ -250,7 +259,7 @@ try {
 }
 catch (e) {
   if (e.stack) {
-    console.log(e.stack);
+    console.error(e.stack);
   }
   jake.die('Could not load Jakefile: ' + e);
 }

@@ -149,7 +149,7 @@ And you'd get the following output:
 
 Note that you *cannot* uses spaces between the commas separating the parameters.
 
-Any paramters passed after the Jake task that contain a colon (:) or equals sign (=) will be added to process.env.
+Any paramters passed after the Jake task that contain an equals sign (=) will be added to process.env.
 
 With the following Jakefile:
 
@@ -161,7 +161,7 @@ With the following Jakefile:
 
 You could run `jake` like this:
 
-    jake awesome[foo,bar,baz] qux:zoobie frang=asdf
+    jake awesome[foo,bar,baz] qux=zoobie frang=asdf
 
 And you'd get the following output:
 

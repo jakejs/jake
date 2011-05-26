@@ -26,19 +26,15 @@ var args = process.argv.slice(2)
   , Program = require('../lib/program.js').Program
   , program = new Program()
   , pkg = JSON.parse(fs.readFileSync(__dirname + '/../package.json').toString())
-  , Parser
-  , parsed
   , opts;
 
 jake.version = pkg.version;
 
 global.jake = jake;
 
-/*
 process.addListener('uncaughtException', function (err) {
   program.handleErr(err);
 });
-*/
 
 program.parseArgs(args);
 
@@ -79,9 +75,7 @@ if (!program.preemptiveOption()) {
       };
 
   if (!exists()) {
-    program.die('Could not load Jakefile.\n' +
-        'If no Jakefile specified with -f or --jakefile, jake looks for Jakefile or\n' +
-        'Jakefile.js in the current directory or one of the parent directories.');
+    fail('No Jakefile. Specify one with -f/--jakefile, or place one in the current directory.');
   }
 
   isCoffee = path.existsSync(jakefile + '.coffee');

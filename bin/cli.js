@@ -17,252 +17,93 @@
  *
 */
 
-var JAKE_VERSION = '0.1.12'
-  , args = process.argv.slice(2)
+var args = process.argv.slice(2)
   , fs = require('fs')
   , path = require('path')
   , sys = require('sys')
-  , parseopts = require('../lib/parseopts')
   , jake = require('../lib/jake')
-  , usage
-  , optsReg
+  , api = require('../lib/api')
+  , Program = require('../lib/program.js').Program
+  , program = new Program()
+  , pkg = JSON.parse(fs.readFileSync(__dirname + '/../package.json').toString())
   , Parser
   , parsed
-  , opts
-  , cmds
-  , taskArr
-  , taskName
-  , taskArgs
-  , jakefile
-  , dirname
-  , isCoffee
-  , exists
-  , tasks;
+  , opts;
 
+jake.version = pkg.version;
+
+global.jake = jake;
+
+/*
 process.addListener('uncaughtException', function (err) {
-  var msg;
-  console.error('jake aborted.');
-  if (opts.trace && err.stack) {
-    console.error(err.stack);
-  }
-  else {
-    if (err.stack) {
-      msg = err.stack.split('\n').slice(0, 2).join('\n');
-      console.error(msg);
-      console.error('(See full trace by running task with --trace)');
-    }
-    else {
-      console.error(err.message);
-    }
-  }
-  process.exit(jake.errorCode || 1);
+  program.handleErr(err);
 });
+*/
 
-exists = function () {
-  var cwd = process.cwd();
-  if (path.existsSync(jakefile) || path.existsSync(jakefile + '.js') ||
-    path.existsSync(jakefile + '.coffee')) {
-    return true;
-  }
-  process.chdir("..");
-  if (cwd === process.cwd()) {
-    return false;
-  }
-  return exists();
-};
+program.parseArgs(args);
 
-usage = ''
-    + 'Jake JavaScript build tool\n'
-    + '********************************************************************************\n'
-    + 'If no flags are given, Jake looks for a Jakefile or Jakefile.js in the current directory.\n'
-    + '********************************************************************************\n'
-    + '{Usage}: jake [options] target (commands/options ...)\n'
-    + '\n'
-    + '{Options}:\n'
-    + '  -f, --jakefile FILE        Use FILE as the Jakefile\n'
-    + '  -C, --directory DIRECTORY  Change to DIRECTORY before running tasks.\n'
-    + '  -T, --tasks                Display the tasks, with descriptions, then exit.\n'
-    + '  -t, --trace                Enable full backtrace.\n'
-    + '  -h, --help                 Outputs help information\n'
-    + '  -V, --version              Outputs Jake version\n'
-    + '';
+if (!program.preemptiveOption()) {
+  var opts = program.opts
+    , taskName = program.taskName
+    , taskArgs = program.taskArgs
+    , envVars = program.envVars;
 
-var task = function (name, prereqs, handler, async) {
-  var args = Array.prototype.slice.call(arguments)
-    , type;
-  args.unshift('task');
-  jake.taskOrFile.apply(global, args);
-};
-
-var file = function (name, prereqs, handler, async) {
-  var args = Array.prototype.slice.call(arguments);
-  args.unshift('file');
-  jake.taskOrFile.apply(global, args);
-};
-
-var desc = function (str) {
-  jake.currentTaskDescription = str;
-};
-
-var namespace = function (name, nextLevelDown) {
-  var curr = jake.currentNamespace
-    , ns = new jake.Namespace(name, curr);
-  curr.childNamespaces[name] = ns;
-  jake.currentNamespace = ns;
-  nextLevelDown();
-  jake.currentNamespace = curr;
-};
-
-var complete = function () {
-  jake.runNextTask();
-};
-
-var fail = function (err, code) {
-  if (code) {
-    jake.errorCode = code;
+  // Globalize top-level API methods (e.g., `task`, `desc`)
+  for (var p in api) {
+    global[p] = api[p];
   }
-  if (err) {
-    if (typeof err == 'string') {
-      throw new Error(err);
-    }
-    else if (err instanceof Error) {
-      throw err;
-    }
-    else {
-      throw new Error(err.toString());
-    }
-  }
-  else {
-    throw new Error();
-  }
-};
-
-// Globalize these. Yes, globalize. Yes, use eval. :)
-var g, globals = [
-  'jake'
-, 'task'
-, 'file'
-, 'desc'
-, 'namespace'
-, 'complete'
-, 'fail'
-];
-for (var i = 0, ii = globals.length; i < ii; i++) {
-  g = globals[i];
-  eval('global.' + g + ' = ' + g);
-}
-
-// ========================
-// Run Jake
-// ========================
-optsReg = [
-  { full: 'directory'
-  , abbr: 'C'
-  , expectValue: true
-  }
-, { full: 'jakefile'
-  , abbr: 'f'
-  , expectValue: true
-  }
-, { full: 'tasks'
-  , abbr: 'T'
-  , expectValue: false
-  }
-, { full: 'trace'
-  , abbr: 't'
-  , expectValue: false
-  }
-, { full: 'help'
-  , abbr: 'h'
-  , expectValue: false
-  }
-, { full: 'version'
-  , abbr: 'V'
-  , expectValue: false
-  }
-];
-
-// Parse cmdline input
-(function () {
-  var arg
-    , env = {}
-    , argItems;
-
-  // Pull env vars off the end, grab the task name
-  // Everthing before that is opts
-  for (var i = args.length - 1; i > -1; i--) {
-    arg = args[i];
-    argItems = arg.split('=');
-    if (argItems.length > 1) {
-      env[argItems[0]] = argItems[1];
-      args.pop();
-    }
-    else {
-      break;
-    }
-  }
-  envVars = env;
 
   // Enhance env with any env vars passed in
   for (var p in envVars) { process.env[p] = envVars[p]; }
 
-  Parser = new parseopts.Parser(optsReg);
-  parsed = Parser.parse(args);
-  opts = Parser.opts;
-  taskName = Parser.cmd;
-  dirname = opts.directory || process.cwd();
+  var dirname = opts.directory || process.cwd();
   process.chdir(dirname);
-  //taskName = taskName || 'default';
 
-  if (taskName) {
-    taskArr = taskName.split('[');
-    taskName = taskArr[0];
-    // Parse any args
-    if (taskArr[1]) {
-      taskArgs = taskArr[1].replace(/\]$/, '');
-      taskArgs = taskArgs.split(',');
-    }
+}
+
+(function () {
+  var jakefile = opts.jakefile ?
+          opts.jakefile.replace(/\.js$/, '').replace(/\.coffee$/, '') : 'Jakefile'
+    , isCoffee = false
+    , exists = function () {
+        var cwd = process.cwd();
+        if (path.existsSync(jakefile) || path.existsSync(jakefile + '.js') ||
+          path.existsSync(jakefile + '.coffee')) {
+          return true;
+        }
+        process.chdir("..");
+        if (cwd === process.cwd()) {
+          return false;
+        }
+        return exists();
+      };
+
+  if (!exists()) {
+    program.die('Could not load Jakefile.\n' +
+        'If no Jakefile specified with -f or --jakefile, jake looks for Jakefile or\n' +
+        'Jakefile.js in the current directory or one of the parent directories.');
   }
 
+  isCoffee = path.existsSync(jakefile + '.coffee');
+  try {
+    if (isCoffee) {
+      try {
+        CoffeeScript = require('coffee-script');
+      }
+      catch (e) {
+        program.die('CoffeeScript is missing! Try `npm install coffee-script`');
+      }
+    }
+    jakefile = path.join(process.cwd(), jakefile);
+    require(jakefile);
+  }
+  catch (e) {
+    if (e.stack) {
+      console.error(e.stack);
+    }
+    program.die('Could not load Jakefile: ' + e);
+  }
 })();
-
-jakefile = opts.jakefile ?
-    opts.jakefile.replace(/\.js$/, '').replace(/\.coffee$/, '') : 'Jakefile';
-
-if (opts.help) {
-  jake.die(usage);
-}
-
-if (opts.version) {
-  jake.die(JAKE_VERSION);
-}
-
-if (!exists()) {
-  jake.die('Could not load Jakefile.\nIf no Jakefile specified with -f or --jakefile, ' +
-      'jake looks for Jakefile or Jakefile.js in the current directory ' +
-      'or one of the parent directories.');
-}
-
-isCoffee = path.existsSync(jakefile + '.coffee');
-
-try {
-  if (isCoffee) {
-    try {
-      CoffeeScript = require('coffee-script');
-    }
-    catch (e) {
-      jake.die('CoffeeScript is missing! Try `npm install coffee-script`');
-    }
-  }
-  jakefile = path.join(process.cwd(), jakefile);
-  tasks = require(jakefile);
-}
-catch (e) {
-  if (e.stack) {
-    console.error(e.stack);
-  }
-  jake.die('Could not load Jakefile: ' + e);
-}
 
 jake.parseAllTasks();
 
@@ -270,7 +111,6 @@ if (opts.tasks) {
   jake.showAllTaskDescriptions(opts.tasks);
 }
 else {
-  jake.args = cmds;
   jake.runTask(taskName || 'default', taskArgs, true);
 }
 

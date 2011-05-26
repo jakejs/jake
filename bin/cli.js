@@ -19,12 +19,13 @@
 
 var args = process.argv.slice(2)
   , fs = require('fs')
-  , path = require('path')
   , sys = require('sys')
   , jake = require('../lib/jake')
   , api = require('../lib/api')
   , Program = require('../lib/program.js').Program
   , program = new Program()
+  , Loader = require('../lib/loader.js').Loader
+  , loader = new Loader()
   , pkg = JSON.parse(fs.readFileSync(__dirname + '/../package.json').toString())
   , opts;
 
@@ -40,8 +41,6 @@ program.parseArgs(args);
 
 if (!program.preemptiveOption()) {
   var opts = program.opts
-    , taskName = program.taskName
-    , taskArgs = program.taskArgs
     , envVars = program.envVars;
 
   // Globalize top-level API methods (e.g., `task`, `desc`)
@@ -52,60 +51,19 @@ if (!program.preemptiveOption()) {
   // Enhance env with any env vars passed in
   for (var p in envVars) { process.env[p] = envVars[p]; }
 
+  // Set working dir
   var dirname = opts.directory || process.cwd();
   process.chdir(dirname);
 
-}
+  loader.load(opts.jakefile);
 
-(function () {
-  var jakefile = opts.jakefile ?
-          opts.jakefile.replace(/\.js$/, '').replace(/\.coffee$/, '') : 'Jakefile'
-    , isCoffee = false
-    , exists = function () {
-        var cwd = process.cwd();
-        if (path.existsSync(jakefile) || path.existsSync(jakefile + '.js') ||
-          path.existsSync(jakefile + '.coffee')) {
-          return true;
-        }
-        process.chdir("..");
-        if (cwd === process.cwd()) {
-          return false;
-        }
-        return exists();
-      };
+  jake.parseAllTasks();
 
-  if (!exists()) {
-    fail('No Jakefile. Specify one with -f/--jakefile, or place one in the current directory.');
+  if (opts.tasks) {
+    jake.showAllTaskDescriptions(opts.tasks);
   }
-
-  isCoffee = path.existsSync(jakefile + '.coffee');
-  try {
-    if (isCoffee) {
-      try {
-        CoffeeScript = require('coffee-script');
-      }
-      catch (e) {
-        program.die('CoffeeScript is missing! Try `npm install coffee-script`');
-      }
-    }
-    jakefile = path.join(process.cwd(), jakefile);
-    require(jakefile);
+  else {
+    jake.runTask(program.taskName || 'default', program.taskArgs, true);
   }
-  catch (e) {
-    if (e.stack) {
-      console.error(e.stack);
-    }
-    program.die('Could not load Jakefile: ' + e);
-  }
-})();
-
-jake.parseAllTasks();
-
-if (opts.tasks) {
-  jake.showAllTaskDescriptions(opts.tasks);
 }
-else {
-  jake.runTask(taskName || 'default', taskArgs, true);
-}
-
 

@@ -20,7 +20,7 @@ Or, get the code, and `npm link` in the code root.
 
 ### Basic usage
 
-    jake [options] target (commands/options ...)
+    jake [options ...] [env variables ...] target
 
 ### Description
 

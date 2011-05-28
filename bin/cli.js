@@ -48,6 +48,12 @@ if (!program.preemptiveOption()) {
     global[p] = api[p];
   }
 
+  if (opts.debug) {
+    var d = require('_debugger');
+    //console.log('<Jake started in debug mode. Debugger listening on port ' + d.port + '>');
+    d.start();
+  }
+
   // Enhance env with any env vars passed in
   for (var p in envVars) { process.env[p] = envVars[p]; }
 

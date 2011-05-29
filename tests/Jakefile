@@ -30,6 +30,9 @@ task({'zxcv': ['default', 'uiop']}, function () {
 desc('This is the uiop task. It has no action.');
 task({'uiop': ['default']});
 
+desc('This is the frang task. It has no action, no prereqs.');
+task('frang');
+
 desc('File task, concating two files together');
 file({'concat.txt': ['src1.txt', 'src2.txt']}, function() {
   console.log('doing concat.txt file-task');

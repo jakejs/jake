@@ -17,6 +17,8 @@
  *
 */
 
+//console.dir(require.paths);
+
 var args = process.argv.slice(2)
   , fs = require('fs')
   , sys = require('sys')

@@ -33,27 +33,29 @@ task({'uiop': ['default']});
 desc('This is the frang task. It has no action, no prereqs.');
 task('frang');
 
+directory('foo');
+
 desc('File task, concating two files together');
-file({'concat.txt': ['src1.txt', 'src2.txt']}, function() {
+file({'foo/concat.txt': ['foo', 'foo/src1.txt', 'foo/src2.txt']}, function() {
   console.log('doing concat.txt file-task');
-  var data1 = fs.readFileSync('src1.txt');
-  var data2 = fs.readFileSync('src2.txt');
-  fs.writeFileSync('concat.txt', data1 + data2);
+  var data1 = fs.readFileSync('foo/src1.txt');
+  var data2 = fs.readFileSync('foo/src2.txt');
+  fs.writeFileSync('foo/concat.txt', data1 + data2);
 });
 
 desc('File task, async creation with child_process.exec');
-file('src1.txt', function () {
+file('foo/src1.txt', function () {
   console.log('running src1.txt file-task');
-  proc.exec('touch src1.txt', function (err, stdout, stderr) {
+  proc.exec('touch foo/src1.txt', function (err, stdout, stderr) {
     console.log('src1.txt complete');
     complete();
   });
 }, true);
 
 desc('File task, sync creation with writeFileSync');
-file('src2.txt', function () {
+file('foo/src2.txt', function () {
   console.log('running src2.txt file-task');
-  fs.writeFileSync('src2.txt', '');
+  fs.writeFileSync('foo/src2.txt', '');
 });
 
 desc('Failing task.');

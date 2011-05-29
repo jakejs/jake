@@ -17,19 +17,20 @@
  *
 */
 
-//console.dir(require.paths);
+require.paths.push(__dirname + '/../lib');
 
 var args = process.argv.slice(2)
   , fs = require('fs')
   , sys = require('sys')
-  , jake = require('../lib/jake')
-  , api = require('../lib/api')
-  , Program = require('../lib/program.js').Program
+  , jake = require('jake')
+  , api = require('api')
+  , Program = require('program.js').Program
   , program = new Program()
-  , Loader = require('../lib/loader.js').Loader
+  , Loader = require('loader.js').Loader
   , loader = new Loader()
   , pkg = JSON.parse(fs.readFileSync(__dirname + '/../package.json').toString())
-  , opts;
+  , opts
+  , envVars;
 
 jake.version = pkg.version;
 
@@ -42,8 +43,8 @@ process.addListener('uncaughtException', function (err) {
 program.parseArgs(args);
 
 if (!program.preemptiveOption()) {
-  var opts = program.opts
-    , envVars = program.envVars;
+  opts = program.opts
+  envVars = program.envVars;
 
   // Globalize top-level API methods (e.g., `task`, `desc`)
   for (var p in api) {

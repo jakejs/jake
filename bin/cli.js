@@ -55,8 +55,10 @@ if (!program.preemptiveOption()) {
   for (var p in envVars) { process.env[p] = envVars[p]; }
 
   // Set working dir
-  var dirname = opts.directory || process.cwd();
-  process.chdir(dirname);
+  var dirname = opts.directory;
+  if (dirname) {
+    process.chdir(dirname);
+  }
 
   loader.load(opts.jakefile);
 

@@ -46,6 +46,9 @@ Or, get the code, and `npm link` in the code root.
     -C *DIRECTORY*
     --directory *DIRECTORY*     Change to DIRECTORY before running tasks.
 
+    -I
+    --ignoredeps                Ignore depencies when running tasks.
+
     -T
     --tasks                     Display the tasks, with descriptions, then exit.
 

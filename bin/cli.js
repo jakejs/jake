@@ -68,7 +68,7 @@ if (!program.preemptiveOption()) {
     jake.showAllTaskDescriptions(opts.tasks);
   }
   else {
-    jake.runTask(program.taskName || 'default', program.taskArgs, true);
+    jake.runTask(program.taskName || 'default', program.taskArgs, !opts.ignoredeps);
   }
 }
 

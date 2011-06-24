@@ -33,15 +33,28 @@ task({'uiop': ['default']});
 desc('This is the frang task. It has no action, no prereqs.');
 task('frang');
 
+desc('This is the fonebone task.');
+task('fonebone', function () {
+  console.log('doing fonebone task.');
+});
+
 directory('foo');
 
 desc('File task, concating two files together');
-file({'foo/concat.txt': ['foo', 'foo/src1.txt', 'foo/src2.txt']}, function() {
+file({'foo/concat.txt': ['foo', 'foo/src0.txt', 'foo/src1.txt', 'foo/src2.txt']}, function() {
   console.log('doing concat.txt file-task');
   var data1 = fs.readFileSync('foo/src1.txt');
   var data2 = fs.readFileSync('foo/src2.txt');
   fs.writeFileSync('foo/concat.txt', data1 + data2);
 });
+
+desc('File task, don\'t run unless the prereq file changes');
+file({'foo/src2-foo.txt': ['foo', 'foo/src2.txt']}, function() {
+  console.log('doing src2-foo.txt file-task');
+  var data2 = fs.readFileSync('foo/src2.txt');
+  fs.writeFileSync('foo/src2-foo.txt', data2);
+});
+
 
 desc('File task, async creation with child_process.exec');
 file('foo/src1.txt', function () {
@@ -53,8 +66,8 @@ file('foo/src1.txt', function () {
 }, true);
 
 desc('File task, sync creation with writeFileSync');
-file('foo/src2.txt', function () {
-  console.log('running src2.txt file-task');
+file({'foo/src2.txt': 'fonebone'}, function () {
+  console.log('doing src2.txt file-task');
   fs.writeFileSync('foo/src2.txt', '');
 });
 

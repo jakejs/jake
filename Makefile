@@ -25,8 +25,8 @@ build:
 install:
 	@mkdir -p /usr/local/lib/node_modules/jake && \
 		cp -R ./* /usr/local/lib/node_modules/jake/ && \
-		ln -snf /usr/local/lib/node_modules/jake/bin/jake /usr/local/bin/jake && \
-		chmod 755 /usr/local/lib/node_modules/jake/bin/jake && \
+		ln -snf /usr/local/lib/node_modules/jake/bin/cli.js /usr/local/bin/jake && \
+		chmod 755 /usr/local/lib/node_modules/jake/bin/cli.js && \
 		echo 'Jake installed.'
 
 clean:
@@ -34,4 +34,5 @@ clean:
 
 uninstall:
 	@rm -f /usr/local/bin/jake && \
+		rm -fr /usr/local/lib/node_modules/jake/ && \
 		echo 'Jake uninstalled.'

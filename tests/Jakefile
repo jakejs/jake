@@ -105,16 +105,16 @@ namespace('foo', function () {
     var t;
     console.log('doing foo:zoobie task');
     console.log(sys.inspect(arguments));
-    t = jake.Task.zxcv;
+    t = jake.Task.qwer;
     t.invoke.apply(t, arguments);
     t.invoke.apply(t, arguments);
   });
 
   desc('This the foo:frang task');
   task('frang', function () {
-    console.log('doing foo:zoobie task');
+    console.log('doing foo:frang task');
     console.log(sys.inspect(arguments));
-    t = jake.Task.zxcv;
+    t = jake.Task.qwer;
     t.execute.apply(t, arguments);
     t.execute.apply(t, arguments);
   });
@@ -123,9 +123,9 @@ namespace('foo', function () {
   task('fonebone', function () {
     console.log('doing foo:fonebone task');
     console.log(sys.inspect(arguments));
-    t = jake.Task.zxcv;
+    t = jake.Task.qwer;
     t.invoke.apply(t, arguments);
-    t.reenable();
+    t.reenable(true);
     t.invoke.apply(t, arguments);
   });
 

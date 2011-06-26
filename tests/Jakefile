@@ -142,12 +142,3 @@ namespace('foo', function () {
 });
 
 
-require('package');
-require('file_list');
-
-var t = new jake.PackageTask('foo', '0.0.1', function () {
-  this.needTar = true;
-  this.packageFiles.include('foo/*.txt');
-  this.packageFiles.include('Jakefile');
-});
-

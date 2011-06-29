@@ -54,13 +54,13 @@ if (!program.preemptiveOption()) {
   // Enhance env with any env vars passed in
   for (var p in envVars) { process.env[p] = envVars[p]; }
 
+  loader.load(opts.jakefile);
+
   // Set working dir
   var dirname = opts.directory;
   if (dirname) {
     process.chdir(dirname);
   }
-
-  loader.load(opts.jakefile);
 
   jake.parseAllTasks();
 

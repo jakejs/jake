@@ -16,6 +16,7 @@ var t = new jake.PackageTask('jake', 'v' + version, function () {
   , 'tests/*'
   ];
   this.needTarGz = true;
+  this.needTarBz2 = true;
   this.packageFiles.include(fileList);
 });
 

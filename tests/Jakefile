@@ -41,7 +41,7 @@ task('fonebone', function () {
 directory('foo');
 
 desc('File task, concating two files together');
-file({'foo/concat.txt': ['foo', 'foo/src0.txt', 'foo/src1.txt', 'foo/src2.txt']}, function() {
+file({'foo/concat.txt': ['foo', 'foo/src1.txt', 'foo/src2.txt']}, function () {
   console.log('doing concat.txt file-task');
   var data1 = fs.readFileSync('foo/src1.txt');
   var data2 = fs.readFileSync('foo/src2.txt');
@@ -49,7 +49,7 @@ file({'foo/concat.txt': ['foo', 'foo/src0.txt', 'foo/src1.txt', 'foo/src2.txt']}
 });
 
 desc('File task, don\'t run unless the prereq file changes');
-file({'foo/src2-foo.txt': ['foo', 'foo/src2.txt']}, function() {
+file({'foo/src2-foo.txt': ['foo', 'foo/src2.txt']}, function () {
   console.log('doing src2-foo.txt file-task');
   var data2 = fs.readFileSync('foo/src2.txt');
   fs.writeFileSync('foo/src2-foo.txt', data2);

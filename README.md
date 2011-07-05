@@ -53,7 +53,7 @@ Or, get the code, and `npm link` in the code root.
 
 A Jakefile is just executable JavaScript. You can include whatever JavaScript you want in it.
 
-### Tasks
+j## Tasks
 
 Use `task` or `file` to define tasks. Call it with two arguments (and one optional argument):
 
@@ -285,6 +285,36 @@ Setting a value for -T/--tasks will filter the list by that value:
     jake foo:fonebone  # This the foo:fonebone task
 
 The list displayed will be all tasks whose namespace/name contain the filter-string.
+
+### PackageTask
+
+Jake's PackageTask programmically creates a set of tasks for packaging up your project for distribution. Here's an example:
+
+    var PackageTask = require('package_task').PackageTask;
+
+    var t = new PackageTask('fonebone', 'v0.1.2112', function () {
+      var fileList = [
+        'Jakefile'
+      , 'README.md'
+      , 'package.json'
+      , 'lib/*'
+      , 'bin/*'
+      , 'tests/*'
+      ];
+      this.packageFiles.include(fileList);
+      this.needTarGz = true;
+      this.needTarBz2 = true;
+    });
+
+This will automatically create a 'package' task that will assemble the specified files in 'pkg/fonebone-v0.1.2112,' and compress them according to the specified options. After running `jake package`, you'll have the following in pkg/:
+
+    fonebone-v0.1.2112
+    fonebone-v0.1.2112.tar.bz2
+    fonebone-v0.1.2112.tar.gz
+
+PackageTask also creates a 'clobberPackage' task that removes the pkg/ directory, and a 'repackage' task that forces the package to be rebuilt.
+
+PackageTask requires NodeJS's glob module (https://github.com/isaacs/node-glob). It is used in FileList, which is used to specify the list of files to include in your PackageTask (the packageFiles property). (See FileList, below.)
 
 ### CoffeeScript Jakefiles
 

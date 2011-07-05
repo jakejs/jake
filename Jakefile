@@ -1,11 +1,10 @@
-require('package_task');
-require('file_list');
+var PackageTask = require('package_task').PackageTask;
 
 var fs = require('fs')
   , pkg = JSON.parse(fs.readFileSync('package.json').toString())
   , version = pkg.version
 
-var t = new jake.PackageTask('jake', 'v' + version, function () {
+var t = new PackageTask('jake', 'v' + version, function () {
   var fileList = [
     'Makefile'
   , 'Jakefile'
@@ -15,9 +14,9 @@ var t = new jake.PackageTask('jake', 'v' + version, function () {
   , 'bin/*'
   , 'tests/*'
   ];
+  this.packageFiles.include(fileList);
   this.needTarGz = true;
   this.needTarBz2 = true;
-  this.packageFiles.include(fileList);
 });
 
 

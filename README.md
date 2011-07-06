@@ -290,9 +290,8 @@ The list displayed will be all tasks whose namespace/name contain the filter-str
 
 Jake's PackageTask programmically creates a set of tasks for packaging up your project for distribution. Here's an example:
 
-    var PackageTask = require('package_task').PackageTask;
-
-    var t = new PackageTask('fonebone', 'v0.1.2112', function () {
+    var PackageTask = require('package_task').PackageTask
+      , t = new PackageTask('fonebone', 'v0.1.2112', function () {
       var fileList = [
         'Jakefile'
       , 'README.md'
@@ -315,6 +314,27 @@ This will automatically create a 'package' task that will assemble the specified
 PackageTask also creates a 'clobberPackage' task that removes the pkg/ directory, and a 'repackage' task that forces the package to be rebuilt.
 
 PackageTask requires NodeJS's glob module (https://github.com/isaacs/node-glob). It is used in FileList, which is used to specify the list of files to include in your PackageTask (the packageFiles property). (See FileList, below.)
+
+### FileList
+
+Jake's FileList takes a list of glob-patterns and file-names, and lazy-creates a list of files to include. Instead of immediately searching the filesystem to find the files, a FileList holds the pattern until it is actually used.
+
+When any of the normal JavaScript Array methods (or the `toArray` method) are called on the FileList, the pending patterns are resolved into an actual list of file-names. FileList uses NodeJS's glob module (https://github.com/isaacs/node-glob).
+
+To build the list of files, use FileList's `include` and `exclude` methods:
+
+    var FileList = require('file_list').FileList
+      , list = new FileList();
+    list.include('foo/*.txt');
+    list.include(['bar/*.txt', 'README.md']);
+    list.include('Makefile', 'package.json');
+    list.exclude('foo/zoobie.txt');
+    list.exclude(/foo\/src.*.txt/);
+    console.log(list.toArray());
+
+The `include` method can be called either with an array of items, or multiple single parameters. Items can be either glob-patterns, or individual file-names.
+
+The `exclude` method will prevent files from being included in the list. These files must resolve to actual files on the filesystem. It can be called either with an array of items, or mutliple single parameters. Items can be glob-patterns, individual file-names, string-representations of regular-expressions, or regular-expression literals.
 
 ### CoffeeScript Jakefiles
 

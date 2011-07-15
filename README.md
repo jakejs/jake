@@ -143,6 +143,10 @@ You could run `jake` like this:
 
     jake awesome[foo,bar,baz]
 
+Note that zsh users will need to escape the brackets or wrap in single quotes like this:
+
+    jake 'awesome[foo,bar,baz]'
+
 And you'd get the following output:
 
     foo bar baz

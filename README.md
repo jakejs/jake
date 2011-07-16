@@ -53,7 +53,7 @@ Or, get the code, and `npm link` in the code root.
 
 A Jakefile is just executable JavaScript. You can include whatever JavaScript you want in it.
 
-j## Tasks
+## Tasks
 
 Use `task` to define tasks. Call it with two arguments (and one optional argument):
 

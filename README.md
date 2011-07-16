@@ -89,7 +89,7 @@ And here's an example of an asynchronous task:
 
 ### File-tasks
 
-Create a file task by calling `file`.
+Create a file-task by calling `file`.
 
 File-tasks create a file from one or more other files. With a file-task, Jake checks both that the file exists, and also that it is not older than the files specified by any prerequisite tasks. File-tasks are particularly useful for compiling something from a tree of source files.
 
@@ -100,7 +100,7 @@ File-tasks create a file from one or more other files. With a file-task, Jake ch
 
 ### Directory-tasks
 
-Create a file task by calling `directory`.
+Create a directory-task by calling `directory`.
 
 Directory-tasks create a directory for use with for file-tasks. Jake checks for the existence of the directory, and only creates it if needed.
 

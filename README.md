@@ -55,7 +55,7 @@ A Jakefile is just executable JavaScript. You can include whatever JavaScript yo
 
 j## Tasks
 
-Use `task` or `file` to define tasks. Call it with two arguments (and one optional argument):
+Use `task` to define tasks. Call it with two arguments (and one optional argument):
 
     task(name/prerequisites, action, [async]);
 
@@ -89,14 +89,23 @@ And here's an example of an asynchronous task:
 
 ### File-tasks
 
-File-tasks create a file from one or more other files. With a file-task, Jake checks both that the file exists, and also that it is not older than the files specified by any prerequisite tasks. File-tasks are particularly useful for compiling something from a tree of source files.
-
 Create a file task by calling `file`.
 
+File-tasks create a file from one or more other files. With a file-task, Jake checks both that the file exists, and also that it is not older than the files specified by any prerequisite tasks. File-tasks are particularly useful for compiling something from a tree of source files.
+
     desc('This builds a minified JS file for production.');
-    file({'foo-minified.js': ['foo-bar.js', 'foo-baz.js']}, function () {
+    file({'foo-minified.js': ['bar', 'foo-bar.js', 'foo-baz.js']}, function () {
       // Code to concat and minify goes here
     });
+
+### Directory-tasks
+
+Create a file task by calling `directory`.
+
+Directory-tasks create a directory for use with for file-tasks. Jake checks for the existence of the directory, and only creates it if needed.
+
+    desc('This creates the bar directory for use with the foo-minified.js file-task.');
+    directory('bar');
 
 ### Namespaces
 

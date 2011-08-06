@@ -17,16 +17,15 @@
  *
 */
 
-require.paths.push(__dirname + '/../lib');
-
 var args = process.argv.slice(2)
+  , lib_path = __dirname + '/../lib/'
   , fs = require('fs')
   , sys = require('sys')
-  , jake = require('jake')
-  , api = require('api')
-  , Program = require('program.js').Program
+  , jake = require(lib_path + 'jake.js')
+  , api = require(lib_path + 'api.js')
+  , Program = require(lib_path + 'program.js').Program
   , program = new Program()
-  , Loader = require('loader.js').Loader
+  , Loader = require(lib_path + 'loader.js').Loader
   , loader = new Loader()
   , pkg = JSON.parse(fs.readFileSync(__dirname + '/../package.json').toString())
   , opts

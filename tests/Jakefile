@@ -139,6 +139,36 @@ namespace('foo', function () {
     }, 0);
   }, true);
 
+  desc('This is the foo:flob task');
+  task('flob', ['foo:wibble', 'foo:wobble', 'foo:wubble'])
+
+  desc('This the foo:wibble asynctask');
+  asynctask('wibble', function () {
+    console.log('starting foo:wibble asynctask');
+    setTimeout(function () {
+      console.log('completing foo:wibble asynctask');
+      complete();
+    }, 5000);
+  });
+
+  desc('This the foo:wobble asynctask');
+  asynctask('wobble', function () {
+    console.log('starting foo:wobble asynctask');
+    setTimeout(function () {
+      console.log('completing foo:wobble asynctask');
+      complete();
+    }, 3000);
+  });
+
+  desc('This the foo:wubble asynctask');
+  asynctask('wubble', function () {
+    console.log('starting foo:wubble asynctask');
+    setTimeout(function () {
+      console.log('completing foo:wubble asynctask');
+      complete();
+    }, 1000);
+  });
+
 });
 
 

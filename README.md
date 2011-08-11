@@ -87,6 +87,14 @@ And here's an example of an asynchronous task:
       setTimeout(complete, 1000);
     }, true);
 
+Asynchronous tasks can also be created using 'asynctask'. When using this form the syntax is the same as with 'task' minus the optional 'async' argument.
+
+    desc('This is also an asynchronous task.');
+    asynctask('aTask', function () {
+      setTimeout(complete, 1000);
+    });
+
+
 ### File-tasks
 
 Create a file-task by calling `file`.
@@ -358,6 +366,12 @@ Here's an example:
       console.log 'This is the default task.'
       console.log(sys.inspect(arguments))
       invoke 'new', []
+ 
+    desc 'This is an asynchronous task.'
+    asynctask 'default', (params) ->
+      console.log 'Don't wait for me!'
+      console.log(sys.inspect(arguments))
+      complete()
 
     task 'new', ->
       console.log 'Hello from new'

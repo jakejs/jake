@@ -355,17 +355,17 @@ Here's an example:
 
     desc 'This is the default task.'
     task 'default', (params) ->
-      console.log 'Ths is the default task.'
+      console.log 'This is the default task.'
       console.log(sys.inspect(arguments))
       invoke 'new', []
 
     task 'new', ->
-      console.log 'ello from new'
+      console.log 'Hello from new'
       invoke 'foo:next', ['param']
 
     namespace 'foo', ->
       task 'next', (param) ->
-        console.log 'ello from next with param: ' + param
+        console.log 'Hello from next with param: ' + param
 
 ### Related projects
 

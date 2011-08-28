@@ -158,7 +158,7 @@ And you'd get the following output:
 
 Note that you *cannot* uses spaces between the commas separating the parameters.
 
-Any paramters passed after the Jake task that contain an equals sign (=) will be added to process.env.
+Any parameters passed after the Jake task that contain an equals sign (=) will be added to process.env.
 
 With the following Jakefile:
 
@@ -219,7 +219,7 @@ Calling `execute` repeatedly will run the desired task repeatedly.
       jake.Task['foo:baz'].execute();
     });
 
-If you want to run the task and its prerequisites more than once, you can use `invoke` with the `reenable` method.
+If you want to run the task and its prerequisites more than once, you can use `invoke` with the `re-enable` method.
 
     desc('Calls the foo:bar task and its prerequisites.');
     task('invokeFooBar', function () {
@@ -228,11 +228,11 @@ If you want to run the task and its prerequisites more than once, you can use `i
       // Does nothing
       jake.Task['foo:bar'].invoke();
       // Only re-runs foo:bar, but not its prerequisites
-      jake.Task['foo:bar'].reenable();
+      jake.Task['foo:bar'].re-enable();
       jake.Task['foo:bar'].invoke();
     });
 
-The `reenable` method takes a single Boolean arg, a 'deep' flag, which reenables the task's prerequisites if set to true.
+The `re-enable` method takes a single Boolean arg, a 'deep' flag, which reenables the task's prerequisites if set to true.
 
     desc('Calls the foo:bar task and its prerequisites.');
     task('invokeFooBar', function () {
@@ -241,7 +241,7 @@ The `reenable` method takes a single Boolean arg, a 'deep' flag, which reenables
       // Does nothing
       jake.Task['foo:bar'].invoke();
       // Only re-runs foo:bar, but not its prerequisites
-      jake.Task['foo:bar'].reenable(true);
+      jake.Task['foo:bar'].re-enable(true);
       jake.Task['foo:bar'].invoke();
     });
 
@@ -276,7 +276,7 @@ Uncaught errors will also abort the currently running task.
 
 ### Showing the list of tasks
 
-Passing `jake` the -T or --tasks flag will display the full list of tasks avaliable in a Jakefile, along with their descriptions:
+Passing `jake` the -T or --tasks flag will display the full list of tasks available in a Jakefile, along with their descriptions:
 
     $ jake -T
     jake default       # This is the default task.

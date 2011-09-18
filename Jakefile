@@ -1,10 +1,8 @@
-var PackageTask = require('package_task').PackageTask;
-
 var fs = require('fs')
   , pkg = JSON.parse(fs.readFileSync('package.json').toString())
   , version = pkg.version
 
-var t = new PackageTask('jake', 'v' + version, function () {
+var t = new jake.PackageTask('jake', 'v' + version, function () {
   var fileList = [
     'Makefile'
   , 'Jakefile'

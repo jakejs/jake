@@ -313,8 +313,7 @@ The list displayed will be all tasks whose namespace/name contain the filter-str
 
 Jake's PackageTask programmically creates a set of tasks for packaging up your project for distribution. Here's an example:
 
-    var PackageTask = require('package_task').PackageTask
-      , t = new PackageTask('fonebone', 'v0.1.2112', function () {
+    var t = new jake.PackageTask('fonebone', 'v0.1.2112', function () {
       var fileList = [
         'Jakefile'
       , 'README.md'
@@ -346,8 +345,7 @@ When any of the normal JavaScript Array methods (or the `toArray` method) are ca
 
 To build the list of files, use FileList's `include` and `exclude` methods:
 
-    var FileList = require('file_list').FileList
-      , list = new FileList();
+    var list = new jake.FileList();
     list.include('foo/*.txt');
     list.include(['bar/*.txt', 'README.md']);
     list.include('Makefile', 'package.json');

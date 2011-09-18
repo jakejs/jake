@@ -18,14 +18,14 @@
 */
 
 var args = process.argv.slice(2)
-  , lib_path = __dirname + '/../lib/'
+  , libPath = __dirname + '/../lib'
   , fs = require('fs')
   , sys = require('sys')
-  , jake = require(lib_path + 'jake.js')
-  , api = require(lib_path + 'api.js')
-  , Program = require(lib_path + 'program.js').Program
+  , jake = require(libPath + '/jake.js')
+  , api = require(libPath + '/api.js')
+  , Program = require(libPath + '/program.js').Program
   , program = new Program()
-  , Loader = require(lib_path + 'loader.js').Loader
+  , Loader = require(libPath + '/loader.js').Loader
   , loader = new Loader()
   , pkg = JSON.parse(fs.readFileSync(__dirname + '/../package.json').toString())
   , opts
@@ -49,6 +49,10 @@ if (!program.preemptiveOption()) {
   for (var p in api) {
     global[p] = api[p];
   }
+
+  // Get convenient refs to FileList, PackageTask
+  jake.FileList = require(libPath + '/file_list').FileList
+  jake.PackageTask = require(libPath + '/package_task').PackageTask
 
   // Enhance env with any env vars passed in
   for (var p in envVars) { process.env[p] = envVars[p]; }

@@ -75,7 +75,7 @@ assert.equal('bar', p.envVars.foo);
 assert.equal(undefined, p.taskName);
 
 // -f expects a value, -t does not (foo=bar is env-var, task-name follows)
-p.parse(z('-f zoobie -t foo=bar howdy'));
+p.parse(z('-f zoobie -t howdy foo=bar'));
 assert.equal('zoobie', p.opts.jakefile);
 assert.equal(true, p.opts.trace);
 assert.equal('bar', p.envVars.foo);
@@ -105,7 +105,7 @@ assert.equal('asdf', p.taskArgs[0]);
 assert.equal('qwer', p.taskArgs[1]);
 
 // Opts, env vars, task-name with positional args
-p.parse(z('-f ./tests/Jakefile -t foo=bar default[asdf,qwer]'));
+p.parse(z('-f ./tests/Jakefile -t default[asdf,qwer] foo=bar'));
 assert.equal('./tests/Jakefile', p.opts.jakefile);
 assert.equal(true, p.opts.trace);
 assert.equal('bar', p.envVars.foo);

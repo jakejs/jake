@@ -18,6 +18,20 @@ Build Jake:
 
 Or, get the code, and `npm link` in the code root.
 
+### Installing on Windows
+
+*Assumed: current directory is the same directory where node.exe is present.*
+
+Get Jake:
+
+    git clone git://github.com/mde/jake.git node_modules/jake
+
+Copy jake.bat to the same directory as node.exe
+
+    copy node_modules/jake/jake.bat jake.bat
+
+Add the directory of node.exe to the environment PATH variable.
+
 ### Basic usage
 
     jake [options ...] [env variables ...] target

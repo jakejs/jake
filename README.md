@@ -401,3 +401,6 @@ Andrzej Sliwa <andrzej.sliwa@i-tool.eu>
 Nikolay V. Nemshilov aka St <nemshilov@gmail.com>
 Sascha Teske <sascha.teske@gmail.com>
 
+### License
+
+Licensed under the Apache License, Version 2.0 (<http://www.apache.org/licenses/LICENSE-2.0>)

@@ -40,7 +40,7 @@ task('fonebone', function () {
 
 directory('foo');
 
-desc('File task, concating two files together');
+desc('File task, concatenating two files together');
 file({'foo/concat.txt': ['foo', 'foo/src1.txt', 'foo/src2.txt']}, function () {
   console.log('doing concat.txt file-task');
   var data1 = fs.readFileSync('foo/src1.txt');
@@ -138,7 +138,20 @@ namespace('foo', function () {
       complete();
     }, 0);
   }, true);
+});
 
+namespace('bar', function() {
+  directory('bar');
+  
+  task({'setup': 'bar:bar'}, function() {
+    fs.writeFileSync('bar/test.txt', 'test');
+  });
+
+  desc('Namespaced file task, don\'t run unless the prereq file changes');
+  file({'bar/src2.txt': 'bar/test.txt'}, function () {
+    console.log('doing src2.txt file-task');
+    fs.writeFileSync('bar/src2.txt', '');
+  });
 });
 
 

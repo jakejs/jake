@@ -20,7 +20,6 @@
 var args = process.argv.slice(2)
   , libPath = __dirname + '/../lib'
   , fs = require('fs')
-  , sys = require('sys')
   , jake = require(libPath + '/jake.js')
   , api = require(libPath + '/api.js')
   , Program = require(libPath + '/program.js').Program

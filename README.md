@@ -71,9 +71,9 @@ A Jakefile is just executable JavaScript. You can include whatever JavaScript yo
 
 Use `task` to define tasks. Call it with two arguments (and one optional argument):
 
-    task(name/prerequisites, action, [async]);
+    task(name, [prerequisites], action, [async]);
 
-The `name/prerequisites` argument can be either a simple String with the name of the task, or an Object literal where the single key is the name of the ask, and the value is an array of prerequisites. The `action` is a function defininng the action to take for the task.
+The `name` argument is a String with the name of the task, and `prerequisites` is an optional Array arg of the list of prerequisite tasks to perform first. The `action` is a Function defininng the action to take for the task. (Note that Object-literal syntax for name/prerequisites in a single argument a la Rake is also supported, but JavaScript's lack of support for dynamic keys in Object literals makes it not very useful.)
 
 The `async` argument is optional, and when set to `true` (`async === true`) indicates the task executes asynchronously. Asynchronous tasks need to call `complete()` to signal they have completed.
 
@@ -90,7 +90,7 @@ Here's an example:
     });
 
     desc('This task has prerequisites.');
-    task({'hasPrereqs': ['foo', 'bar', 'baz']}, function (params) {
+    task('hasPrereqs', ['foo', 'bar', 'baz'], function (params) {
       console.log('Ran some prereqs first.');
     });
 
@@ -108,7 +108,7 @@ Create a file-task by calling `file`.
 File-tasks create a file from one or more other files. With a file-task, Jake checks both that the file exists, and also that it is not older than the files specified by any prerequisite tasks. File-tasks are particularly useful for compiling something from a tree of source files.
 
     desc('This builds a minified JS file for production.');
-    file({'foo-minified.js': ['bar', 'foo-bar.js', 'foo-baz.js']}, function () {
+    file('foo-minified.js', ['bar', 'foo-bar.js', 'foo-baz.js'], function () {
       // Code to concat and minify goes here
     });
 
@@ -143,7 +143,7 @@ Here's an example:
       });
 
       desc('This the foo:baz task');
-      task({'baz': ['default', 'foo:bar']}, function () {
+      task('baz', ['default', 'foo:bar'], function () {
         console.log('doing foo:baz task');
       });
 
@@ -208,7 +208,7 @@ It will only run the task once, even if you call `invoke` repeatedly.
 
     desc('Calls the foo:bar task and its prerequisites.');
     task('invokeFooBar', function () {
-      // Calls foo:bar and its prereqs 
+      // Calls foo:bar and its prereqs
       jake.Task['foo:bar'].invoke();
       // Does nothing
       jake.Task['foo:bar'].invoke();

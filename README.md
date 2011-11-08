@@ -400,6 +400,7 @@ Patrick Walton <pcwalton@mimiga.net>
 Andrzej Sliwa <andrzej.sliwa@i-tool.eu>
 Nikolay V. Nemshilov aka St <nemshilov@gmail.com>
 Sascha Teske <sascha.teske@gmail.com>
+Fernando Gómez ( @fernandogmar )
 
 ### License
 

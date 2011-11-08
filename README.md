@@ -166,10 +166,6 @@ You could run `jake` like this:
 
     jake awesome[foo,bar,baz]
 
-Note that zsh users will need to escape the brackets or wrap in single quotes like this:
-
-    jake 'awesome[foo,bar,baz]'
-
 And you'd get the following output:
 
     foo bar baz
@@ -195,6 +191,14 @@ And you'd get the following output:
     foo bar baz
     zoobie asdf
 Running `jake` with no arguments runs the default task.
+
+__Note for zsh users__ : you will need to escape the brackets or wrap in single quotes like this to pass parameters :
+
+    jake 'awesome[foo,bar,baz]'
+    
+An other solution is to desactivate permannently file-globbing for the `jake` command. You can do this by adding this line to your `.zshrc` file :
+
+    alias jake="noglob jake"
 
 ### Running tasks from within other tasks
 

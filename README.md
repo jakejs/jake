@@ -339,13 +339,13 @@ This will automatically create a 'package' task that will assemble the specified
 
 PackageTask also creates a 'clobberPackage' task that removes the pkg/ directory, and a 'repackage' task that forces the package to be rebuilt.
 
-PackageTask requires NodeJS's glob module (https://github.com/isaacs/node-glob). It is used in FileList, which is used to specify the list of files to include in your PackageTask (the packageFiles property). (See FileList, below.)
+PackageTask requires NodeJS's minimatchmodule (https://github.com/isaacs/minimatch). It is used in FileList, which is used to specify the list of files to include in your PackageTask (the packageFiles property). (See FileList, below.)
 
 ### FileList
 
 Jake's FileList takes a list of glob-patterns and file-names, and lazy-creates a list of files to include. Instead of immediately searching the filesystem to find the files, a FileList holds the pattern until it is actually used.
 
-When any of the normal JavaScript Array methods (or the `toArray` method) are called on the FileList, the pending patterns are resolved into an actual list of file-names. FileList uses NodeJS's glob module (https://github.com/isaacs/node-glob).
+When any of the normal JavaScript Array methods (or the `toArray` method) are called on the FileList, the pending patterns are resolved into an actual list of file-names. FileList uses NodeJS's minimatchmodule (https://github.com/isaacs/minimatch).
 
 To build the list of files, use FileList's `include` and `exclude` methods:
 

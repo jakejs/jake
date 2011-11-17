@@ -22,6 +22,7 @@ var args = process.argv.slice(2)
   , fs = require('fs')
   , jake = require(libPath + '/jake.js')
   , api = require(libPath + '/api.js')
+  , utils = require(libPath + '/utils.js')
   , Program = require(libPath + '/program.js').Program
   , program = new Program()
   , Loader = require(libPath + '/loader.js').Loader
@@ -48,6 +49,8 @@ if (!program.preemptiveOption()) {
   for (var p in api) {
     global[p] = api[p];
   }
+
+  jake.exec = utils.exec;
 
   // Get convenient refs to FileList, PackageTask
   jake.FileList = require(libPath + '/file_list').FileList

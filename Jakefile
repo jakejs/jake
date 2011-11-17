@@ -1,5 +1,5 @@
 var fs = require('fs')
-  , pkg = JSON.parse(fs.readFileSync('package.json').toString())
+  , pkg = JSON.parse(fs.readFileSync('./package.json').toString())
   , version = pkg.version
 
 var t = new jake.PackageTask('jake', 'v' + version, function () {

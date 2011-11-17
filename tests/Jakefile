@@ -154,4 +154,18 @@ namespace('bar', function() {
   });
 });
 
+desc('Tests jake.exec API call');
+task('testExec', function () {
+  var cmds = [
+        'echo "testing"'
+      , 'true'
+      , 'echo "seems to work"'
+      ]
+    , callback = function () {
+        complete();
+      };
+  jake.exec(cmds, callback, {stdout: true});
+}, true);
+
+
 

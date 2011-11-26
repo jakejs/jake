@@ -12,11 +12,11 @@ Build Jake:
 
     cd jake && make && sudo make install
 
-### Installing with [npm](http://npmjs.org/)
+### Installing with [NPM](http://npmjs.org/)
 
-    npm install jake
+    npm install -g jake
 
-Or, get the code, and `npm link` in the code root.
+Note that Jake is a system-level tool, and wants to be installed globally.
 
 ### Installing on Windows
 

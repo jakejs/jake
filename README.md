@@ -71,14 +71,13 @@ A Jakefile is just executable JavaScript. You can include whatever JavaScript yo
 
 Use `task` to define tasks. Call it with two arguments (and one optional argument):
 
-    task(name, [prerequisites], action, [async]);
+    task(name, [prerequisites], action, [opts]);
 
 The `name` argument is a String with the name of the task, and `prerequisites` is an optional Array arg of the list of prerequisite tasks to perform first. The `action` is a Function defininng the action to take for the task. (Note that Object-literal syntax for name/prerequisites in a single argument a la Rake is also supported, but JavaScript's lack of support for dynamic keys in Object literals makes it not very useful.)
 
-The `async` argument is optional, and when set to `true` (`async === true`) indicates the task executes asynchronously. Asynchronous tasks need to call `complete()` to signal they have completed.
+The `opts` argument is optional, and when it includes an `async` property set to `true`, indicates the task executes asynchronously. Asynchronous tasks need to call `complete()` to signal they have completed. (Passing a final `async` Boolean flag is deprecated, but still supported.)
 
 Tasks created with `task` are always executed when asked for (or are a prerequisite). Tasks created with `file` are only executed if no file with the given name exists or if any of its file-prerequisites are more recent than the file named by the task. Also, if any prerequisite is a regular task, the file task will always be executed.
-
 
 Use `desc` to add a string description of the task.
 
@@ -99,7 +98,7 @@ And here's an example of an asynchronous task:
     desc('This is an asynchronous task.');
     task('asyncTask', function () {
       setTimeout(complete, 1000);
-    }, true);
+    }, {async: true});
 
 ### File-tasks
 

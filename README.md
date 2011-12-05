@@ -60,6 +60,9 @@ Add the directory of node.exe to the environment PATH variable.
     -C *DIRECTORY*
     --directory *DIRECTORY*     Change to DIRECTORY before running tasks.
 
+    -I
+    --ignoredeps                Ignore depencies when running tasks.
+
     -T
     --tasks                     Display the tasks, with descriptions, then exit.
 

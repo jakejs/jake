@@ -29,7 +29,8 @@ var args = process.argv.slice(2)
   , loader = new Loader()
   , pkg = JSON.parse(fs.readFileSync(__dirname + '/../package.json').toString())
   , opts
-  , envVars;
+  , envVars
+  , taskNames;
 
 jake.version = pkg.version;
 
@@ -73,7 +74,10 @@ if (!program.preemptiveOption()) {
     jake.showAllTaskDescriptions(opts.tasks);
   }
   else {
-    jake.runTask(program.taskName || 'default', program.taskArgs, true);
+    taskNames = program.taskNames;
+    taskNames = taskNames.length ? taskNames : ['default'];
+    task('__root__', taskNames, function () {});
+    jake.run('__root__', true);
   }
 }
 

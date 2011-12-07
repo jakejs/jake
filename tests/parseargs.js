@@ -99,6 +99,7 @@ assert.equal(true, p.opts.trace);
 assert.equal('zoobie', p.opts.jakefile);
 assert.equal(undefined, p.taskName);
 
+/*
 // Task-name with positional args
 p.parse(z('foo:bar[asdf,qwer]'));
 assert.equal('asdf', p.taskArgs[0]);
@@ -112,5 +113,5 @@ assert.equal('bar', p.envVars.foo);
 assert.equal('default', p.taskName);
 assert.equal('asdf', p.taskArgs[0]);
 assert.equal('qwer', p.taskArgs[1]);
-
+*/
 

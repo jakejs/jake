@@ -65,7 +65,7 @@ assert.equal(undefined, p.opts.jakefile);
 p.parse(z('-f zoobie -t howdy'));
 assert.equal('zoobie', p.opts.jakefile);
 assert.equal(true, p.opts.trace);
-assert.equal('howdy', p.taskName);
+assert.equal('howdy', p.taskNames[0]);
 
 // -f expects a value, -t does not (foo=bar is env var)
 p.parse(z('-f zoobie -t foo=bar'));
@@ -79,7 +79,7 @@ p.parse(z('-f zoobie -t howdy foo=bar'));
 assert.equal('zoobie', p.opts.jakefile);
 assert.equal(true, p.opts.trace);
 assert.equal('bar', p.envVars.foo);
-assert.equal('howdy', p.taskName);
+assert.equal('howdy', p.taskNames[0]);
 
 // -t does not expect a value, -f does (throw howdy away)
 p.parse(z('-t howdy -f zoobie'));

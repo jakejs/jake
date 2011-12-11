@@ -1,3 +1,57 @@
+desc('The default task.');
+task('default', function () {
+  console.log('default task');
+});
+
+desc('Accepts args and env vars.');
+task('argsEnvVars', function () {
+  var res = {
+    args: arguments
+  , env: {
+      foo: process.env.foo
+    , baz: process.env.baz
+    }
+  };
+  console.log(JSON.stringify(res));
+});
+
+namespace('foo', function () {
+  desc('The foo:bar task.');
+  task('bar', function () {
+    if (arguments.length) {
+      console.log('foo:bar[' +
+          Array.prototype.join.call(arguments, ',') +
+          '] task');
+    }
+    else {
+      console.log('foo:bar task');
+    }
+  });
+
+  desc('The foo:baz task, calls foo:bar as a prerequisite.');
+  task('baz', ['foo:bar'], function () {
+    console.log('foo:baz task');
+  });
+
+  desc('The foo:qux task, calls foo:bar with args as a prerequisite.');
+  task('qux', ['foo:bar[asdf,qwer]'], function () {
+    console.log('foo:qux task');
+  });
+
+  desc('The foo:qux task, calls foo:bar with cmdline args as a prerequisite.');
+  task('qux', ['foo:bar[asdf,qwer]'], function () {
+    console.log('foo:qux task');
+  });
+
+  desc('The foo:frang task, calls foo:bar with passed args as a prerequisite.');
+  task('frang', function () {
+    jake.Task['foo:bar'].invoke('zxcv', 'uiop');
+    console.log('foo:frang task');
+  });
+
+});
+
+/*
 var sys = require('sys'),
     fs  = require('fs')
     proc = require('child_process');
@@ -166,6 +220,6 @@ task('testExec', function () {
       };
   jake.exec(cmds, callback, {stdout: true});
 }, true);
-
+*/
 
 

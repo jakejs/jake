@@ -33,11 +33,6 @@ namespace('foo', function () {
     console.log('foo:baz task');
   });
 
-  desc('The foo:qux task, calls foo:bar with args as a prerequisite.');
-  task('qux', ['foo:bar[asdf,qwer]'], function () {
-    console.log('foo:qux task');
-  });
-
   desc('The foo:qux task, calls foo:bar with cmdline args as a prerequisite.');
   task('qux', ['foo:bar[asdf,qwer]'], function () {
     console.log('foo:qux task');
@@ -45,8 +40,52 @@ namespace('foo', function () {
 
   desc('The foo:frang task, calls foo:bar with passed args as a prerequisite.');
   task('frang', function () {
-    jake.Task['foo:bar'].invoke('zxcv', 'uiop');
+    var task = jake.Task['foo:bar'];
+    // Do args pass-through
+    task.invoke.apply(task, arguments);
     console.log('foo:frang task');
+  });
+
+  desc('The foo:zoobie task, has no prerequisites.');
+  task('zoobie', function () {
+    console.log('foo:zoobie task');
+  });
+
+  desc('The foo:voom task, has no prerequisites.');
+  task('voom', function () {
+    console.log('foo:voom task');
+  });
+
+});
+
+namespace('bar', function () {
+  desc('The bar:foo task, has no prerequisites, is async.');
+  task('foo', function () {
+    console.log('bar:foo task');
+    complete();
+  }, {async: true});
+
+  desc('The bar:bar task, has the async bar:foo task as a prerequisite.');
+  task('bar', ['bar:foo'], function () {
+    console.log('bar:bar task');
+  });
+
+});
+
+namespace('hoge', function () {
+  desc('The hoge:hoge task, has no prerequisites.');
+  task('hoge', function () {
+    console.log('hoge:hoge task');
+  });
+
+  desc('The hoge:piyo task, has no prerequisites.');
+  task('piyo', function () {
+    console.log('hoge:piyo task');
+  });
+
+  desc('The hoge:fuga task, has hoge:hoge and hoge:piyo as prerequisites.');
+  task('fuga', ['hoge:hoge', 'hoge:piyo'], function () {
+    console.log('hoge:fuga task');
   });
 
 });

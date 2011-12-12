@@ -57,8 +57,20 @@ var tests = new (function () {
   };
 
   this.testPrereqWithArgsViaInvoke = function () {
-    h.exec('../bin/cli.js foo:frang', function (out) {
+    h.exec('../bin/cli.js foo:frang[zxcv,uiop]', function (out) {
       assert.equal('foo:bar[zxcv,uiop] task\nfoo:frang task', out);
+    });
+  };
+
+  this.testPrereqOrdering = function () {
+    h.exec('../bin/cli.js hoge:fuga', function (out) {
+      assert.equal('hoge:hoge task\nhoge:piyo task\nhoge:fuga task', out);
+    });
+  };
+
+  this.testAsync = function () {
+    h.exec('../bin/cli.js bar:bar', function (out) {
+      assert.equal('bar:foo task\nbar:bar task', out);
     });
   };
 

@@ -12,6 +12,19 @@ var tests = new (function () {
     h.exec('../bin/cli.js default', function (out) {
       assert.equal('default task', out);
     });
+    h.next();
+  };
+
+  this.testNoAction = function () {
+    h.exec('../bin/cli.js noAction', function (out) {
+      assert.equal('default task', out);
+    });
+    h.next();
+  };
+
+  this.testNoActionNoPrereqs = function () {
+    h.exec('../bin/cli.js noActionNoPrereqs', function () {});
+    h.next();
   };
 
   this.testWithArgs = function () {
@@ -21,6 +34,7 @@ var tests = new (function () {
       assert.equal(args[0], 'foo');
       assert.equal(args[1], 'bar');
     });
+    h.next();
   };
 
   this.testWithEnvVars = function () {
@@ -30,6 +44,7 @@ var tests = new (function () {
       assert.equal(env.foo, 'bar');
       assert.equal(env.baz, 'qux');
     });
+    h.next();
   };
 
   this.testWithArgsAndEnvVars = function () {
@@ -42,45 +57,47 @@ var tests = new (function () {
       assert.equal(env.foo, 'bar');
       assert.equal(env.baz, 'qux');
     });
+    h.next();
   };
 
   this.testPrereq = function () {
     h.exec('../bin/cli.js foo:baz', function (out) {
       assert.equal('foo:bar task\nfoo:baz task', out);
     });
+    h.next();
   };
 
   this.testPrereqWithCmdlineArgs = function () {
     h.exec('../bin/cli.js foo:qux', function (out) {
       assert.equal('foo:bar[asdf,qwer] task\nfoo:qux task', out);
     });
+    h.next();
   };
 
   this.testPrereqWithArgsViaInvoke = function () {
     h.exec('../bin/cli.js foo:frang[zxcv,uiop]', function (out) {
       assert.equal('foo:bar[zxcv,uiop] task\nfoo:frang task', out);
     });
+    h.next();
   };
 
   this.testPrereqOrdering = function () {
     h.exec('../bin/cli.js hoge:fuga', function (out) {
       assert.equal('hoge:hoge task\nhoge:piyo task\nhoge:fuga task', out);
     });
+    h.next();
   };
 
   this.testAsync = function () {
     h.exec('../bin/cli.js bar:bar', function (out) {
       assert.equal('bar:foo task\nbar:bar task', out);
     });
+    h.next();
   };
 
 })();
 
-for (var p in tests) {
-  if (typeof tests[p] == 'function') {
-    tests[p]();
-  }
-}
-
-process.chdir('../');
+h.run(tests, function () {
+  process.chdir('../');
+});
 

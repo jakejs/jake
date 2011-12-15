@@ -7,10 +7,10 @@ process.chdir('./tests');
 
 var tests = new (function () {
   this.testConcatTwoFiles = function () {
-    h.exec('../bin/cli.js foo/concat.txt', function (out) {
+    h.exec('../bin/cli.js fileTest:foo/concat.txt', function (out) {
       var data;
-      assert.equal('default task\nfoo/src2.txt task\n' +
-          'foo/concat.txt task\nfoo/src1.txt task', out);
+      assert.equal('default task\nfileTest:foo/src2.txt task\n' +
+          'fileTest:foo/concat.txt task\nfileTest:foo/src1.txt task', out);
       data = fs.readFileSync(process.cwd() + '/foo/concat.txt');
       exec('rm -fr ./foo', function (err, stdout, stderr) {
         if (err) { throw err }

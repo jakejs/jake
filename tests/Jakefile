@@ -99,35 +99,38 @@ namespace('hoge', function () {
 
 });
 
-directory('foo');
+namespace('fileTest', function () {
+  directory('foo');
 
-desc('File task, concatenating two files together');
-file({'foo/concat.txt': ['foo', 'foo/src1.txt', 'foo/src2.txt']}, function () {
-  console.log('foo/concat.txt task');
-  var data1 = fs.readFileSync('foo/src1.txt');
-  var data2 = fs.readFileSync('foo/src2.txt');
-  fs.writeFileSync('foo/concat.txt', data1 + data2);
-});
-
-desc('File task, async creation with child_process.exec');
-file('foo/src1.txt', function () {
-  fs.writeFile('foo/src1.txt', 'src1', function (err) {
-    console.log('foo/src1.txt task');
-    complete();
+  desc('File task, concatenating two files together');
+  file({'foo/concat.txt': ['fileTest:foo', 'fileTest:foo/src1.txt', 'fileTest:foo/src2.txt']}, function () {
+    console.log('fileTest:foo/concat.txt task');
+    var data1 = fs.readFileSync('foo/src1.txt');
+    var data2 = fs.readFileSync('foo/src2.txt');
+    fs.writeFileSync('foo/concat.txt', data1 + data2);
   });
-}, {async: true});
 
-desc('File task, sync creation with writeFileSync');
-file({'foo/src2.txt': 'default'}, function () {
-  fs.writeFileSync('foo/src2.txt', 'src2');
-  console.log('foo/src2.txt task');
-});
+  desc('File task, async creation with child_process.exec');
+  file('foo/src1.txt', function () {
+    fs.writeFile('foo/src1.txt', 'src1', function (err) {
+      console.log('fileTest:foo/src1.txt task');
+      complete();
+    });
+  }, {async: true});
 
-desc('File task, do not run unless the prereq file changes');
-file({'foo/src2-foo.txt': ['foo', 'foo/src2.txt']}, function () {
-  console.log('foo/src2-foo.txt task');
-  var data = fs.readFileSync('foo/src2.txt');
-  fs.writeFileSync('foo/src2-foo.txt', data);
+  desc('File task, sync creation with writeFileSync');
+  file({'foo/src2.txt': 'default'}, function () {
+    fs.writeFileSync('foo/src2.txt', 'src2');
+    console.log('fileTest:foo/src2.txt task');
+  });
+
+  desc('File task, do not run unless the prereq file changes');
+  file({'foo/src2-foo.txt': ['fileTest:foo', 'fileTest:foo/src2.txt']}, function () {
+    console.log('fileTest:foo/src2-foo.txt task');
+    var data = fs.readFileSync('foo/src2.txt');
+    fs.writeFileSync('foo/src2-foo.txt', data);
+  });
+
 });
 
 /*

@@ -12,6 +12,18 @@ Build Jake:
 
     cd jake && make && sudo make install
 
+By default Jake is installed in "/usr/local." To install it into a
+different directory (e.g., one that doesn't require super-user
+privilege), pass the PREFIX variable to the `make install` command.
+For example, to install it into a "jake" directory in your home
+directory, you could use this:
+
+    make && make install PREFIX=~/jake
+
+If do you install Jake somewhere special, you'll need to add the
+"bin" directory in the install target to your PATH to get access
+to the `jake` executable.
+
 ### Installing with [NPM](http://npmjs.org/)
 
     npm install -g jake

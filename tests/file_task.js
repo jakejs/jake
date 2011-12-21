@@ -24,6 +24,15 @@ var tests = new (function () {
     });
   };
 
+  this.testNoPrereqChange = function () {
+    h.exec('../bin/cli.js fileTest:foo/from-src2.txt', function (out) {
+      console.log(out);
+      h.exec('../bin/cli.js fileTest:foo/from-src2.txt', function (out) {
+        console.log(out);
+      });
+    });
+  };
+
 })();
 
 h.run(tests, function () {

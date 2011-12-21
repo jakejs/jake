@@ -113,23 +113,26 @@ namespace('fileTest', function () {
   desc('File task, async creation with child_process.exec');
   file('foo/src1.txt', function () {
     fs.writeFile('foo/src1.txt', 'src1', function (err) {
+      if (err) {
+        throw err;
+      }
       console.log('fileTest:foo/src1.txt task');
       complete();
     });
   }, {async: true});
 
   desc('File task, sync creation with writeFileSync');
-  file({'foo/src2.txt': 'default'}, function () {
+  file('foo/src2.txt', ['default'], function () {
     fs.writeFileSync('foo/src2.txt', 'src2');
     console.log('fileTest:foo/src2.txt task');
   });
 
   desc('File task, do not run unless the prereq file changes');
-  file({'foo/src2-foo.txt': ['fileTest:foo', 'fileTest:foo/src2.txt']}, function () {
-    console.log('fileTest:foo/src2-foo.txt task');
-    var data = fs.readFileSync('foo/src2.txt');
-    fs.writeFileSync('foo/src2-foo.txt', data);
-  });
+  file('foo/from-src1.txt', ['fileTest:foo', 'fileTest:foo/src1.txt'], function () {
+    console.log('fileTest:foo/from-src1.txt task');
+    var data = fs.readFileSync('foo/src1.txt');
+    fs.writeFileSync('foo/from-src1.txt', data);
+  }, {async: true});
 
 });
 

@@ -5,6 +5,16 @@ var assert = require('assert')
 
 process.chdir('./tests');
 
+var cleanUpAndNext = function () {
+  exec('rm -fr ./foo', function (err, stdout, stderr) {
+    if (err) { throw err }
+    if (stderr || stdout) {
+      console.log (stderr || stdout);
+    }
+    h.next();
+  });
+};
+
 var tests = new (function () {
   this.testConcatTwoFiles = function () {
     h.exec('../bin/cli.js fileTest:foo/concat.txt', function (out) {
@@ -14,13 +24,7 @@ var tests = new (function () {
       // Check to see the two files got concat'd
       data = fs.readFileSync(process.cwd() + '/foo/concat.txt');
       assert.equal('src1src2', data.toString());
-      exec('rm -fr ./foo', function (err, stdout, stderr) {
-        if (err) { throw err }
-        if (stderr || stdout) {
-          console.log (stderr || stdout);
-        }
-        h.next();
-      });
+      cleanUpAndNext();
     });
   };
 
@@ -29,14 +33,9 @@ var tests = new (function () {
       assert.equal('fileTest:foo/src1.txt task\nfileTest:foo/from-src1.txt task',
         out);
       h.exec('../bin/cli.js fileTest:foo/from-src1.txt', function (out) {
+        // Second time should be a no-op
         assert.equal('', out);
-        exec('rm -fr ./foo', function (err, stdout, stderr) {
-          if (err) { throw err }
-          if (stderr || stdout) {
-            console.log (stderr || stdout);
-          }
-          h.next();
-        });
+        cleanUpAndNext();
       });
     });
   };

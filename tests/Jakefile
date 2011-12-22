@@ -129,9 +129,9 @@ namespace('fileTest', function () {
 
   desc('File task, do not run unless the prereq file changes');
   file('foo/from-src1.txt', ['fileTest:foo', 'fileTest:foo/src1.txt'], function () {
-    console.log('fileTest:foo/from-src1.txt task');
     var data = fs.readFileSync('foo/src1.txt');
     fs.writeFileSync('foo/from-src1.txt', data);
+    console.log('fileTest:foo/from-src1.txt task');
   }, {async: true});
 
 });

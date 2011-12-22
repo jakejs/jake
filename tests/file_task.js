@@ -25,10 +25,18 @@ var tests = new (function () {
   };
 
   this.testNoPrereqChange = function () {
-    h.exec('../bin/cli.js fileTest:foo/from-src2.txt', function (out) {
-      console.log(out);
-      h.exec('../bin/cli.js fileTest:foo/from-src2.txt', function (out) {
-        console.log(out);
+    h.exec('../bin/cli.js fileTest:foo/from-src1.txt', function (out) {
+      assert.equal('fileTest:foo/src1.txt task\nfileTest:foo/from-src1.txt task',
+        out);
+      h.exec('../bin/cli.js fileTest:foo/from-src1.txt', function (out) {
+        assert.equal('', out);
+        exec('rm -fr ./foo', function (err, stdout, stderr) {
+          if (err) { throw err }
+          if (stderr || stdout) {
+            console.log (stderr || stdout);
+          }
+          h.next();
+        });
       });
     });
   };

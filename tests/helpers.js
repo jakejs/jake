@@ -24,7 +24,7 @@ var helpers = new (function () {
       if (stderr) {
         callback(stderr);
       }
-      else if (out) {
+      else {
         callback(out);
       }
     });

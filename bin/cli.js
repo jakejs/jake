@@ -68,16 +68,18 @@ if (!program.preemptiveOption()) {
     process.chdir(dirname);
   }
 
+  taskNames = program.taskNames;
+  taskNames = taskNames.length ? taskNames : ['default'];
+  task('__root__', taskNames, function () {});
+
   jake.parseAllTasks();
 
   if (opts.tasks) {
     jake.showAllTaskDescriptions(opts.tasks);
   }
   else {
-    taskNames = program.taskNames;
-    taskNames = taskNames.length ? taskNames : ['default'];
-    task('__root__', taskNames, function () {});
-    jake.run('__root__', true);
+    //jake.run('__root__', true);
+    jake.Task['__root__'].invoke();
   }
 }
 

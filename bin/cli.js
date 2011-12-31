@@ -51,9 +51,9 @@ if (!program.preemptiveOption()) {
     global[p] = api[p];
   }
 
+  // Convenience aliases
+  jake.opts = opts;
   jake.exec = utils.exec;
-
-  // Get convenient refs to FileList, PackageTask
   jake.FileList = require(libPath + '/file_list').FileList
   jake.PackageTask = require(libPath + '/package_task').PackageTask
 

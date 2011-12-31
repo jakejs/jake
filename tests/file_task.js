@@ -40,6 +40,18 @@ var tests = new (function () {
     });
   };
 
+  this.testNoPrereqChangeAlwaysMake = function () {
+    h.exec('../bin/cli.js fileTest:foo/from-src1.txt', function (out) {
+      assert.equal('fileTest:foo/src1.txt task\nfileTest:foo/from-src1.txt task',
+        out);
+      h.exec('../bin/cli.js -B fileTest:foo/from-src1.txt', function (out) {
+        assert.equal('fileTest:foo/src1.txt task\nfileTest:foo/from-src1.txt task',
+          out);
+        cleanUpAndNext();
+      });
+    });
+  };
+
 })();
 
 h.run(tests, function () {

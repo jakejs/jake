@@ -78,7 +78,6 @@ if (!program.preemptiveOption()) {
     jake.showAllTaskDescriptions(opts.tasks);
   }
   else {
-    //jake.run('__root__', true);
     jake.Task['__root__'].invoke();
   }
 }

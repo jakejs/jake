@@ -252,7 +252,7 @@ Calling `execute` repeatedly will run the desired task repeatedly.
       jake.Task['foo:baz'].execute();
     });
 
-If you want to run the task and its prerequisites more than once, you can use `invoke` with the `re-enable` method.
+If you want to run the task and its prerequisites more than once, you can use `invoke` with the `reenable` method.
 
     desc('Calls the foo:bar task and its prerequisites.');
     task('invokeFooBar', function () {
@@ -261,11 +261,11 @@ If you want to run the task and its prerequisites more than once, you can use `i
       // Does nothing
       jake.Task['foo:bar'].invoke();
       // Only re-runs foo:bar, but not its prerequisites
-      jake.Task['foo:bar'].re-enable();
+      jake.Task['foo:bar'].reenable();
       jake.Task['foo:bar'].invoke();
     });
 
-The `re-enable` method takes a single Boolean arg, a 'deep' flag, which reenables the task's prerequisites if set to true.
+The `reenable` method takes a single Boolean arg, a 'deep' flag, which reenables the task's prerequisites if set to true.
 
     desc('Calls the foo:bar task and its prerequisites.');
     task('invokeFooBar', function () {
@@ -274,7 +274,7 @@ The `re-enable` method takes a single Boolean arg, a 'deep' flag, which reenable
       // Does nothing
       jake.Task['foo:bar'].invoke();
       // Only re-runs foo:bar, but not its prerequisites
-      jake.Task['foo:bar'].re-enable(true);
+      jake.Task['foo:bar'].reenable(true);
       jake.Task['foo:bar'].invoke();
     });
 

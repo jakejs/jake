@@ -66,6 +66,23 @@ var tests = new (function () {
     });
   };
 
+  this.testPreexistingFileAlwaysMake = function () {
+    var prereqData = 'howdy';
+    h.exec('mkdir -p foo', function (out) {
+      fs.writeFileSync('foo/prereq.txt', prereqData);
+      h.exec('../bin/cli.js fileTest:foo/from-prereq.txt', function (out) {
+        var data;
+        assert.equal('fileTest:foo/from-prereq.txt task', out);
+        data = fs.readFileSync(process.cwd() + '/foo/from-prereq.txt');
+        assert.equal(prereqData, data.toString());
+        h.exec('../bin/cli.js -B fileTest:foo/from-prereq.txt', function (out) {
+          assert.equal('fileTest:foo/from-prereq.txt task', out);
+          cleanUpAndNext();
+        });
+      });
+    });
+  };
+
 })();
 
 h.run(tests, function () {

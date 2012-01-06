@@ -132,6 +132,8 @@ Directory-tasks create a directory for use with for file-tasks. Jake checks for 
     desc('This creates the bar directory for use with the foo-minified.js file-task.');
     directory('bar');
 
+This task will create the directory when used as a prerequisite for a file-task, or when run from the command-line.
+
 ### Namespaces
 
 Use `namespace` to create a namespace of tasks to perform. Call it with two arguments:

@@ -1,11 +1,19 @@
-{ "name": "jake"
-, "version": "0.2.0"
-, "author": "Matthew Eernisse <mde@fleegix.org> (http://fleegix.org)"
-, "bin": { "jake": "./bin/cli.js" }
-, "main": "./lib"
-, "repository": {
-    "type": "git"
-  , "url": "https://github.com/mde/jake.git"
+{
+  "name": "jake",
+  "version": "0.2.1",
+  "author": "Matthew Eernisse <mde@fleegix.org> (http://fleegix.org)",
+  "bin": {
+    "jake": "./bin/cli.js"
+  },
+  "main": "./lib",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/mde/jake.git"
+  },
+  "preferGlobal": true,
+  "dependencies": {},
+  "devDependencies": {},
+  "engines": {
+    "node": "*"
   }
-, "preferGlobal": true
 }

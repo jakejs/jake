@@ -12,17 +12,15 @@ Build Jake:
 
     cd jake && make && sudo make install
 
-By default Jake is installed in "/usr/local." To install it into a
-different directory (e.g., one that doesn't require super-user
-privilege), pass the PREFIX variable to the `make install` command.
-For example, to install it into a "jake" directory in your home
-directory, you could use this:
+By default Jake is installed in "/usr/local." To install it into a different
+directory (e.g., one that doesn't require super-user privilege), pass the PREFIX
+variable to the `make install` command.  For example, to install it into a
+"jake" directory in your home directory, you could use this:
 
     make && make install PREFIX=~/jake
 
-If do you install Jake somewhere special, you'll need to add the
-"bin" directory in the install target to your PATH to get access
-to the `jake` executable.
+If do you install Jake somewhere special, you'll need to add the "bin" directory
+in the install target to your PATH to get access to the `jake` executable.
 
 ### Installing with [NPM](http://npmjs.org/)
 
@@ -50,7 +48,8 @@ Add the directory of node.exe to the environment PATH variable.
 
 ### Description
 
-    Jake is a simple JavaScript build program with capabilities similar to the regular make or rake command.
+    Jake is a simple JavaScript build program with capabilities similar to the
+    regular make or rake command.
 
     Jake has the following features:
         * Jakefiles are in standard JavaScript syntax
@@ -77,19 +76,33 @@ Add the directory of node.exe to the environment PATH variable.
 
 ### Jakefile syntax
 
-A Jakefile is just executable JavaScript. You can include whatever JavaScript you want in it.
+A Jakefile is just executable JavaScript. You can include whatever JavaScript
+you want in it.
 
 ## Tasks
 
-Use `task` to define tasks. Call it with two arguments (and one optional argument):
+Use `task` to define tasks. Call it with two arguments (and one optional
+argument):
 
     task(name, [prerequisites], action, [opts]);
 
-The `name` argument is a String with the name of the task, and `prerequisites` is an optional Array arg of the list of prerequisite tasks to perform first. The `action` is a Function defininng the action to take for the task. (Note that Object-literal syntax for name/prerequisites in a single argument a la Rake is also supported, but JavaScript's lack of support for dynamic keys in Object literals makes it not very useful.)
+The `name` argument is a String with the name of the task, and `prerequisites`
+is an optional Array arg of the list of prerequisite tasks to perform first. The
+`action` is a Function defininng the action to take for the task. (Note that
+Object-literal syntax for name/prerequisites in a single argument a la Rake is
+also supported, but JavaScript's lack of support for dynamic keys in Object
+literals makes it not very useful.)
 
-The `opts` argument is optional, and when it includes an `async` property set to `true`, indicates the task executes asynchronously. Asynchronous tasks need to call `complete()` to signal they have completed. (Passing a final `async` Boolean flag is deprecated, but still supported.)
+The `opts` argument is optional, and when it includes an `async` property set to
+`true`, indicates the task executes asynchronously. Asynchronous tasks need to
+call `complete()` to signal they have completed. (Passing a final `async`
+Boolean flag is deprecated, but still supported.)
 
-Tasks created with `task` are always executed when asked for (or are a prerequisite). Tasks created with `file` are only executed if no file with the given name exists or if any of its file-prerequisites are more recent than the file named by the task. Also, if any prerequisite is a regular task, the file task will always be executed.
+Tasks created with `task` are always executed when asked for (or are a
+prerequisite). Tasks created with `file` are only executed if no file with the
+given name exists or if any of its file-prerequisites are more recent than the
+file named by the task. Also, if any prerequisite is a regular task, the file
+task will always be executed.
 
 Use `desc` to add a string description of the task.
 
@@ -116,7 +129,10 @@ And here's an example of an asynchronous task:
 
 Create a file-task by calling `file`.
 
-File-tasks create a file from one or more other files. With a file-task, Jake checks both that the file exists, and also that it is not older than the files specified by any prerequisite tasks. File-tasks are particularly useful for compiling something from a tree of source files.
+File-tasks create a file from one or more other files. With a file-task, Jake
+checks both that the file exists, and also that it is not older than the files
+specified by any prerequisite tasks. File-tasks are particularly useful for
+compiling something from a tree of source files.
 
     desc('This builds a minified JS file for production.');
     file('foo-minified.js', ['bar', 'foo-bar.js', 'foo-baz.js'], function () {
@@ -127,12 +143,14 @@ File-tasks create a file from one or more other files. With a file-task, Jake ch
 
 Create a directory-task by calling `directory`.
 
-Directory-tasks create a directory for use with for file-tasks. Jake checks for the existence of the directory, and only creates it if needed.
+Directory-tasks create a directory for use with for file-tasks. Jake checks for
+the existence of the directory, and only creates it if needed.
 
     desc('This creates the bar directory for use with the foo-minified.js file-task.');
     directory('bar');
 
-This task will create the directory when used as a prerequisite for a file-task, or when run from the command-line.
+This task will create the directory when used as a prerequisite for a file-task,
+or when run from the command-line.
 
 ### Namespaces
 
@@ -140,7 +158,9 @@ Use `namespace` to create a namespace of tasks to perform. Call it with two argu
 
     namespace(name, namespaceTasks);
 
-Where is `name` is the name of the namespace, and `namespaceTasks` is a function with calls inside it to `task` or `desc` definining all the tasks for that namespace.
+Where is `name` is the name of the namespace, and `namespaceTasks` is a function
+with calls inside it to `task` or `desc` definining all the tasks for that
+namespace.
 
 Here's an example:
 
@@ -166,9 +186,12 @@ In this example, the foo:baz task depends on the the default and foo:bar tasks.
 
 ### Passing parameters to jake
 
-Parameters can be passed to Jake two ways: plain arguments, and environment variables.
+Parameters can be passed to Jake two ways: plain arguments, and environment
+variables.
 
-To pass positional arguments to the Jake tasks, enclose them in square braces, separated by commas, after the name of the task on the command-line. For example, with the following Jakefile:
+To pass positional arguments to the Jake tasks, enclose them in square braces,
+separated by commas, after the name of the task on the command-line. For
+example, with the following Jakefile:
 
     desc('This is an awesome task.');
     task('awesome', function (a, b, c) {
@@ -185,7 +208,8 @@ And you'd get the following output:
 
 Note that you *cannot* uses spaces between the commas separating the parameters.
 
-Any parameters passed after the Jake task that contain an equals sign (=) will be added to process.env.
+Any parameters passed after the Jake task that contain an equals sign (=) will
+be added to process.env.
 
 With the following Jakefile:
 
@@ -205,17 +229,20 @@ And you'd get the following output:
     zoobie asdf
 Running `jake` with no arguments runs the default task.
 
-__Note for zsh users__ : you will need to escape the brackets or wrap in single quotes like this to pass parameters :
+__Note for zsh users__ : you will need to escape the brackets or wrap in single
+quotes like this to pass parameters :
 
     jake 'awesome[foo,bar,baz]'
-    
-An other solution is to desactivate permannently file-globbing for the `jake` command. You can do this by adding this line to your `.zshrc` file :
+
+An other solution is to desactivate permannently file-globbing for the `jake`
+command. You can do this by adding this line to your `.zshrc` file :
 
     alias jake="noglob jake"
 
 ### Running tasks from within other tasks
 
-Jake supports the ability to run a task from within another task via the `invoke` and `execute` methods.
+Jake supports the ability to run a task from within another task via the
+`invoke` and `execute` methods.
 
 The `invoke` method will run the desired task, along with its prerequisites:
 
@@ -254,7 +281,8 @@ Calling `execute` repeatedly will run the desired task repeatedly.
       jake.Task['foo:baz'].execute();
     });
 
-If you want to run the task and its prerequisites more than once, you can use `invoke` with the `reenable` method.
+If you want to run the task and its prerequisites more than once, you can use
+`invoke` with the `reenable` method.
 
     desc('Calls the foo:bar task and its prerequisites.');
     task('invokeFooBar', function () {
@@ -267,7 +295,8 @@ If you want to run the task and its prerequisites more than once, you can use `i
       jake.Task['foo:bar'].invoke();
     });
 
-The `reenable` method takes a single Boolean arg, a 'deep' flag, which reenables the task's prerequisites if set to true.
+The `reenable` method takes a single Boolean arg, a 'deep' flag, which reenables
+the task's prerequisites if set to true.
 
     desc('Calls the foo:bar task and its prerequisites.');
     task('invokeFooBar', function () {
@@ -291,7 +320,8 @@ It's easy to pass params on to a sub-task run via `invoke` or `execute`:
 
 ### Aborting a task
 
-You can abort a task by calling the `fail` function, and Jake will abort the currently running task. You can pass a customized error message to `fail`:
+You can abort a task by calling the `fail` function, and Jake will abort the
+currently running task. You can pass a customized error message to `fail`:
 
     desc('This task fails.');
     task('failTask', function () {
@@ -311,7 +341,8 @@ Uncaught errors will also abort the currently running task.
 
 ### Showing the list of tasks
 
-Passing `jake` the -T or --tasks flag will display the full list of tasks available in a Jakefile, along with their descriptions:
+Passing `jake` the -T or --tasks flag will display the full list of tasks
+available in a Jakefile, along with their descriptions:
 
     $ jake -T
     jake default       # This is the default task.
@@ -332,7 +363,8 @@ The list displayed will be all tasks whose namespace/name contain the filter-str
 
 ### PackageTask
 
-Jake's PackageTask programmically creates a set of tasks for packaging up your project for distribution. Here's an example:
+Jake's PackageTask programmically creates a set of tasks for packaging up your
+project for distribution. Here's an example:
 
     var t = new jake.PackageTask('fonebone', 'v0.1.2112', function () {
       var fileList = [
@@ -348,21 +380,32 @@ Jake's PackageTask programmically creates a set of tasks for packaging up your p
       this.needTarBz2 = true;
     });
 
-This will automatically create a 'package' task that will assemble the specified files in 'pkg/fonebone-v0.1.2112,' and compress them according to the specified options. After running `jake package`, you'll have the following in pkg/:
+This will automatically create a 'package' task that will assemble the specified
+files in 'pkg/fonebone-v0.1.2112,' and compress them according to the specified
+options. After running `jake package`, you'll have the following in pkg/:
 
     fonebone-v0.1.2112
     fonebone-v0.1.2112.tar.bz2
     fonebone-v0.1.2112.tar.gz
 
-PackageTask also creates a 'clobberPackage' task that removes the pkg/ directory, and a 'repackage' task that forces the package to be rebuilt.
+PackageTask also creates a 'clobberPackage' task that removes the pkg/
+directory, and a 'repackage' task that forces the package to be rebuilt.
 
-PackageTask requires NodeJS's minimatchmodule (https://github.com/isaacs/minimatch). It is used in FileList, which is used to specify the list of files to include in your PackageTask (the packageFiles property). (See FileList, below.)
+PackageTask requires NodeJS's minimatchmodule
+(https://github.com/isaacs/minimatch). It is used in FileList, which is used to
+specify the list of files to include in your PackageTask (the packageFiles
+property). (See FileList, below.)
 
 ### FileList
 
-Jake's FileList takes a list of glob-patterns and file-names, and lazy-creates a list of files to include. Instead of immediately searching the filesystem to find the files, a FileList holds the pattern until it is actually used.
+Jake's FileList takes a list of glob-patterns and file-names, and lazy-creates a
+list of files to include. Instead of immediately searching the filesystem to
+find the files, a FileList holds the pattern until it is actually used.
 
-When any of the normal JavaScript Array methods (or the `toArray` method) are called on the FileList, the pending patterns are resolved into an actual list of file-names. FileList uses NodeJS's minimatchmodule (https://github.com/isaacs/minimatch).
+When any of the normal JavaScript Array methods (or the `toArray` method) are
+called on the FileList, the pending patterns are resolved into an actual list of
+file-names. FileList uses NodeJS's minimatchmodule
+(https://github.com/isaacs/minimatch).
 
 To build the list of files, use FileList's `include` and `exclude` methods:
 
@@ -374,13 +417,19 @@ To build the list of files, use FileList's `include` and `exclude` methods:
     list.exclude(/foo\/src.*.txt/);
     console.log(list.toArray());
 
-The `include` method can be called either with an array of items, or multiple single parameters. Items can be either glob-patterns, or individual file-names.
+The `include` method can be called either with an array of items, or multiple
+single parameters. Items can be either glob-patterns, or individual file-names.
 
-The `exclude` method will prevent files from being included in the list. These files must resolve to actual files on the filesystem. It can be called either with an array of items, or mutliple single parameters. Items can be glob-patterns, individual file-names, string-representations of regular-expressions, or regular-expression literals.
+The `exclude` method will prevent files from being included in the list. These
+files must resolve to actual files on the filesystem. It can be called either
+with an array of items, or mutliple single parameters. Items can be
+glob-patterns, individual file-names, string-representations of
+regular-expressions, or regular-expression literals.
 
 ### CoffeeScript Jakefiles
 
-Jake can also handle Jakefiles in CoffeeScript. Be sure to make it Jakefile.coffee so Jake knows it's in CoffeeScript.
+Jake can also handle Jakefiles in CoffeeScript. Be sure to make it
+Jakefile.coffee so Jake knows it's in CoffeeScript.
 
 Here's an example:
 
@@ -424,4 +473,5 @@ Sascha Teske <sascha.teske@gmail.com>
 
 ### License
 
-Licensed under the Apache License, Version 2.0 (<http://www.apache.org/licenses/LICENSE-2.0>)
+Licensed under the Apache License, Version 2.0
+(<http://www.apache.org/licenses/LICENSE-2.0>)

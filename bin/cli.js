@@ -53,9 +53,12 @@ if (!program.preemptiveOption()) {
 
   // Convenience aliases
   jake.opts = opts;
-  jake.exec = utils.exec;
-  jake.FileList = require(libPath + '/file_list').FileList
-  jake.PackageTask = require(libPath + '/package_task').PackageTask
+  for (var p in utils) {
+    jake[p] = utils[p];
+  }
+  jake.FileList = require(libPath + '/file_list').FileList;
+  jake.PackageTask = require(libPath + '/package_task').PackageTask;
+  jake.NpmPublisTask = require(libPath + '/npm_publish_task').NpmPublishTask;
 
   // Enhance env with any env vars passed in
   for (var p in envVars) { process.env[p] = envVars[p]; }
@@ -71,8 +74,6 @@ if (!program.preemptiveOption()) {
   taskNames = program.taskNames;
   taskNames = taskNames.length ? taskNames : ['default'];
   task('__root__', taskNames, function () {});
-
-  jake.parseAllTasks();
 
   if (opts.tasks) {
     jake.showAllTaskDescriptions(opts.tasks);

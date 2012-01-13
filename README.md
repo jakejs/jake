@@ -426,6 +426,35 @@ with an array of items, or mutliple single parameters. Items can be
 glob-patterns, individual file-names, string-representations of
 regular-expressions, or regular-expression literals.
 
+### NpmPublishTask
+
+The NpmPublishTask builds on top of PackageTask to allow you to do a version
+bump of your project, package it, and publish it to NPM. Define the task with
+your project's name, and the list of files you want packaged and published to
+NPM.
+
+Here's an example from Jake's Jakefile:
+
+    var p = new jake.NpmPublishTask('jake', [
+      'Makefile'
+    , 'Jakefile'
+    , 'README.md'
+    , 'package.json'
+    , 'lib/*'
+    , 'bin/*'
+    , 'tests/*'
+    ]);
+
+The NpmPublisTask will automatically create a `publish` task which performs the
+following steps:
+
+1. Bump the version number in your package.json
+2. Commit change in git, push it to GitHub
+3. Create a git tag for the version
+4. Push the tag to GitHub
+5. Package the new version of your project
+6. Publish it to NPM
+
 ### CoffeeScript Jakefiles
 
 Jake can also handle Jakefiles in CoffeeScript. Be sure to make it

@@ -445,7 +445,7 @@ Here's an example from Jake's Jakefile:
     , 'tests/*'
     ]);
 
-The NpmPublisTask will automatically create a `publish` task which performs the
+The NpmPublishTask will automatically create a `publish` task which performs the
 following steps:
 
 1. Bump the version number in your package.json

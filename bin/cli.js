@@ -58,7 +58,7 @@ if (!program.preemptiveOption()) {
   }
   jake.FileList = require(libPath + '/file_list').FileList;
   jake.PackageTask = require(libPath + '/package_task').PackageTask;
-  jake.NpmPublisTask = require(libPath + '/npm_publish_task').NpmPublishTask;
+  jake.NpmPublishTask = require(libPath + '/npm_publish_task').NpmPublishTask;
 
   // Enhance env with any env vars passed in
   for (var p in envVars) { process.env[p] = envVars[p]; }

@@ -125,6 +125,12 @@ And here's an example of an asynchronous task:
       setTimeout(complete, 1000);
     }, {async: true});
 
+A Task is also an EventEmitter which emits the 'complete' event when it is
+finished. This allows asynchronous tasks to be run from within other asked via
+either `invoke` or `execute`, and ensure they will complete before the rest of
+the containing task executes. See the section "Running tasks from within other
+tasks," below.
+
 ### File-tasks
 
 Create a file-task by calling `file`.
@@ -252,7 +258,24 @@ The `invoke` method will run the desired task, along with its prerequisites:
       jake.Task['foo:bar'].invoke();
     });
 
-It will only run the task once, even if you call `invoke` repeatedly.
+Tasks are EventEmitters. If the inner-task invoked is asynchronous, you can set
+a listener on the 'complete' event to run any code that depends on it.
+
+    desc('Calls the async foo:baz task and its prerequisites.');
+    task('invokeFooBaz', function () {
+      var t = jake.Task['foo:baz'];
+      t.addListener('complete', function () {
+        console.log('Finished executing foo:baz');
+        // Maybe run some other code
+        // ...
+        // Complete the containing task
+        complete();
+      });
+      // Kick off foo:baz
+      t.invoke();
+    }, {async: true});
+
+The `invoke` method will only run the task once, even if you call it repeatedly.
 
     desc('Calls the foo:bar task and its prerequisites.');
     task('invokeFooBar', function () {
@@ -454,6 +477,7 @@ following steps:
 4. Push the tag to GitHub
 5. Package the new version of your project
 6. Publish it to NPM
+7. Clean up the package
 
 ### CoffeeScript Jakefiles
 

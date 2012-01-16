@@ -1,6 +1,6 @@
 {
   "name": "jake",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "author": "Matthew Eernisse <mde@fleegix.org> (http://fleegix.org)",
   "bin": {
     "jake": "./bin/cli.js"

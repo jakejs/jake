@@ -29,7 +29,7 @@ install:
 	@mkdir -p $(DESTDIR)$(PREFIX)/bin \
     mkdir -p $(DESTDIR)$(PREFIX)/lib/node_modules/jake && \
 		cp -R ./* $(DESTDIR)$(PREFIX)/lib/node_modules/jake/ && \
-		ln -snf $(DESTDIR)$(PREFIX)/lib/node_modules/jake/bin/cli.js $(DESTDIR)$(PREFIX)/bin/jake && \
+		ln -snf ../lib/node_modules/jake/bin/cli.js $(DESTDIR)$(PREFIX)/bin/jake && \
 		chmod 755 $(DESTDIR)$(PREFIX)/lib/node_modules/jake/bin/cli.js && \
 		echo 'Jake installed.'
 

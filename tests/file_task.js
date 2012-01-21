@@ -34,7 +34,7 @@ var tests = new (function () {
       h.exec('../bin/cli.js fileTest:foo/from-src1.txt', function (out) {
         // Second time should be a no-op
         assert.equal('', out);
-				cleanUpAndNext();
+        cleanUpAndNext();
       });
     });
   };
@@ -60,17 +60,17 @@ var tests = new (function () {
         assert.equal('fileTest:foo/from-prereq.txt task', out);
         data = fs.readFileSync(process.cwd() + '/foo/from-prereq.txt');
         assert.equal(prereqData, data.toString());
-				h.exec('../bin/cli.js fileTest:foo/from-prereq.txt', function (out) {
-					// Second time should be a no-op
-					assert.equal('', out);
-					h.exec('../bin/cli.js fileTest:touch-prereq', function () {
-						h.exec('../bin/cli.js fileTest:foo/from-prereq.txt', function (out) {
-							// Third time should update the target file
-							assert.equal('fileTest:foo/from-prereq.txt task', out);
-							cleanUpAndNext();
-						});
-					});
-				});
+        h.exec('../bin/cli.js fileTest:foo/from-prereq.txt', function (out) {
+          // Second time should be a no-op
+          assert.equal('', out);
+          h.exec('../bin/cli.js fileTest:touch-prereq', function () {
+            h.exec('../bin/cli.js fileTest:foo/from-prereq.txt', function (out) {
+              // Third time should update the target file
+              assert.equal('fileTest:foo/from-prereq.txt task', out);
+              cleanUpAndNext();
+            });
+          });
+        });
       });
     });
   };

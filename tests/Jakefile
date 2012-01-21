@@ -135,9 +135,9 @@ namespace('fileTest', function () {
   }, {async: true});
 
   desc('File task, run if the prereq file changes');
-	task('touch-prereq', function() {
+  task('touch-prereq', function() {
     fs.writeFileSync('foo/prereq.txt', 'UPDATED');
-	})
+  })
 
   desc('File task, has a preexisting file (with no associated task) as a prereq');
   file('foo/from-prereq.txt', ['fileTest:foo', 'foo/prereq.txt'], function () {

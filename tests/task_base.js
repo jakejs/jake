@@ -67,6 +67,13 @@ var tests = new (function () {
     h.next();
   };
 
+  this.testSamePrereqTwice = function () {
+    h.exec('../bin/cli.js foo:asdf', function (out) {
+      assert.equal('foo:bar task\nfoo:baz task\nfoo:asdf task', out);
+    });
+    h.next();
+  };
+
   this.testPrereqWithCmdlineArgs = function () {
     h.exec('../bin/cli.js foo:qux', function (out) {
       assert.equal('foo:bar[asdf,qwer] task\nfoo:qux task', out);

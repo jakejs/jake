@@ -65,6 +65,11 @@ namespace('foo', function () {
     console.log('foo:voom task');
   });
 
+  desc('The foo:asdf task, has the same prereq twice.');
+  task('asdf', ['foo:bar', 'foo:baz'], function () {
+    console.log('foo:asdf task');
+  });
+
 });
 
 namespace('bar', function () {

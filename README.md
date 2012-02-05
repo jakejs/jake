@@ -402,7 +402,7 @@ them. Here's an example from Jake's Jakefile, that runs the tests:
         console.log('All tests passed.');
         complete();
       }, {stdout: true});
-    });
+    }, {async: true});
 
 It also takes an optional options-object, where you can set `stdout` (print to
 stdout, default false), `stderr` (print to stderr, default false), and

@@ -10,7 +10,7 @@ task('test', function () {
     console.log('All tests passed.');
     complete();
   }, {stdout: true});
-});
+}, {async: true});
 
 var p = new jake.NpmPublishTask('jake', [
   'Makefile'

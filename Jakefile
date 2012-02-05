@@ -1,7 +1,7 @@
 
 desc('Runs the Jake tests.');
 task('test', function () {
-  cmds = [
+  var cmds = [
     'node ./tests/parseargs.js'
   , 'node ./tests/task_base.js'
   , 'node ./tests/file_task.js'

@@ -384,6 +384,34 @@ Setting a value for -T/--tasks will filter the list by that value:
 
 The list displayed will be all tasks whose namespace/name contain the filter-string.
 
+### Running shell-commands with `jake.exec`
+
+Since shelling out in Node is an asynchronous operation, Jake provides a utility
+function for running a sequence of shell-commands. The `jake.exec` command takes
+an array of shell-command strings, and a final callback to run after completing
+them. Here's an example from Jake's Jakefile, that runs the tests:
+
+    desc('Runs the Jake tests.');
+    task('test', function () {
+      var cmds = [
+        'node ./tests/parseargs.js'
+      , 'node ./tests/task_base.js'
+      , 'node ./tests/file_task.js'
+      ];
+      jake.exec(cmds, function () {
+        console.log('All tests passed.');
+        complete();
+      }, {stdout: true});
+    });
+
+It also takes an optional options-object, where you can set `stdout` (print to
+stdout, default false), `stderr` (print to stderr, default false), and
+`breakOnError` (stop execution on error, default true).
+
+This command doesn't pipe input between commands -- it's for simple execution.
+If you need something more sophisticated, Procstreams
+(<https://github.com/polotek/procstreams>) might be a good option.
+
 ### PackageTask
 
 Jake's PackageTask programmically creates a set of tasks for packaging up your

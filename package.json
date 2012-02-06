@@ -1,5 +1,7 @@
 {
   "name": "jake",
+  "description": "JavaScript build tool, similar to Make or Rake",
+  "keywords": ["build", "cli", "make", "rake"],
   "version": "0.2.17",
   "author": "Matthew Eernisse <mde@fleegix.org> (http://fleegix.org)",
   "bin": {

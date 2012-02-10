@@ -84,7 +84,9 @@ you want in it.
 Use `task` to define tasks. Call it with two arguments (and one optional
 argument):
 
-    task(name, [prerequisites], action, [opts]);
+```javascript
+task(name, [prerequisites], action, [opts]);
+```
 
 The `name` argument is a String with the name of the task, and `prerequisites`
 is an optional Array arg of the list of prerequisite tasks to perform first. The
@@ -108,22 +110,26 @@ Use `desc` to add a string description of the task.
 
 Here's an example:
 
-    desc('This is the default task.');
-    task('default', function (params) {
-      console.log('This is the default task.');
-    });
+```javascript
+desc('This is the default task.');
+task('default', function (params) {
+  console.log('This is the default task.');
+});
 
-    desc('This task has prerequisites.');
-    task('hasPrereqs', ['foo', 'bar', 'baz'], function (params) {
-      console.log('Ran some prereqs first.');
-    });
+desc('This task has prerequisites.');
+task('hasPrereqs', ['foo', 'bar', 'baz'], function (params) {
+  console.log('Ran some prereqs first.');
+});
+```
 
 And here's an example of an asynchronous task:
 
-    desc('This is an asynchronous task.');
-    task('asyncTask', function () {
-      setTimeout(complete, 1000);
-    }, {async: true});
+```javascript
+desc('This is an asynchronous task.');
+task('asyncTask', function () {
+  setTimeout(complete, 1000);
+}, {async: true});
+```
 
 A Task is also an EventEmitter which emits the 'complete' event when it is
 finished. This allows asynchronous tasks to be run from within other asked via
@@ -140,10 +146,12 @@ checks both that the file exists, and also that it is not older than the files
 specified by any prerequisite tasks. File-tasks are particularly useful for
 compiling something from a tree of source files.
 
-    desc('This builds a minified JS file for production.');
-    file('foo-minified.js', ['bar', 'foo-bar.js', 'foo-baz.js'], function () {
-      // Code to concat and minify goes here
-    });
+```javascript
+desc('This builds a minified JS file for production.');
+file('foo-minified.js', ['bar', 'foo-bar.js', 'foo-baz.js'], function () {
+  // Code to concat and minify goes here
+});
+```
 
 ### Directory-tasks
 
@@ -152,8 +160,10 @@ Create a directory-task by calling `directory`.
 Directory-tasks create a directory for use with for file-tasks. Jake checks for
 the existence of the directory, and only creates it if needed.
 
-    desc('This creates the bar directory for use with the foo-minified.js file-task.');
-    directory('bar');
+```javascript
+desc('This creates the bar directory for use with the foo-minified.js file-task.');
+directory('bar');
+```
 
 This task will create the directory when used as a prerequisite for a file-task,
 or when run from the command-line.
@@ -162,7 +172,9 @@ or when run from the command-line.
 
 Use `namespace` to create a namespace of tasks to perform. Call it with two arguments:
 
-    namespace(name, namespaceTasks);
+```javascript
+namespace(name, namespaceTasks);
+```
 
 Where is `name` is the name of the namespace, and `namespaceTasks` is a function
 with calls inside it to `task` or `desc` definining all the tasks for that
@@ -170,23 +182,25 @@ namespace.
 
 Here's an example:
 
-    desc('This is the default task.');
-    task('default', function () {
-      console.log('This is the default task.');
-    });
+```javascript
+desc('This is the default task.');
+task('default', function () {
+  console.log('This is the default task.');
+});
 
-    namespace('foo', function () {
-      desc('This the foo:bar task');
-      task('bar', function () {
-        console.log('doing foo:bar task');
-      });
+namespace('foo', function () {
+  desc('This the foo:bar task');
+  task('bar', function () {
+    console.log('doing foo:bar task');
+  });
 
-      desc('This the foo:baz task');
-      task('baz', ['default', 'foo:bar'], function () {
-        console.log('doing foo:baz task');
-      });
+  desc('This the foo:baz task');
+  task('baz', ['default', 'foo:bar'], function () {
+    console.log('doing foo:baz task');
+  });
 
-    });
+});
+```
 
 In this example, the foo:baz task depends on the the default and foo:bar tasks.
 
@@ -199,10 +213,12 @@ To pass positional arguments to the Jake tasks, enclose them in square braces,
 separated by commas, after the name of the task on the command-line. For
 example, with the following Jakefile:
 
-    desc('This is an awesome task.');
-    task('awesome', function (a, b, c) {
-      console.log(a, b, c);
-    });
+```javascript
+desc('This is an awesome task.');
+task('awesome', function (a, b, c) {
+  console.log(a, b, c);
+});
+```
 
 You could run `jake` like this:
 
@@ -219,11 +235,13 @@ be added to process.env.
 
 With the following Jakefile:
 
-    desc('This is an awesome task.');
-    task('awesome', function (a, b, c) {
-      console.log(a, b, c);
-      console.log(process.env.qux, process.env.frang);
-    });
+```javascript
+desc('This is an awesome task.');
+task('awesome', function (a, b, c) {
+  console.log(a, b, c);
+  console.log(process.env.qux, process.env.frang);
+});
+```
 
 You could run `jake` like this:
 
@@ -252,111 +270,131 @@ Jake supports the ability to run a task from within another task via the
 
 The `invoke` method will run the desired task, along with its prerequisites:
 
-    desc('Calls the foo:bar task and its prerequisites.');
-    task('invokeFooBar', function () {
-      // Calls foo:bar and its prereqs
-      jake.Task['foo:bar'].invoke();
-    });
+```javascript
+desc('Calls the foo:bar task and its prerequisites.');
+task('invokeFooBar', function () {
+  // Calls foo:bar and its prereqs
+  jake.Task['foo:bar'].invoke();
+});
+```
 
 Tasks are EventEmitters. If the inner-task invoked is asynchronous, you can set
 a listener on the 'complete' event to run any code that depends on it.
 
-    desc('Calls the async foo:baz task and its prerequisites.');
-    task('invokeFooBaz', function () {
-      var t = jake.Task['foo:baz'];
-      t.addListener('complete', function () {
-        console.log('Finished executing foo:baz');
-        // Maybe run some other code
-        // ...
-        // Complete the containing task
-        complete();
-      });
-      // Kick off foo:baz
-      t.invoke();
-    }, {async: true});
+```javascript
+desc('Calls the async foo:baz task and its prerequisites.');
+task('invokeFooBaz', function () {
+  var t = jake.Task['foo:baz'];
+  t.addListener('complete', function () {
+    console.log('Finished executing foo:baz');
+    // Maybe run some other code
+    // ...
+    // Complete the containing task
+    complete();
+  });
+  // Kick off foo:baz
+  t.invoke();
+}, {async: true});
+```
 
 The `invoke` method will only run the task once, even if you call it repeatedly.
 
-    desc('Calls the foo:bar task and its prerequisites.');
-    task('invokeFooBar', function () {
-      // Calls foo:bar and its prereqs
-      jake.Task['foo:bar'].invoke();
-      // Does nothing
-      jake.Task['foo:bar'].invoke();
-    });
+```javascript
+desc('Calls the foo:bar task and its prerequisites.');
+task('invokeFooBar', function () {
+  // Calls foo:bar and its prereqs
+  jake.Task['foo:bar'].invoke();
+  // Does nothing
+  jake.Task['foo:bar'].invoke();
+});
+```
 
 The `execute` method will run the desired task without its prerequisites:
 
-    desc('Calls the foo:bar task without its prerequisites.');
-    task('executeFooBar', function () {
-      // Calls foo:bar without its prereqs
-      jake.Task['foo:baz'].execute();
-    });
+```javascript
+desc('Calls the foo:bar task without its prerequisites.');
+task('executeFooBar', function () {
+  // Calls foo:bar without its prereqs
+  jake.Task['foo:baz'].execute();
+});
+```
 
 Calling `execute` repeatedly will run the desired task repeatedly.
 
-    desc('Calls the foo:bar task without its prerequisites.');
-    task('executeFooBar', function () {
-      // Calls foo:bar without its prereqs
-      jake.Task['foo:baz'].execute();
-      // Can keep running this over and over
-      jake.Task['foo:baz'].execute();
-      jake.Task['foo:baz'].execute();
-    });
+```javascript
+desc('Calls the foo:bar task without its prerequisites.');
+task('executeFooBar', function () {
+  // Calls foo:bar without its prereqs
+  jake.Task['foo:baz'].execute();
+  // Can keep running this over and over
+  jake.Task['foo:baz'].execute();
+  jake.Task['foo:baz'].execute();
+});
+```
 
 If you want to run the task and its prerequisites more than once, you can use
 `invoke` with the `reenable` method.
 
-    desc('Calls the foo:bar task and its prerequisites.');
-    task('invokeFooBar', function () {
-      // Calls foo:bar and its prereqs
-      jake.Task['foo:bar'].invoke();
-      // Does nothing
-      jake.Task['foo:bar'].invoke();
-      // Only re-runs foo:bar, but not its prerequisites
-      jake.Task['foo:bar'].reenable();
-      jake.Task['foo:bar'].invoke();
-    });
+```javascript
+desc('Calls the foo:bar task and its prerequisites.');
+task('invokeFooBar', function () {
+  // Calls foo:bar and its prereqs
+  jake.Task['foo:bar'].invoke();
+  // Does nothing
+  jake.Task['foo:bar'].invoke();
+  // Only re-runs foo:bar, but not its prerequisites
+  jake.Task['foo:bar'].reenable();
+  jake.Task['foo:bar'].invoke();
+});
+```
 
 The `reenable` method takes a single Boolean arg, a 'deep' flag, which reenables
 the task's prerequisites if set to true.
 
-    desc('Calls the foo:bar task and its prerequisites.');
-    task('invokeFooBar', function () {
-      // Calls foo:bar and its prereqs
-      jake.Task['foo:bar'].invoke();
-      // Does nothing
-      jake.Task['foo:bar'].invoke();
-      // Only re-runs foo:bar, but not its prerequisites
-      jake.Task['foo:bar'].reenable(true);
-      jake.Task['foo:bar'].invoke();
-    });
+```javascript
+desc('Calls the foo:bar task and its prerequisites.');
+task('invokeFooBar', function () {
+  // Calls foo:bar and its prereqs
+  jake.Task['foo:bar'].invoke();
+  // Does nothing
+  jake.Task['foo:bar'].invoke();
+  // Only re-runs foo:bar, but not its prerequisites
+  jake.Task['foo:bar'].reenable(true);
+  jake.Task['foo:bar'].invoke();
+});
+```
 
 It's easy to pass params on to a sub-task run via `invoke` or `execute`:
 
-    desc('Passes params on to other tasks.');
-    task('passParams', function () {
-      var t = jake.Task['foo:bar'];
-      // Calls foo:bar, passing along current args
-      t.invoke.apply(t, arguments);
-    });
+```javascript
+desc('Passes params on to other tasks.');
+task('passParams', function () {
+  var t = jake.Task['foo:bar'];
+  // Calls foo:bar, passing along current args
+  t.invoke.apply(t, arguments);
+});
+```
 
 ### Aborting a task
 
 You can abort a task by calling the `fail` function, and Jake will abort the
 currently running task. You can pass a customized error message to `fail`:
 
-    desc('This task fails.');
-    task('failTask', function () {
-      fail('Yikes. Something back happened.');
-    });
+```javascript
+desc('This task fails.');
+task('failTask', function () {
+  fail('Yikes. Something back happened.');
+});
+```
 
 You can also pass an optional exit status-code to the fail command, like so:
 
-    desc('This task fails with an exit-status of 42.');
-    task('failTaskQuestionCustomStatus', function () {
-      fail('What is the answer?', 42);
-    });
+```javascript
+desc('This task fails with an exit-status of 42.');
+task('failTaskQuestionCustomStatus', function () {
+  fail('What is the answer?', 42);
+});
+```
 
 The process will exit with a status of 42.
 
@@ -391,18 +429,20 @@ function for running a sequence of shell-commands. The `jake.exec` command takes
 an array of shell-command strings, and a final callback to run after completing
 them. Here's an example from Jake's Jakefile, that runs the tests:
 
-    desc('Runs the Jake tests.');
-    task('test', function () {
-      var cmds = [
-        'node ./tests/parseargs.js'
-      , 'node ./tests/task_base.js'
-      , 'node ./tests/file_task.js'
-      ];
-      jake.exec(cmds, function () {
-        console.log('All tests passed.');
-        complete();
-      }, {stdout: true});
-    }, {async: true});
+```javascript
+desc('Runs the Jake tests.');
+task('test', function () {
+  var cmds = [
+    'node ./tests/parseargs.js'
+  , 'node ./tests/task_base.js'
+  , 'node ./tests/file_task.js'
+  ];
+  jake.exec(cmds, function () {
+    console.log('All tests passed.');
+    complete();
+  }, {stdout: true});
+}, {async: true});
+```
 
 It also takes an optional options-object, where you can set `stdout` (print to
 stdout, default false), `stderr` (print to stderr, default false), and
@@ -417,19 +457,21 @@ If you need something more sophisticated, Procstreams
 Jake's PackageTask programmically creates a set of tasks for packaging up your
 project for distribution. Here's an example:
 
-    var t = new jake.PackageTask('fonebone', 'v0.1.2112', function () {
-      var fileList = [
-        'Jakefile'
-      , 'README.md'
-      , 'package.json'
-      , 'lib/*'
-      , 'bin/*'
-      , 'tests/*'
-      ];
-      this.packageFiles.include(fileList);
-      this.needTarGz = true;
-      this.needTarBz2 = true;
-    });
+```javascript
+var t = new jake.PackageTask('fonebone', 'v0.1.2112', function () {
+  var fileList = [
+    'Jakefile'
+  , 'README.md'
+  , 'package.json'
+  , 'lib/*'
+  , 'bin/*'
+  , 'tests/*'
+  ];
+  this.packageFiles.include(fileList);
+  this.needTarGz = true;
+  this.needTarBz2 = true;
+});
+```
 
 This will automatically create a 'package' task that will assemble the specified
 files in 'pkg/fonebone-v0.1.2112,' and compress them according to the specified
@@ -460,13 +502,15 @@ file-names. FileList uses NodeJS's minimatchmodule
 
 To build the list of files, use FileList's `include` and `exclude` methods:
 
-    var list = new jake.FileList();
-    list.include('foo/*.txt');
-    list.include(['bar/*.txt', 'README.md']);
-    list.include('Makefile', 'package.json');
-    list.exclude('foo/zoobie.txt');
-    list.exclude(/foo\/src.*.txt/);
-    console.log(list.toArray());
+```javascript
+var list = new jake.FileList();
+list.include('foo/*.txt');
+list.include(['bar/*.txt', 'README.md']);
+list.include('Makefile', 'package.json');
+list.exclude('foo/zoobie.txt');
+list.exclude(/foo\/src.*.txt/);
+console.log(list.toArray());
+```
 
 The `include` method can be called either with an array of items, or multiple
 single parameters. Items can be either glob-patterns, or individual file-names.
@@ -486,15 +530,17 @@ NPM.
 
 Here's an example from Jake's Jakefile:
 
-    var p = new jake.NpmPublishTask('jake', [
-      'Makefile'
-    , 'Jakefile'
-    , 'README.md'
-    , 'package.json'
-    , 'lib/*'
-    , 'bin/*'
-    , 'tests/*'
-    ]);
+```javascript
+var p = new jake.NpmPublishTask('jake', [
+  'Makefile'
+, 'Jakefile'
+, 'README.md'
+, 'package.json'
+, 'lib/*'
+, 'bin/*'
+, 'tests/*'
+]);
+```
 
 The NpmPublishTask will automatically create a `publish` task which performs the
 following steps:
@@ -514,21 +560,23 @@ Jakefile.coffee so Jake knows it's in CoffeeScript.
 
 Here's an example:
 
-    sys = require('sys')
+```coffeescript
+sys = require('sys')
 
-    desc 'This is the default task.'
-    task 'default', (params) ->
-      console.log 'Ths is the default task.'
-      console.log(sys.inspect(arguments))
-      invoke 'new', []
+desc 'This is the default task.'
+task 'default', (params) ->
+  console.log 'Ths is the default task.'
+  console.log(sys.inspect(arguments))
+  invoke 'new', []
 
-    task 'new', ->
-      console.log 'ello from new'
-      invoke 'foo:next', ['param']
+task 'new', ->
+  console.log 'ello from new'
+  invoke 'foo:next', ['param']
 
-    namespace 'foo', ->
-      task 'next', (param) ->
-        console.log 'ello from next with param: ' + param
+namespace 'foo', ->
+  task 'next', (param) ->
+    console.log 'ello from next with param: ' + param
+```
 
 ### Related projects
 

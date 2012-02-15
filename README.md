@@ -74,6 +74,10 @@ Add the directory of node.exe to the environment PATH variable.
     -T
     --tasks                     Display the tasks, with descriptions, then exit.
 
+## API Docs
+
+API docs [can be found here](http://mde.github.com/jake/doc/).
+
 ### Jakefile syntax
 
 A Jakefile is just executable JavaScript. You can include whatever JavaScript
@@ -530,6 +534,7 @@ Here's an example:
       task 'next', (param) ->
         console.log 'ello from next with param: ' + param
 
+
 ### Related projects
 
 James Coglan's "Jake": <http://github.com/jcoglan/jake>
@@ -539,18 +544,6 @@ Confusingly, this is a Ruby tool for building JavaScript packages from source co
 280 North's Jake: <http://github.com/280north/jake>
 
 This is also a JavaScript port of Rake, which runs on the Narwhal platform.
-
-### Author
-
-Matthew Eernisse, mde@fleegix.org
-
-### Contributors
-
-Mark Wubben / EqualMedia <mark.wubben@equalmedia.com>
-Patrick Walton <pcwalton@mimiga.net>
-Andrzej Sliwa <andrzej.sliwa@i-tool.eu>
-Nikolay V. Nemshilov aka St <nemshilov@gmail.com>
-Sascha Teske <sascha.teske@gmail.com>
 
 ### License
 

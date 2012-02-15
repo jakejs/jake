@@ -74,14 +74,14 @@ Add the directory of node.exe to the environment PATH variable.
     -T
     --tasks                     Display the tasks, with descriptions, then exit.
 
-## API Docs
-
-API docs [can be found here](http://mde.github.com/jake/doc/).
-
 ### Jakefile syntax
 
 A Jakefile is just executable JavaScript. You can include whatever JavaScript
 you want in it.
+
+## API Docs
+
+API docs [can be found here](http://mde.github.com/jake/doc/).
 
 ## Tasks
 

@@ -26,7 +26,7 @@ build:
 	@echo 'Jake built.'
 
 install:
-	@mkdir -p $(DESTDIR)$(PREFIX)/bin \
+	@mkdir -p $(DESTDIR)$(PREFIX)/bin && \
     mkdir -p $(DESTDIR)$(PREFIX)/lib/node_modules/jake && \
 		cp -R ./* $(DESTDIR)$(PREFIX)/lib/node_modules/jake/ && \
 		ln -snf ../lib/node_modules/jake/bin/cli.js $(DESTDIR)$(PREFIX)/bin/jake && \

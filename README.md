@@ -524,11 +524,11 @@ Here's an example:
     task 'default', (params) ->
       console.log 'Ths is the default task.'
       console.log(sys.inspect(arguments))
-      invoke 'new', []
+      jake.Task['new'].invoke []
 
     task 'new', ->
       console.log 'ello from new'
-      invoke 'foo:next', ['param']
+      jake.Task['foo:next'].invoke ['param']
 
     namespace 'foo', ->
       task 'next', (param) ->

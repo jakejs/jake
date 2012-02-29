@@ -62,7 +62,7 @@ Add the directory of node.exe to the environment PATH variable.
 
 ### Options
 
-    -V
+    -V/v
     --version                   Display the program version.
 
     -h

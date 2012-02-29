@@ -91,11 +91,14 @@ argument):
     task(name, [prerequisites], action, [opts]);
 
 The `name` argument is a String with the name of the task, and `prerequisites`
-is an optional Array arg of the list of prerequisite tasks to perform first. The
-`action` is a Function defininng the action to take for the task. (Note that
+is an optional Array arg of the list of prerequisite tasks to perform first.
+
+The `action` is a Function defininng the action to take for the task. (Note that
 Object-literal syntax for name/prerequisites in a single argument a la Rake is
 also supported, but JavaScript's lack of support for dynamic keys in Object
-literals makes it not very useful.)
+literals makes it not very useful.) The action is invoked with the Task object
+itself as the execution context (i.e, "this" inside the action references the
+Task object).
 
 The `opts` argument is optional, and when it includes an `async` property set to
 `true`, indicates the task executes asynchronously. Asynchronous tasks need to

@@ -36,9 +36,10 @@ Get Jake:
 
     git clone git://github.com/mde/jake.git node_modules/jake
 
-Copy jake.bat to the same directory as node.exe
+Copy jake.bat and jake to the same directory as node.exe
 
     copy node_modules/jake/jake.bat jake.bat
+    copy node_modules/jake/jake jake
 
 Add the directory of node.exe to the environment PATH variable.
 

@@ -1,6 +1,12 @@
 ### Jake -- JavaScript build tool for Node.js
 
-### Installing
+### Installing with [NPM](http://npmjs.org/)
+
+    npm install -g jake
+
+Note that Jake is a system-level tool, and wants to be installed globally.
+
+### Installing from source
 
 Prerequisites: Jake requires Node.js. (<http://nodejs.org/>)
 
@@ -22,13 +28,7 @@ variable to the `make install` command.  For example, to install it into a
 If do you install Jake somewhere special, you'll need to add the "bin" directory
 in the install target to your PATH to get access to the `jake` executable.
 
-### Installing with [NPM](http://npmjs.org/)
-
-    npm install -g jake
-
-Note that Jake is a system-level tool, and wants to be installed globally.
-
-### Installing on Windows
+For Windows users installing from source, there are some additional steps.
 
 *Assumed: current directory is the same directory where node.exe is present.*
 

@@ -20,12 +20,12 @@
 var args = process.argv.slice(2)
   , libPath = __dirname + '/../lib'
   , fs = require('fs')
-  , jake = require(libPath + '/jake.js')
-  , api = require(libPath + '/api.js')
-  , utils = require(libPath + '/utils.js')
-  , Program = require(libPath + '/program.js').Program
+  , jake = require(libPath + '/jake')
+  , api = require(libPath + '/api')
+  , utils = require(libPath + '/utils')
+  , Program = require(libPath + '/program').Program
   , program = new Program()
-  , Loader = require(libPath + '/loader.js').Loader
+  , Loader = require(libPath + '/loader').Loader
   , loader = new Loader()
   , pkg = JSON.parse(fs.readFileSync(__dirname + '/../package.json').toString())
   , opts

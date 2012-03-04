@@ -102,6 +102,14 @@ var tests = new (function () {
     h.next();
   };
 
+  this.testPrereqIndexReset = function () {
+    h.exec('../bin/cli.js hoge:kira', function (out) {
+      assert.equal('hoge:hoge task\nhoge:piyo task\nhoge:fuga task\n' +
+          'hoge:charan task\nhoge:gero task\nhoge:kira task', out);
+    });
+    h.next();
+  };
+
 })();
 
 h.run(tests, function () {

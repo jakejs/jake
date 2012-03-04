@@ -102,6 +102,21 @@ namespace('hoge', function () {
     console.log('hoge:fuga task');
   });
 
+  desc('The hoge:charan task, has hoge:fuga as a prerequisite.');
+  task('charan', ['hoge:fuga'], function () {
+    console.log('hoge:charan task');
+  });
+
+  desc('The hoge:gero task, has hoge:fuga as a prerequisite.');
+  task('gero', ['hoge:fuga'], function () {
+    console.log('hoge:gero task');
+  });
+
+  desc('The hoge:kira task, has hoge:charan and hoge:gero as prerequisites.');
+  task('kira', ['hoge:charan', 'hoge:gero'], function () {
+    console.log('hoge:kira task');
+  });
+
 });
 
 namespace('fileTest', function () {

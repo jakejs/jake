@@ -432,12 +432,35 @@ Setting a value for -T/--tasks will filter the list by that value:
 
 The list displayed will be all tasks whose namespace/name contain the filter-string.
 
+### File-utils
+
+Since shelling out in Node is an asynchronous operation, Jake comes with a few
+useful blocking file-utilities that make scripting easier.
+
+The `jake.mkdirP` utility recursively creates a set of nested directories. It
+will not throw an error if any of the directories already exists. Here's an example:
+
+```javascript
+jake.mkdirP('app/views/layouts');
+```
+
+The `jake.cpR` utility does a synchronous, recursive copy of a file or
+directory. It takes two arguments, the file/directory to copy, and the
+destination. Note that this command can only copy files and directories; it does
+not perform globbing (so arguments like '*.txt' are not possible).
+
+```javascript
+jake.cpR(path.join(sourceDir, '/templates'), currentDir);
+```
+
+This would copy 'templates' (and all its contents) into `currentDir`.
+
 ### Running shell-commands with `jake.exec`
 
-Since shelling out in Node is an asynchronous operation, Jake provides a utility
-function for running a sequence of shell-commands. The `jake.exec` command takes
-an array of shell-command strings, and a final callback to run after completing
-them. Here's an example from Jake's Jakefile, that runs the tests:
+Jake also provides a more general utility function for running a sequence of
+shell-commands. The `jake.exec` command takes an array of shell-command strings,
+and a final callback to run after completing them. Here's an example from Jake's
+Jakefile, that runs the tests:
 
 ```javascript
 desc('Runs the Jake tests.');

@@ -487,8 +487,8 @@ If you need something more sophisticated, Procstreams
 
 ### PackageTask
 
-Jake's PackageTask programmically creates a set of tasks for packaging up your
-project for distribution. Here's an example:
+Instantiating a PackageTask programmically creates a set of tasks for packaging
+up your project for distribution. Here's an example:
 
 ```javascript
 var t = new jake.PackageTask('fonebone', 'v0.1.2112', function () {
@@ -514,8 +514,11 @@ options. After running `jake package`, you'll have the following in pkg/:
     fonebone-v0.1.2112.tar.bz2
     fonebone-v0.1.2112.tar.gz
 
-PackageTask also creates a 'clobberPackage' task that removes the pkg/
-directory, and a 'repackage' task that forces the package to be rebuilt.
+PackageTask also creates a 'clobber' task that removes the pkg/
+directory.
+
+More details on PackageTask, including different archiving options, [can be
+found here](http://mde.github.com/jake/doc/symbols/jake.PackageTask.html).
 
 PackageTask requires NodeJS's minimatchmodule
 (https://github.com/isaacs/minimatch). It is used in FileList, which is used to

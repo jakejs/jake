@@ -517,10 +517,11 @@ options. After running `jake package`, you'll have the following in pkg/:
 PackageTask also creates a 'clobber' task that removes the pkg/
 directory.
 
-More details on PackageTask, including different archiving options, [can be
-found here](http://mde.github.com/jake/doc/symbols/jake.PackageTask.html).
+The [PackageTask API
+docs](http://mde.github.com/jake/doc/symbols/jake.PackageTask.html) include a
+lot more information, including different archiving options.
 
-PackageTask requires NodeJS's minimatchmodule
+PackageTask requires NodeJS's minimatch module
 (https://github.com/isaacs/minimatch). It is used in FileList, which is used to
 specify the list of files to include in your PackageTask (the packageFiles
 property). (See FileList, below.)

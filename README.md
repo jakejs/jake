@@ -600,7 +600,6 @@ Here's an example:
 ```coffeescript
 sys = require('sys')
 
-<<<<<<< HEAD
 desc 'This is the default task.'
 task 'default', (params) ->
   console.log 'Ths is the default task.'

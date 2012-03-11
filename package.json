@@ -12,7 +12,7 @@
   "bin": {
     "jake": "./bin/cli.js"
   },
-  "main": "./lib",
+  "main": "./lib/jake.js",
   "repository": {
     "type": "git",
     "url": "git://github.com/mde/jake.git"

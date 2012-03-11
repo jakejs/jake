@@ -168,6 +168,13 @@ namespace('fileTest', function () {
 
 });
 
+// Define task
+task('derp', function () {
+  console.log('derp task');
+});
+// Redefine as a no-op
+task('derp');
+
 /*
 var sys = require('sys'),
     fs  = require('fs')

@@ -110,6 +110,13 @@ var tests = new (function () {
     h.next();
   };
 
+  this.redefineTask = function () {
+    h.exec('../bin/cli.js derp', function (out) {
+      assert.equal('', out);
+    });
+    h.next();
+  };
+
 })();
 
 h.run(tests, function () {

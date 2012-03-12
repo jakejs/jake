@@ -110,9 +110,9 @@ var tests = new (function () {
     h.next();
   };
 
-  this.redefineTask = function () {
-    h.exec('../bin/cli.js derp', function (out) {
-      assert.equal('', out);
+  this.modifyTaskAddPrereq = function () {
+    h.exec('../bin/cli.js voom', function (out) {
+      assert.equal(2, out);
     });
     h.next();
   };

@@ -74,6 +74,16 @@ Add the directory of node.exe to the environment PATH variable.
     -C *DIRECTORY*
     --directory *DIRECTORY*     Change to DIRECTORY before running tasks.
 
+    -J *JAKELIBDIR*
+    --jakelibdir *JAKELIBDIR*   Auto-import any .jake files in JAKELIBDIR.
+                                (default is 'jakelib')
+
+    -B
+    --always-make               Unconditionally make all targets.
+
+    -t
+    --trace                     Enable full backtracke.
+
     -T
     --tasks                     Display the tasks, with descriptions, then exit.
 
@@ -431,6 +441,24 @@ Setting a value for -T/--tasks will filter the list by that value:
     jake foo:fonebone  # This the foo:fonebone task
 
 The list displayed will be all tasks whose namespace/name contain the filter-string.
+
+### Breaking tasks up into multiple files
+
+Jake will automatically load (using `require`) any files with a .jake extension
+in the special directory in the project directory (defaults to 'jakelib', can be
+set using the -J/--jakelibdir command-line option. These files will be loaded
+after the Jakefile.
+
+This allows you to break your tasks up over multiple files -- a good way to do
+it is one namespace per file.
+
+Note that these .jake files each run in their own module-context, so they don't
+have access to each others' data. However, the Jake API methods, and the
+task-hierarchy are globally available, so you can use tasks in any file as
+prerequisites for tasks in any other, as normal.
+
+Environment-variables set on the command-line are likewise also naturally
+available to code in all files via process.env.
 
 ### File-utils
 

@@ -442,20 +442,22 @@ Setting a value for -T/--tasks will filter the list by that value:
 
 The list displayed will be all tasks whose namespace/name contain the filter-string.
 
-### Breaking tasks up into multiple files
+### Breaking things up into multiple files
 
-Jake will automatically load (using `require`) any files with a .jake extension
-in the special directory in the project directory (defaults to 'jakelib', can be
-set using the -J/--jakelibdir command-line option. These files will be loaded
-after the Jakefile.
+Jake will automatically look for files with a .jake extension in a 'jakelib'
+directory in your project, and load them (via `require`) after loading your
+Jakefile. (The directory name can be overridden using the -J/--jakelibdir
+command-line option.)
 
 This allows you to break your tasks up over multiple files -- a good way to do
-it is one namespace per file.
+it is one namespace per file: e.g., a `zardoz` namespace full of tasks in
+'jakelib/zardox.jake'.
 
 Note that these .jake files each run in their own module-context, so they don't
 have access to each others' data. However, the Jake API methods, and the
 task-hierarchy are globally available, so you can use tasks in any file as
-prerequisites for tasks in any other, as normal.
+prerequisites for tasks in any other, just as if everything were in a single
+file.
 
 Environment-variables set on the command-line are likewise also naturally
 available to code in all files via process.env.

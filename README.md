@@ -485,6 +485,13 @@ jake.cpR(path.join(sourceDir, '/templates'), currentDir);
 
 This would copy 'templates' (and all its contents) into `currentDir`.
 
+The `jake.rmRf` utility synchronously, recursively removes a directory and all
+its contents.
+
+```javascript
+jake.rmRf('pkg');
+```
+
 ### Running shell-commands with `jake.exec`
 
 Jake also provides a more general utility function for running a sequence of

@@ -465,7 +465,7 @@ available to code in all files via process.env.
 ### File-utils
 
 Since shelling out in Node is an asynchronous operation, Jake comes with a few
-useful blocking file-utilities that make scripting easier.
+useful file-utilities with a synchronous API, that make scripting easier.
 
 The `jake.mkdirP` utility recursively creates a set of nested directories. It
 will not throw an error if any of the directories already exists. Here's an example:
@@ -474,10 +474,10 @@ will not throw an error if any of the directories already exists. Here's an exam
 jake.mkdirP('app/views/layouts');
 ```
 
-The `jake.cpR` utility does a synchronous, recursive copy of a file or
-directory. It takes two arguments, the file/directory to copy, and the
-destination. Note that this command can only copy files and directories; it does
-not perform globbing (so arguments like '*.txt' are not possible).
+The `jake.cpR` utility does a recursive copy of a file or directory. It takes
+two arguments, the file/directory to copy, and the destination. Note that this
+command can only copy files and directories; it does not perform globbing (so
+arguments like '*.txt' are not possible).
 
 ```javascript
 jake.cpR(path.join(sourceDir, '/templates'), currentDir);
@@ -485,12 +485,13 @@ jake.cpR(path.join(sourceDir, '/templates'), currentDir);
 
 This would copy 'templates' (and all its contents) into `currentDir`.
 
-The `jake.rmRf` utility synchronously, recursively removes a directory and all
-its contents.
+The `jake.rmRf` utility recursively removes a directory and all its contents.
 
 ```javascript
 jake.rmRf('pkg');
 ```
+
+This would remove the 'pkg' directory, and all its contents.
 
 ### Running shell-commands with `jake.exec`
 

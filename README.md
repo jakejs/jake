@@ -115,10 +115,13 @@ literals makes it not very useful.) The action is invoked with the Task object
 itself as the execution context (i.e, "this" inside the action references the
 Task object).
 
-The `opts` argument is optional, and when it includes an `async` property set to
-`true`, indicates the task executes asynchronously. Asynchronous tasks need to
-call `complete()` to signal they have completed. (Passing a final `async`
-Boolean flag is deprecated, but still supported.)
+The `opts` argument is optional. When a task's operations are asynchronous, the
+`async` property should be set to `true` to notify Jake to wait for its
+`complete` event before proceeding. The `async` flag is meant to describe the
+operation, not the intended outcome. Asynchronous tasks should always call
+`complete()` to signal they have completed. By default this property is `false`.
+(Note: Passing a final Boolean literal to indicate `async` is deprecated, but
+still supported.)
 
 Tasks created with `task` are always executed when asked for (or are a
 prerequisite). Tasks created with `file` are only executed if no file with the

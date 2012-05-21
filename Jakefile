@@ -1,15 +1,19 @@
+var fs = require('fs')
+  , path = require('path');
 
 desc('Runs the Jake tests.');
 task('test', function () {
-  var cmds = [
-    'node ./tests/parseargs.js'
-  , 'node ./tests/task_base.js'
-  , 'node ./tests/file_task.js'
-  ];
+  var cmds = fs.readdirSync('./tests')
+          .filter(function (f) {
+            return /\.js$/.test(f);
+          })
+          .map(function (f) {
+            return 'node ' + path.join('tests', f);
+          });
   jake.exec(cmds, function () {
     console.log('All tests passed.');
     complete();
-  }, {stdout: true});
+  }, {printStdout: true});
 }, {async: true});
 
 namespace('doc', function () {

@@ -64,6 +64,43 @@ var tests = new (function () {
     h.next();
   };
 
+  this.testPipe = function () {
+    var ex = jake.createExec('ls', function () {})
+      , data
+      , appended = false;
+
+    ex.addListener('stdout', function (d) {
+      data += h.trim(d.toString());
+    });
+
+    // After the first command ends, get the accumulated result,
+    // and use it to build a new command to append to the queue.
+    // Grep through the result for files that end in .js
+    ex.addListener('cmdEnd', function () {
+      // Only append after the first cmd, avoid infinite loop
+      if (appended) {
+        return;
+      }
+      appended = true;
+      // Take the original output and build the new command
+      ex.append('echo "' + data + '" | grep "\\.js$"');
+      // Clear out data
+      data = '';
+    });
+
+    // And the end, the stdout data has been cleared once, and the new
+    // data should be the result of the second command
+    ex.addListener('end', function () {
+      // Should be a list of files ending in .js
+      data = data.split('\n');
+      data.forEach(function (d) {
+        assert.ok(/\.js$/.test(d));
+      });
+    });
+    ex.run();
+    h.next();
+  };
+
 })();
 
 h.run(tests, function () {

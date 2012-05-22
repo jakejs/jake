@@ -545,7 +545,7 @@ This command doesn't pipe input between commands -- it's for simple execution.
 
 ### `jake.createExec` and the evented Exec object
 
-Jake also provides an evented interface for doing shell commands. Calling
+Jake also provides an evented interface for running shell commands. Calling
 `jake.createExec` returns an instance of `jake.Exec`, which is an `EventEmitter`
 that fires events as it executes commands.
 
@@ -582,7 +582,7 @@ ex.addListener('error', function (msg, code) {
     ex.append('do_other_thing.sh');
   }
   else {
-    fail('Fatal error', code);
+    fail('Fatal error: ' + msg, code);
   }
 });
 ex.run();

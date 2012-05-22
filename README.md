@@ -488,6 +488,17 @@ jake.cpR(path.join(sourceDir, '/templates'), currentDir);
 
 This would copy 'templates' (and all its contents) into `currentDir`.
 
+The `jake.readdirR` utility gives you a recursive directory listing, giving you
+output somewhat similar to the Unix `find` command. It only works with a
+directory name, and does not perform filtering or globbing.
+
+```javascript
+jake.readdirR('pkg');
+```
+
+This would return an array of filepaths for all files in the 'pkg' directory,
+and all its subdirectories.
+
 The `jake.rmRf` utility recursively removes a directory and all its contents.
 
 ```javascript
@@ -496,7 +507,7 @@ jake.rmRf('pkg');
 
 This would remove the 'pkg' directory, and all its contents.
 
-### Running shell-commands with `jake.exec`
+### Running shell-commands: `jake.exec` and `jake.createExec`
 
 Jake also provides a more general utility function for running a sequence of
 shell-commands. The `jake.exec` command takes an array of shell-command strings,
@@ -518,12 +529,61 @@ task('test', function () {
 }, {async: true});
 ```
 
-It also takes an optional options-object, where you can set `stdout` (print to
-stdout, default false), `stderr` (print to stderr, default false), and
-`breakOnError` (stop execution on error, default true).
+It also takes an optional options-object, with the following options:
+
+* `printStdout` (print to stdout, default false)
+
+* `printStderr` (print to stderr, default false)
+
+* `breakOnError` (stop execution on error, default true)
 
 This command doesn't pipe input between commands -- it's for simple execution.
-If you need something more sophisticated, Procstreams
+
+Jake also provides an evented interface for doing shell commands. Calling
+`jake.createExec` returns an instance of `jake.Exec`, which is an `EventEmitter`
+that fires events as it executes commands.
+
+It emits the following events:
+
+* 'cmdStart': When a new command begins to run. Passes one arg, the command
+being run.
+
+* 'cmdEnd': When a command finishes. Passes one arg, the command
+being run.
+
+* 'stdout': When the stdout for the child-process recieves data. This streams
+the stdout data. Passes one arg, the chunk of data.
+
+* 'stdout': When the stderr for the child-process recieves data. This streams
+the sterr data. Passes one arg, the chunk of data.
+
+* 'error': When a shell-command exits with a non-zero status-code. Passes two
+args -- the error message, and the status code. If you do not set an error
+handler, and a command exits with an error-code, Jake will throw the unhandled
+error. If `breakOnError` is set to true, the Exec object will emit and 'error'
+event after the first error, and stop any further execution.
+
+To begin running the commands, you have to call the `run` method on it. It also
+has an `append` method for adding new commands to the list of commands to run.
+
+Here's an example:
+
+```javascript
+var ex = jake.createExec('do_thing.sh', function () {});
+ex.addListener('error', function (msg, code) {
+  if (code == 127) {
+    console.log("Couldn't find do_thing script, trying do_other_thing");
+    ex.append('do_other_thing.sh');
+  }
+  else {
+    fail('Fatal error', code);
+  }
+});
+ex.run();
+```
+
+Using the evented Exec object gives you a lot more flexibility in running shell
+commmands. But if you need something more sophisticated, Procstreams
 (<https://github.com/polotek/procstreams>) might be a good option.
 
 ### PackageTask

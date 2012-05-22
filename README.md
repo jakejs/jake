@@ -514,7 +514,7 @@ shell-commands.
 
 ### `jake.exec`
 
-The `jake.exec` command takes an array of shell-command strings, and a final
+The `jake.exec` command takes an array of shell-command strings, and an optional
 callback to run after completing them. Here's an example from Jake's Jakefile,
 that runs the tests:
 
@@ -529,7 +529,7 @@ task('test', function () {
   jake.exec(cmds, function () {
     console.log('All tests passed.');
     complete();
-  }, {stdout: true});
+  }, {printStdout: true});
 }, {async: true});
 ```
 
@@ -575,7 +575,7 @@ has an `append` method for adding new commands to the list of commands to run.
 Here's an example:
 
 ```javascript
-var ex = jake.createExec('do_thing.sh', function () {});
+var ex = jake.createExec(['do_thing.sh'], {printStdout: true});
 ex.addListener('error', function (msg, code) {
   if (code == 127) {
     console.log("Couldn't find do_thing script, trying do_other_thing");

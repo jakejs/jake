@@ -510,9 +510,13 @@ This would remove the 'pkg' directory, and all its contents.
 ### Running shell-commands: `jake.exec` and `jake.createExec`
 
 Jake also provides a more general utility function for running a sequence of
-shell-commands. The `jake.exec` command takes an array of shell-command strings,
-and a final callback to run after completing them. Here's an example from Jake's
-Jakefile, that runs the tests:
+shell-commands.
+
+#### `jake.exec`
+
+The `jake.exec` command takes an array of shell-command strings, and a final
+callback to run after completing them. Here's an example from Jake's Jakefile,
+that runs the tests:
 
 ```javascript
 desc('Runs the Jake tests.');
@@ -538,6 +542,8 @@ It also takes an optional options-object, with the following options:
 * `breakOnError` (stop execution on error, default true)
 
 This command doesn't pipe input between commands -- it's for simple execution.
+
+#### `jake.createExec` and the evented Exec object
 
 Jake also provides an evented interface for doing shell commands. Calling
 `jake.createExec` returns an instance of `jake.Exec`, which is an `EventEmitter`

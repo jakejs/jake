@@ -445,7 +445,7 @@ Setting a value for -T/--tasks will filter the list by that value:
 
 The list displayed will be all tasks whose namespace/name contain the filter-string.
 
-### Breaking things up into multiple files
+## Breaking things up into multiple files
 
 Jake will automatically look for files with a .jake extension in a 'jakelib'
 directory in your project, and load them (via `require`) after loading your
@@ -465,7 +465,7 @@ file.
 Environment-variables set on the command-line are likewise also naturally
 available to code in all files via process.env.
 
-### File-utils
+## File-utils
 
 Since shelling out in Node is an asynchronous operation, Jake comes with a few
 useful file-utilities with a synchronous API, that make scripting easier.
@@ -507,12 +507,12 @@ jake.rmRf('pkg');
 
 This would remove the 'pkg' directory, and all its contents.
 
-### Running shell-commands: `jake.exec` and `jake.createExec`
+## Running shell-commands: `jake.exec` and `jake.createExec`
 
 Jake also provides a more general utility function for running a sequence of
 shell-commands.
 
-#### `jake.exec`
+### `jake.exec`
 
 The `jake.exec` command takes an array of shell-command strings, and a final
 callback to run after completing them. Here's an example from Jake's Jakefile,
@@ -543,7 +543,7 @@ It also takes an optional options-object, with the following options:
 
 This command doesn't pipe input between commands -- it's for simple execution.
 
-#### `jake.createExec` and the evented Exec object
+### `jake.createExec` and the evented Exec object
 
 Jake also provides an evented interface for doing shell commands. Calling
 `jake.createExec` returns an instance of `jake.Exec`, which is an `EventEmitter`
@@ -592,7 +592,7 @@ Using the evented Exec object gives you a lot more flexibility in running shell
 commmands. But if you need something more sophisticated, Procstreams
 (<https://github.com/polotek/procstreams>) might be a good option.
 
-### PackageTask
+## PackageTask
 
 Instantiating a PackageTask programmically creates a set of tasks for packaging
 up your project for distribution. Here's an example:
@@ -633,7 +633,7 @@ PackageTask requires NodeJS's minimatch module
 specify the list of files to include in your PackageTask (the packageFiles
 property). (See FileList, below.)
 
-### FileList
+## FileList
 
 Jake's FileList takes a list of glob-patterns and file-names, and lazy-creates a
 list of files to include. Instead of immediately searching the filesystem to
@@ -665,7 +665,7 @@ with an array of items, or mutliple single parameters. Items can be
 glob-patterns, individual file-names, string-representations of
 regular-expressions, or regular-expression literals.
 
-### NpmPublishTask
+## NpmPublishTask
 
 The NpmPublishTask builds on top of PackageTask to allow you to do a version
 bump of your project, package it, and publish it to NPM. Define the task with
@@ -697,7 +697,7 @@ following steps:
 6. Publish it to NPM
 7. Clean up the package
 
-### CoffeeScript Jakefiles
+## CoffeeScript Jakefiles
 
 Jake can also handle Jakefiles in CoffeeScript. Be sure to make it
 Jakefile.coffee so Jake knows it's in CoffeeScript.
@@ -722,7 +722,7 @@ namespace 'foo', ->
     console.log 'ello from next with param: ' + param
 ```
 
-### Related projects
+## Related projects
 
 James Coglan's "Jake": <http://github.com/jcoglan/jake>
 

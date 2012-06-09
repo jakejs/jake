@@ -116,12 +116,9 @@ itself as the execution context (i.e, "this" inside the action references the
 Task object).
 
 The `opts` argument is optional. When a task's operations are asynchronous, the
-`async` property should be set to `true` to notify Jake to wait for its
-`complete` event before proceeding. The `async` flag is meant to describe the
-operation, not the intended outcome. Asynchronous tasks should always call
-`complete()` to signal they have completed. By default this property is `false`.
-(Note: Passing a final Boolean literal to indicate `async` is deprecated, but
-still supported.)
+`async` property should be set to `true`, and the task must call `complete()` to
+signal to Jake that the task is done, and execution can proceed. By default the
+`async` property is `false`.
 
 Tasks created with `task` are always executed when asked for (or are a
 prerequisite). Tasks created with `file` are only executed if no file with the
@@ -301,25 +298,6 @@ task('invokeFooBar', function () {
 });
 ```
 
-Tasks are EventEmitters. If the inner-task invoked is asynchronous, you can set
-a listener on the 'complete' event to run any code that depends on it.
-
-```javascript
-desc('Calls the async foo:baz task and its prerequisites.');
-task('invokeFooBaz', function () {
-  var t = jake.Task['foo:baz'];
-  t.addListener('complete', function () {
-    console.log('Finished executing foo:baz');
-    // Maybe run some other code
-    // ...
-    // Complete the containing task
-    complete();
-  });
-  // Kick off foo:baz
-  t.invoke();
-}, {async: true});
-```
-
 The `invoke` method will only run the task once, even if you call it repeatedly.
 
 ```javascript
@@ -397,6 +375,51 @@ task('passParams', function () {
   t.invoke.apply(t, arguments);
 });
 ```
+
+### Evented tasks
+
+Tasks are EventEmitters. They can fire 'complete' and 'error' events.
+
+If the inner-task invoked is asynchronous, you can set a listener on the
+'complete' event to run any code that depends on it.
+
+```javascript
+desc('Calls the async foo:baz task and its prerequisites.');
+task('invokeFooBaz', function () {
+  var t = jake.Task['foo:baz'];
+  t.addListener('complete', function () {
+    console.log('Finished executing foo:baz');
+    // Maybe run some other code
+    // ...
+    // Complete the containing task
+    complete();
+  });
+  // Kick off foo:baz
+  t.invoke();
+}, {async: true});
+```
+
+If you want to handle the errors in a task in some specific way, you can set a
+listener for the 'error' event, like so:
+
+```javascript
+namespace('vronk', function () {
+  task('groo', function () {
+    var t = jake.Task['vronk:zong'];
+    t.addListener('error', function (e) {
+      console.log(e.message);
+    });
+    t.invoke();
+  });
+
+  task('zong', function () {
+    throw new Error('OMFGZONG');
+  });
+});
+```
+
+If no specific listener is set for the "error" event, errors are handled by
+Jake's generic error-handling.
 
 ### Aborting a task
 
@@ -705,12 +728,12 @@ Jakefile.coffee so Jake knows it's in CoffeeScript.
 Here's an example:
 
 ```coffeescript
-sys = require('sys')
+util = require('util')
 
 desc 'This is the default task.'
 task 'default', (params) ->
   console.log 'Ths is the default task.'
-  console.log(sys.inspect(arguments))
+  console.log(util.inspect(arguments))
   jake.Task['new'].invoke []
 
 task 'new', ->

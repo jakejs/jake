@@ -166,6 +166,13 @@ namespace('fileTest', function () {
     console.log('fileTest:foo/from-prereq.txt task');
   });
 
+  directory('foo/bar/baz');
+
+  desc('Write a file in a nested subdirectory');
+  file('foo/bar/baz/bamf.txt', ['foo/bar/baz'], function () {
+    fs.writeFileSync('foo/bar/baz/bamf.txt', 'w00t');
+  });
+
 });
 
 task('blammo');

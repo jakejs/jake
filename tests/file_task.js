@@ -1,5 +1,6 @@
 var assert = require('assert')
   , fs = require('fs')
+  , path = require('path')
   , exec = require('child_process').exec
   , h = require('./helpers');
 
@@ -84,6 +85,14 @@ var tests = {
           cleanUpAndNext();
         });
       });
+    });
+  }
+
+, 'test nested directory-task': function () {
+    h.exec('../bin/cli.js fileTest:foo/bar/baz/bamf.txt', function (out) {
+      data = fs.readFileSync(process.cwd() + '/foo/bar/baz/bamf.txt');
+      assert.equal('w00t', data);
+      cleanUpAndNext();
     });
   }
 

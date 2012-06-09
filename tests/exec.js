@@ -7,8 +7,8 @@ utils.mixin(jake, utils);
 
 process.chdir('./tests');
 
-var tests = new (function () {
-  this.testBasicExec = function () {
+var tests = {
+  'test basic exec': function () {
     var ex = jake.createExec('ls', function () {})
       , evts = { // Events should fire in this order
           cmdStart: [0, null]
@@ -35,36 +35,36 @@ var tests = new (function () {
     });
 
     h.next();
-  };
+  }
 
-  this.testExecFailure = function () {
+, 'test an exec failure': function () {
     var ex = jake.createExec('false', function () {});
     ex.addListener('error', function (msg, code) {
       assert.equal(1, code);
     });
     ex.run();
     h.next();
-  };
+  }
 
-  this.testStdout = function () {
+, 'test exec stdout events': function () {
     var ex = jake.createExec('echo "foo"', function () {});
     ex.addListener('stdout', function (data) {
       assert.equal("foo", h.trim(data.toString()));
     });
     ex.run();
     h.next();
-  };
+  }
 
-  this.testStderr = function () {
+, 'test exec stderr events': function () {
     var ex = jake.createExec('echo "foo" 1>&2', function () {});
     ex.addListener('stderr', function (data) {
       assert.equal("foo", h.trim(data.toString()));
     });
     ex.run();
     h.next();
-  };
+  }
 
-  this.testPipe = function () {
+, 'test piping results into next command': function () {
     var ex = jake.createExec('ls', function () {})
       , data
       , appended = false;
@@ -99,9 +99,9 @@ var tests = new (function () {
     });
     ex.run();
     h.next();
-  };
+  }
 
-})();
+};
 
 h.run(tests, function () {
   process.chdir('../');

@@ -5,8 +5,9 @@ var assert = require('assert')
 
 process.chdir('./tests');
 
-var tests = new (function () {
-  this.mkdirP = function () {
+var tests = {
+
+  'test mkdirP': function () {
     var expected = [
           'foo'
         , 'foo/bar'
@@ -21,17 +22,19 @@ var tests = new (function () {
     }
     fileUtils.rmRf('foo');
     h.next();
-  };
+  }
 
-  this.rmRf = function () {
+, 'test rmRf': function () {
     fileUtils.mkdirP('foo/bar/baz/qux');
     fileUtils.rmRf('foo/bar');
     res = fileUtils.readdirR('foo');
     assert.equal(1, res.length);
     assert.equal('foo', res[0]);
     fs.rmdirSync('foo');
-  };
-})();
+    h.next();
+  }
+
+};
 
 
 h.run(tests, function () {

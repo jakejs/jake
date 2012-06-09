@@ -15,8 +15,9 @@ var cleanUpAndNext = function () {
   });
 };
 
-var tests = new (function () {
-  this.testConcatTwoFiles = function () {
+var tests = {
+
+  'test concating two files': function () {
     h.exec('../bin/cli.js fileTest:foo/concat.txt', function (out) {
       var data;
       assert.equal('fileTest:foo/src1.txt task\ndefault task\nfileTest:foo/src2.txt task\n' +
@@ -26,9 +27,9 @@ var tests = new (function () {
       assert.equal('src1src2', data.toString());
       cleanUpAndNext();
     });
-  };
+  }
 
-  this.testNoPrereqChange = function () {
+, 'test where a file-task prereq does not change': function () {
     h.exec('../bin/cli.js fileTest:foo/from-src1.txt', function (out) {
       assert.equal('fileTest:foo/src1.txt task\nfileTest:foo/from-src1.txt task', out);
       h.exec('../bin/cli.js fileTest:foo/from-src1.txt', function (out) {
@@ -37,9 +38,9 @@ var tests = new (function () {
         cleanUpAndNext();
       });
     });
-  };
+  }
 
-  this.testNoPrereqChangeAlwaysMake = function () {
+, 'test where a file-task prereq does not change with --always-make': function () {
     h.exec('../bin/cli.js fileTest:foo/from-src1.txt', function (out) {
       assert.equal('fileTest:foo/src1.txt task\nfileTest:foo/from-src1.txt task',
         out);
@@ -49,9 +50,9 @@ var tests = new (function () {
         cleanUpAndNext();
       });
     });
-  };
+  }
 
-  this.testPreexistingFile = function () {
+, 'test a preexisting file': function () {
     var prereqData = 'howdy';
     h.exec('mkdir -p foo', function (out) {
       fs.writeFileSync('foo/prereq.txt', prereqData);
@@ -64,21 +65,12 @@ var tests = new (function () {
           // Second time should be a no-op
           assert.equal('', out);
           cleanUpAndNext();
-          /*
-          h.exec('../bin/cli.js fileTest:touch-prereq', function () {
-            h.exec('../bin/cli.js fileTest:foo/from-prereq.txt', function (out) {
-              // Third time should update the target file
-              assert.equal('fileTest:foo/from-prereq.txt task', out);
-              cleanUpAndNext();
-            });
-          });
-          */
         });
       });
     });
-  };
+  }
 
-  this.testPreexistingFileAlwaysMake = function () {
+, 'test a preexisting file with --always-make flag': function () {
     var prereqData = 'howdy';
     h.exec('mkdir -p foo', function (out) {
       fs.writeFileSync('foo/prereq.txt', prereqData);
@@ -93,9 +85,9 @@ var tests = new (function () {
         });
       });
     });
-  };
+  }
 
-})();
+};
 
 h.run(tests, function () {
   process.chdir('../');

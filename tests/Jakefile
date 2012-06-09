@@ -177,5 +177,17 @@ task('voom', ['blammo'], function () {
 // Modify, add a prereq
 task('voom', ['noActionNoPrereqs']);
 
+namespace('vronk', function () {
+  task('groo', function () {
+    var t = jake.Task['vronk:zong'];
+    t.addListener('error', function (e) {
+      console.log(e.message);
+    });
+    t.invoke();
+  });
+  task('zong', function () {
+    throw new Error('OMFGZONG');
+  });
+});
 
 

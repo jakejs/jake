@@ -117,6 +117,13 @@ var tests = {
     h.next();
   }
 
+, 'test listening for task error-event': function () {
+    h.exec('../bin/cli.js vronk:groo', function (out) {
+      assert.equal('OMFGZONG', out);
+    });
+    h.next();
+  }
+
 };
 
 h.run(tests, function () {

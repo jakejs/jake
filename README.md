@@ -380,7 +380,7 @@ task('passParams', function () {
 
 Tasks are EventEmitters. They can fire 'complete' and 'error' events.
 
-If the inner-task invoked is asynchronous, you can set a listener on the
+If a task called via `invoke` is asynchronous, you can set a listener on the
 'complete' event to run any code that depends on it.
 
 ```javascript

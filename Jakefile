@@ -46,9 +46,9 @@ var p = new jake.NpmPublishTask('jake', [
 , 'Jakefile'
 , 'README.md'
 , 'package.json'
-, 'lib/*'
-, 'bin/*'
-, 'tests/*'
+, 'lib/**'
+, 'bin/**'
+, 'tests/**'
 ]);
 
 jake.Task['npm:definePackage'].invoke();

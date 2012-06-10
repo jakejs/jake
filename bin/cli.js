@@ -52,7 +52,7 @@ if (!program.preemptiveOption()) {
   }
 
   // Convenience aliases
-  jake.opts = opts;
+  jake.program = program;
   for (var p in utils) {
     jake[p] = utils[p];
   }

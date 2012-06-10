@@ -9,20 +9,21 @@ task('test', function () {
           })
           .map(function (f) {
             return 'node ' + path.join('tests', f);
-          });
+          })
+    , quiet = jake.program.opts.quiet;
   jake.exec(cmds, function () {
-    console.log('All tests passed.');
+    jake.logger.log('All tests passed.');
     complete();
-  }, {printStdout: true});
+  }, {printStdout: !quiet});
 }, {async: true});
 
 namespace('doc', function () {
   task('generate', ['doc:clobber'], function () {
     var cmd = '../node-jsdoc-toolkit/app/run.js -n -r=100 ' +
         '-t=../node-jsdoc-toolkit/templates/codeview -d=./doc/ ./lib';
-    console.log('Generating docs ...');
+    jake.logger.log('Generating docs ...');
     jake.exec([cmd], function () {
-      console.log('Done.');
+      jake.logger.log('Done.');
       complete();
     });
   }, {async: true});
@@ -30,7 +31,7 @@ namespace('doc', function () {
   task('clobber', function () {
     var cmd = 'rm -fr ./doc/*';
     jake.exec([cmd], function () {
-      console.log('Clobbered old docs.');
+      jake.logger.log('Clobbered old docs.');
       complete();
     });
   }, {async: true});

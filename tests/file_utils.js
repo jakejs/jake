@@ -3,6 +3,15 @@ var assert = require('assert')
   , h = require('./helpers')
   , fileUtils = require('../lib/utils/file');
 
+// Kill output
+global.jake = {
+  program: {
+    opts: {
+      quiet: true
+    }
+  }
+};
+
 process.chdir('./tests');
 
 var tests = {

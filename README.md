@@ -63,16 +63,19 @@ Add the directory of node.exe to the environment PATH variable.
 ### Options
 
     -V/v
-    --version                   Display the program version.
+    --version                   Display the Jake version.
 
     -h
-    --help                      Display help information.
+    --help                      Display help message.
 
     -f *FILE*
     --jakefile *FILE*           Use FILE as the Jakefile.
 
     -C *DIRECTORY*
     --directory *DIRECTORY*     Change to DIRECTORY before running tasks.
+
+    -q
+    --quiet                     Do not log messages to standard output.
 
     -J *JAKELIBDIR*
     --jakelibdir *JAKELIBDIR*   Auto-import any .jake files in JAKELIBDIR.
@@ -82,10 +85,11 @@ Add the directory of node.exe to the environment PATH variable.
     --always-make               Unconditionally make all targets.
 
     -t
-    --trace                     Enable full backtracke.
+    --trace                     Enable full backtrace.
 
     -T
-    --tasks                     Display the tasks, with descriptions, then exit.
+    --tasks                     Display the tasks (matching optional PATTERN)
+                                with descriptions, then exit.
 
 ### Jakefile syntax
 
@@ -614,6 +618,31 @@ ex.run();
 Using the evented Exec object gives you a lot more flexibility in running shell
 commmands. But if you need something more sophisticated, Procstreams
 (<https://github.com/polotek/procstreams>) might be a good option.
+
+## Logging and output
+
+Using the -q/--quiet flag at the command-line will stop Jake from sending its
+normal output to standard output. Note that this only applies to built-in output
+from Jake; anything you output normally from your tasks will still be displayed.
+
+If you want to take advantage of the -q/--quiet flag in your own programs, you
+can use `jake.logger.log` and `jake.logger.error` for displaying output. These
+two commands will respect the flag, and suppress output correctly when the
+quiet-flag is on.
+
+You can check the current value of this flag in your own tasks by using
+`jake.program.opts.quiet`. If you want the output of a `jake.exec` shell-command
+to respect the quiet-flag, set your `printStdout` and `printStderr` options to
+false if the quiet-option is on:
+
+```javascript
+task('echo', function () {
+  jake.exec(['echo "hello"'], function () {
+    jake.logger.log('Done.');
+    complete();
+  }, {printStdout: !jake.program.opts.quiet});
+}, {async: true});
+```
 
 ## PackageTask
 

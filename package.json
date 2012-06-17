@@ -18,7 +18,9 @@
     "url": "git://github.com/mde/jake.git"
   },
   "preferGlobal": true,
-  "dependencies": {},
+  "dependencies": {
+    "minimatch": "0.2.x"
+  },
   "devDependencies": {},
   "engines": {
     "node": "*"

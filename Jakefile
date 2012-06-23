@@ -1,21 +1,10 @@
 var fs = require('fs')
   , path = require('path');
 
-desc('Runs the Jake tests.');
-task('test', function () {
-  var cmds = fs.readdirSync('./tests')
-          .filter(function (f) {
-            return /\.js$/.test(f);
-          })
-          .map(function (f) {
-            return 'node ' + path.join('tests', f);
-          })
-    , quiet = jake.program.opts.quiet;
-  jake.exec(cmds, function () {
-    jake.logger.log('All tests passed.');
-    complete();
-  }, {printStdout: !quiet});
-}, {async: true});
+var t = new jake.TestTask('Jake', function () {
+  this.testFiles.include('tests/*.js');
+  this.testFiles.exclude('tests/helpers.js');
+});
 
 namespace('doc', function () {
   task('generate', ['doc:clobber'], function () {

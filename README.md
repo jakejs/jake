@@ -732,6 +732,7 @@ var t = new jake.TestTask('fonebone', function () {
   , 'lib/adapters/**/test.js'
   ];
   this.testFiles.include(fileList);
+  this.testFiles.exclude('tests/helper.js');
   this.testName = 'testMainAndAdapters';
 });
 ```
@@ -769,6 +770,8 @@ tests = {
 
 module.exports = tests;
 ```
+
+Jake's tests are also a good example of use of a TestTask.
 
 ## NpmPublishTask
 

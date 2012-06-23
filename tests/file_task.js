@@ -4,21 +4,27 @@ var assert = require('assert')
   , exec = require('child_process').exec
   , h = require('./helpers');
 
-process.chdir('./tests');
-
-var cleanUpAndNext = function () {
+var cleanUpAndNext = function (callback) {
   exec('rm -fr ./foo', function (err, stdout, stderr) {
     if (err) { throw err }
     if (stderr || stdout) {
       console.log (stderr || stdout);
     }
-    h.next();
+    callback();
   });
 };
 
 var tests = {
 
-  'test concating two files': function () {
+  'before': function () {
+    process.chdir('./tests');
+  }
+
+, 'after': function () {
+    process.chdir('../');
+  }
+
+, 'test concating two files': function (next) {
     h.exec('../bin/cli.js fileTest:foo/concat.txt', function (out) {
       var data;
       assert.equal('fileTest:foo/src1.txt task\ndefault task\nfileTest:foo/src2.txt task\n' +
@@ -26,34 +32,34 @@ var tests = {
       // Check to see the two files got concat'd
       data = fs.readFileSync(process.cwd() + '/foo/concat.txt');
       assert.equal('src1src2', data.toString());
-      cleanUpAndNext();
+      cleanUpAndNext(next);
     });
   }
 
-, 'test where a file-task prereq does not change': function () {
+, 'test where a file-task prereq does not change': function (next) {
     h.exec('../bin/cli.js fileTest:foo/from-src1.txt', function (out) {
       assert.equal('fileTest:foo/src1.txt task\nfileTest:foo/from-src1.txt task', out);
       h.exec('../bin/cli.js fileTest:foo/from-src1.txt', function (out) {
         // Second time should be a no-op
         assert.equal('', out);
-        cleanUpAndNext();
+        cleanUpAndNext(next);
       });
     });
   }
 
-, 'test where a file-task prereq does not change with --always-make': function () {
+, 'test where a file-task prereq does not change with --always-make': function (next) {
     h.exec('../bin/cli.js fileTest:foo/from-src1.txt', function (out) {
       assert.equal('fileTest:foo/src1.txt task\nfileTest:foo/from-src1.txt task',
         out);
       h.exec('../bin/cli.js -B fileTest:foo/from-src1.txt', function (out) {
         assert.equal('fileTest:foo/src1.txt task\nfileTest:foo/from-src1.txt task',
           out);
-        cleanUpAndNext();
+        cleanUpAndNext(next);
       });
     });
   }
 
-, 'test a preexisting file': function () {
+, 'test a preexisting file': function (next) {
     var prereqData = 'howdy';
     h.exec('mkdir -p foo', function (out) {
       fs.writeFileSync('foo/prereq.txt', prereqData);
@@ -65,13 +71,13 @@ var tests = {
         h.exec('../bin/cli.js fileTest:foo/from-prereq.txt', function (out) {
           // Second time should be a no-op
           assert.equal('', out);
-          cleanUpAndNext();
+          cleanUpAndNext(next);
         });
       });
     });
   }
 
-, 'test a preexisting file with --always-make flag': function () {
+, 'test a preexisting file with --always-make flag': function (next) {
     var prereqData = 'howdy';
     h.exec('mkdir -p foo', function (out) {
       fs.writeFileSync('foo/prereq.txt', prereqData);
@@ -82,24 +88,20 @@ var tests = {
         assert.equal(prereqData, data.toString());
         h.exec('../bin/cli.js -B fileTest:foo/from-prereq.txt', function (out) {
           assert.equal('fileTest:foo/from-prereq.txt task', out);
-          cleanUpAndNext();
+          cleanUpAndNext(next);
         });
       });
     });
   }
 
-, 'test nested directory-task': function () {
+, 'test nested directory-task': function (next) {
     h.exec('../bin/cli.js fileTest:foo/bar/baz/bamf.txt', function (out) {
       data = fs.readFileSync(process.cwd() + '/foo/bar/baz/bamf.txt');
       assert.equal('w00t', data);
-      cleanUpAndNext();
+      cleanUpAndNext(next);
     });
   }
 
 };
-
-h.run(tests, function () {
-  process.chdir('../');
-});
 
 

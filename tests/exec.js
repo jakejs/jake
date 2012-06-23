@@ -5,10 +5,16 @@ var assert = require('assert')
 
 utils.mixin(jake, utils);
 
-process.chdir('./tests');
-
 var tests = {
-  'test basic exec': function () {
+  'before': function () {
+    process.chdir('./tests');
+  }
+
+, 'after': function () {
+    process.chdir('../');
+  }
+
+, 'test basic exec': function (next) {
     var ex = jake.createExec('ls', function () {})
       , evts = { // Events should fire in this order
           cmdStart: [0, null]
@@ -32,39 +38,39 @@ var tests = {
       for (var p in evts) {
         assert.equal(evts[p][0], evts[p][1]);
       }
+      next();
     });
 
-    h.next();
   }
 
-, 'test an exec failure': function () {
+, 'test an exec failure': function (next) {
     var ex = jake.createExec('false', function () {});
     ex.addListener('error', function (msg, code) {
       assert.equal(1, code);
+      next();
     });
     ex.run();
-    h.next();
   }
 
-, 'test exec stdout events': function () {
+, 'test exec stdout events': function (next) {
     var ex = jake.createExec('echo "foo"', function () {});
     ex.addListener('stdout', function (data) {
       assert.equal("foo", h.trim(data.toString()));
+      next();
     });
     ex.run();
-    h.next();
   }
 
-, 'test exec stderr events': function () {
+, 'test exec stderr events': function (next) {
     var ex = jake.createExec('echo "foo" 1>&2', function () {});
     ex.addListener('stderr', function (data) {
       assert.equal("foo", h.trim(data.toString()));
+      next();
     });
     ex.run();
-    h.next();
   }
 
-, 'test piping results into next command': function () {
+, 'test piping results into next command': function (next) {
     var ex = jake.createExec('ls', function () {})
       , data
       , appended = false;
@@ -96,15 +102,12 @@ var tests = {
       data.forEach(function (d) {
         assert.ok(/\.js$/.test(d));
       });
+      next();
     });
     ex.run();
-    h.next();
   }
 
 };
 
-h.run(tests, function () {
-  process.chdir('../');
-});
-
+module.exports = tests;
 

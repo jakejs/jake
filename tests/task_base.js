@@ -1,53 +1,60 @@
 var assert = require('assert')
   , h = require('./helpers');
 
-process.chdir('./tests');
-
 var tests = {
-  'test default task': function () {
+
+  'before': function () {
+    process.chdir('./tests');
+  }
+
+, 'after': function () {
+    process.chdir('../');
+  }
+
+, 'test default task': function (next) {
     h.exec('../bin/cli.js', function (out) {
       assert.equal('default task', out);
+      h.exec('../bin/cli.js default', function (out) {
+        assert.equal('default task', out);
+        next();
+      });
     });
-
-    h.exec('../bin/cli.js default', function (out) {
-      assert.equal('default task', out);
-    });
-    h.next();
   }
 
-, 'test task with no action': function () {
+, 'test task with no action': function (next) {
     h.exec('../bin/cli.js noAction', function (out) {
       assert.equal('default task', out);
+      next();
     });
-    h.next();
   }
 
-, 'test a task with no action and no prereqs': function () {
-    h.exec('../bin/cli.js noActionNoPrereqs', function () {});
-    h.next();
+, 'test a task with no action and no prereqs': function (next) {
+    h.exec('../bin/cli.js noActionNoPrereqs', function () {
+      next();
+    });
   }
 
-, 'test passing args to a task': function () {
+, 'test passing args to a task': function (next) {
     h.exec('../bin/cli.js argsEnvVars[foo,bar]', function (out) {
       var parsed = h.parse(out)
         , args = parsed.args;
       assert.equal(args[0], 'foo');
       assert.equal(args[1], 'bar');
+      next();
     });
-    h.next();
   }
 
-, 'test a task with environment vars': function () {
+, 'test a task with environment vars': function (next) {
     h.exec('../bin/cli.js argsEnvVars foo=bar baz=qux', function (out) {
       var parsed = h.parse(out)
         , env = parsed.env;
       assert.equal(env.foo, 'bar');
       assert.equal(env.baz, 'qux');
+      next();
     });
-    h.next();
   }
 
-, 'test passing args and using environment vars': function () {
+, 'test passing args and using environment vars': function (next) {
     h.exec('../bin/cli.js argsEnvVars[foo,bar] foo=bar baz=qux', function (out) {
       var parsed = h.parse(out)
         , args = parsed.args
@@ -56,77 +63,75 @@ var tests = {
       assert.equal(args[1], 'bar');
       assert.equal(env.foo, 'bar');
       assert.equal(env.baz, 'qux');
+      next();
     });
-    h.next();
   }
 
-, 'test a simple prereq': function () {
+, 'test a simple prereq': function (next) {
     h.exec('../bin/cli.js foo:baz', function (out) {
       assert.equal('foo:bar task\nfoo:baz task', out);
+      next();
     });
-    h.next();
   }
 
-, 'test a duplicate prereq only runs once': function () {
+, 'test a duplicate prereq only runs once': function (next) {
     h.exec('../bin/cli.js foo:asdf', function (out) {
       assert.equal('foo:bar task\nfoo:baz task\nfoo:asdf task', out);
+      next();
     });
-    h.next();
   }
 
-, 'test a prereq with command-line args': function () {
+, 'test a prereq with command-line args': function (next) {
     h.exec('../bin/cli.js foo:qux', function (out) {
       assert.equal('foo:bar[asdf,qwer] task\nfoo:qux task', out);
+      next();
     });
-    h.next();
   }
 
-, 'test a prereq with args via invoke': function () {
+, 'test a prereq with args via invoke': function (next) {
     h.exec('../bin/cli.js foo:frang[zxcv,uiop]', function (out) {
       assert.equal('foo:bar[zxcv,uiop] task\nfoo:frang task', out);
+      next();
     });
-    h.next();
   }
 
-, 'test prereq execution-order': function () {
+, 'test prereq execution-order': function (next) {
     h.exec('../bin/cli.js hoge:fuga', function (out) {
       assert.equal('hoge:hoge task\nhoge:piyo task\nhoge:fuga task', out);
+      next();
     });
-    h.next();
   }
 
-, 'test basic async task': function () {
+, 'test basic async task': function (next) {
     h.exec('../bin/cli.js bar:bar', function (out) {
       assert.equal('bar:foo task\nbar:bar task', out);
+      next();
     });
-    h.next();
   }
 
-, 'test that current-prereq index gets reset': function () {
+, 'test that current-prereq index gets reset': function (next) {
     h.exec('../bin/cli.js hoge:kira', function (out) {
       assert.equal('hoge:hoge task\nhoge:piyo task\nhoge:fuga task\n' +
           'hoge:charan task\nhoge:gero task\nhoge:kira task', out);
+      next();
     });
-    h.next();
   }
 
-, 'test modifying a task by adding prereq during execution': function () {
+, 'test modifying a task by adding prereq during execution': function (next) {
     h.exec('../bin/cli.js voom', function (out) {
       assert.equal(2, out);
+      next();
     });
-    h.next();
   }
 
-, 'test listening for task error-event': function () {
+, 'test listening for task error-event': function (next) {
     h.exec('../bin/cli.js vronk:groo', function (out) {
       assert.equal('OMFGZONG', out);
+      next();
     });
-    h.next();
   }
 
 };
 
-h.run(tests, function () {
-  process.chdir('../');
-});
+module.exports = tests;
 

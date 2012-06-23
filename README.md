@@ -717,6 +717,59 @@ with an array of items, or mutliple single parameters. Items can be
 glob-patterns, individual file-names, string-representations of
 regular-expressions, or regular-expression literals.
 
+## TestTask
+
+Instantiating a TestTask programmically creates a simple task for running tests
+for your project. The first argument of the constructor is the project-name
+(used in the description of the task), and the second argument is a function
+that defines the task. It allows you to specifify what files to run as tests,
+and what to name the task that gets created (defaults to "test" if unset).
+
+```javascript
+var t = new jake.TestTask('fonebone', function () {
+  var fileList = [
+    'tests/*'
+  , 'lib/adapters/**/test.js'
+  ];
+  this.testFiles.include(fileList);
+  this.testName = 'testMainAndAdapters';
+});
+```
+
+Tests in the specified file should be in the very simple format of
+test-functions hung off the export. These tests are converted into Jake tasks
+which Jake then runs normally.
+
+If a test needs to run asynchronously, simply define the test-function with a
+single argument, a callback. Jake will define this as an asynchronous task, and
+will wait until the callback is called in the test function to run the next test.
+
+Here's an example test-file:
+
+```javascript
+var assert = require('assert')
+  , tests;
+
+tests = {
+  'sync test': function () {
+    // Assert something
+    assert.ok(true);
+  }
+, 'async test': function (next) {
+    // Assert something else
+    assert.ok(true);
+    // Won't go next until this is called
+    next();
+  }
+, 'another sync test': function () {
+    // Assert something else
+    assert.ok(true);
+  }
+};
+
+module.exports = tests;
+```
+
 ## NpmPublishTask
 
 The NpmPublishTask builds on top of PackageTask to allow you to do a version

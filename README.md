@@ -680,12 +680,7 @@ The [PackageTask API
 docs](http://mde.github.com/jake/doc/symbols/jake.PackageTask.html) include a
 lot more information, including different archiving options.
 
-PackageTask requires NodeJS's minimatch module
-(https://github.com/isaacs/minimatch). It is used in FileList, which is used to
-specify the list of files to include in your PackageTask (the packageFiles
-property). (See FileList, below.)
-
-## FileList
+### FileList
 
 Jake's FileList takes a list of glob-patterns and file-names, and lazy-creates a
 list of files to include. Instead of immediately searching the filesystem to
@@ -693,8 +688,7 @@ find the files, a FileList holds the pattern until it is actually used.
 
 When any of the normal JavaScript Array methods (or the `toArray` method) are
 called on the FileList, the pending patterns are resolved into an actual list of
-file-names. FileList uses NodeJS's minimatchmodule
-(https://github.com/isaacs/minimatch).
+file-names. FileList uses the [minimatch](https://github.com/isaacs/minimatch) module.
 
 To build the list of files, use FileList's `include` and `exclude` methods:
 

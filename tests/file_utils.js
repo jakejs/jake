@@ -38,6 +38,37 @@ var tests = {
     fs.rmdirSync('foo');
   }
 
+// TODO: Need Windows test with c:\\
+, 'test basedir with Unix absolute path': function () {
+    var p = '/foo/bar/baz';
+    assert.equal('/', fileUtils.basedir(p));
+  }
+
+, 'test basedir with Unix absolute path and globstar': function () {
+    var p = '/**/foo/bar/baz';
+    assert.equal('/', fileUtils.basedir(p));
+  }
+
+, 'test basedir with leading globstar': function () {
+    var p = '**/foo';
+    assert.equal('.', fileUtils.basedir(p));
+  }
+
+, 'test basedir with leading dot-slash and globstar': function () {
+    var p = './**/foo';
+    assert.equal('.', fileUtils.basedir(p));
+  }
+
+, 'test basedir with leading dirname and globstar': function () {
+    var p = 'a/**/*.js';
+    assert.equal('a', fileUtils.basedir(p));
+  }
+
+, 'test basedir with leading dot-dot-slash and globstar': function () {
+    var p = '../test/**/*.js';
+    assert.equal('..', fileUtils.basedir(p));
+  }
+
 };
 
 module.exports = tests;

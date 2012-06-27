@@ -44,27 +44,32 @@ var tests = {
     assert.equal('/', fileUtils.basedir(p));
   }
 
-, 'test basedir with Unix absolute path and globstar': function () {
+, 'test basedir with Unix absolute path and double-asterisk': function () {
     var p = '/**/foo/bar/baz';
     assert.equal('/', fileUtils.basedir(p));
   }
 
-, 'test basedir with leading globstar': function () {
+, 'test basedir with leading double-asterisk': function () {
     var p = '**/foo';
     assert.equal('.', fileUtils.basedir(p));
   }
 
-, 'test basedir with leading dot-slash and globstar': function () {
+, 'test basedir with leading asterisk': function () {
+    var p = '*.js';
+    assert.equal('.', fileUtils.basedir(p));
+  }
+
+, 'test basedir with leading dot-slash and double-asterisk': function () {
     var p = './**/foo';
     assert.equal('.', fileUtils.basedir(p));
   }
 
-, 'test basedir with leading dirname and globstar': function () {
+, 'test basedir with leading dirname and double-asterisk': function () {
     var p = 'a/**/*.js';
     assert.equal('a', fileUtils.basedir(p));
   }
 
-, 'test basedir with leading dot-dot-slash and globstar': function () {
+, 'test basedir with leading dot-dot-slash and double-asterisk': function () {
     var p = '../test/**/*.js';
     assert.equal('..', fileUtils.basedir(p));
   }

@@ -2,8 +2,8 @@ var fs = require('fs')
   , path = require('path');
 
 var t = new jake.TestTask('Jake', function () {
-  this.testFiles.include('tests/*.js');
-  this.testFiles.exclude('tests/helpers.js');
+  this.testFiles.include('test/*.js');
+  this.testFiles.exclude('test/helpers.js');
 });
 
 namespace('doc', function () {
@@ -37,7 +37,7 @@ var p = new jake.NpmPublishTask('jake', [
 , 'package.json'
 , 'lib/**'
 , 'bin/**'
-, 'tests/**'
+, 'test/**'
 ]);
 
 jake.Task['npm:definePackage'].invoke();

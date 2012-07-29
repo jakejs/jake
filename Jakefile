@@ -40,5 +40,4 @@ var p = new jake.NpmPublishTask('jake', [
 , 'test/**'
 ]);
 
-jake.Task['npm:definePackage'].invoke();
 

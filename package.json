@@ -1,0 +1,20 @@
+{
+  "name": "utilities",
+  "description": "A classic collection of JavaScript utilities",
+  "keywords": [
+    "utilities",
+    "utils",
+    "jake",
+    "geddy"
+  ],
+  "version": "0.0.2",
+  "author": "Matthew Eernisse <mde@fleegix.org> (http://fleegix.org)",
+  "main": "./lib/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/mde/utilities.git"
+  },
+  "engines": {
+    "node": "*"
+  }
+}

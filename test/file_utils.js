@@ -6,7 +6,7 @@ var assert = require('assert')
 var tests = {
 
   'before': function () {
-    process.chdir('./tests');
+    process.chdir('./test');
   }
 
 , 'after': function () {

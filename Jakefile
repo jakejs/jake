@@ -11,5 +11,3 @@ var p = new jake.NpmPublishTask('utilities', [
 , 'test/**'
 ]);
 
-jake.Task['npm:definePackage'].invoke();
-

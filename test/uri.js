@@ -18,45 +18,7 @@
 var uri = require('../lib/uri')
   , array = require('../lib/array')
   , assert = require('assert')
-  , tests = {}
-  , checkObjects;
-
-// Check if two objects are similar
-checkObjects = function(first, second) {
-  var finished = [];
-
-  for(var i in first) {
-    if((typeof first[i] === 'object') && (typeof second[i] === 'object')) {
-      finished.push(checkObjects(first[i], second[i]));
-    } else {
-      if(first[i] instanceof Array) {
-        var arr = [];
-
-        for(var p in first[i]) {
-          if(first[i][p] === second[i][p]) {
-            arr.push(true)
-          } else {
-            arr.push(false)
-          }
-        }
-
-        if(array.included(false, finished)) {
-          return false;
-        }
-        return true;
-      } else if(first[i] === second[i]) {
-        return true;
-      } else {
-        return false;
-      }
-    }
-  }
-
-  if(array.included(false, finished)) {
-    return false;
-  }
-  return true;
-};
+  , tests = {};
 
 tests = {
 
@@ -115,21 +77,21 @@ tests = {
   }
 
 , 'test objectify for uri': function() {
-    var data = uri.objectify('name=user')
-      , actual = {name: 'user'};
-    assert.equal(checkObjects(data, actual), true);
+    var expected = {name: 'user'}
+      , actual = uri.objectify('name=user');
+    assert.deepEqual(expected, actual);
   }
 
 , 'test objectify with multiple matching keys for uri': function() {
-    var data = uri.objectify('name=user&name=user2')
-      , actual = {name: ['user', 'user2']};
-    assert.equal(checkObjects(data, actual), true);
+    var expected = {name: ['user', 'user2']}
+      , actual = uri.objectify('name=user&name=user2');
+    assert.deepEqual(expected, actual);
   }
 
 , 'test objectify with no conslidation for uri': function() {
-    var data = uri.objectify('name=user&name=user2', {conslidate: false})
-      , actual = {name: 'user2'};
-    assert.equal(checkObjects(data, actual), true);
+    var expected= {name: 'user2'}
+      , actual = uri.objectify('name=user&name=user2', {consolidate: false});
+    assert.deepEqual(expected, actual);
   }
 
 };

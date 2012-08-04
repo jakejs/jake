@@ -18,18 +18,7 @@
 
 var assert = require('assert')
   , string = require('../lib/string')
-  , tests
-  , checkObjects;
-
-checkObjects = function (expected, actual) {
-  var item;
-  for (var p in actual) {
-    item = actual[p];
-    for (var q in item) {
-      assert.equal(expected[p][q], item[q]);
-    }
-  }
-};
+  , tests;
 
 tests = {
 
@@ -233,7 +222,7 @@ tests = {
         },
       };
 
-    checkObjects(expected, actual);
+    assert.deepEqual(expected, actual);
   }
 
 , 'test inflection with odd name for string': function() {

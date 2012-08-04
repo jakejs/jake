@@ -1,8 +1,9 @@
 var assert = require('assert')
   , fs = require('fs')
-  , file = require('../lib/file');
+  , file = require('../lib/file')
+  , tests;
 
-var tests = {
+tests = {
 
   'before': function () {
     process.chdir('./test');

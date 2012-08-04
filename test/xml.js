@@ -3,13 +3,15 @@ var XML = require('../lib/xml').XML
   , assert = require('assert')
   , obj
   , xml
-  , res;
+  , res
+  , serialize
+  , tests;
 
-var serialize = function (o) {
+serialize = function (o) {
   return XML.stringify(o, {whitespace: false});
 };
 
-var tests = {
+tests = {
 
   'test serialized object': function () {
     obj = {foo: 'bar'};

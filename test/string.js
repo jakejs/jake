@@ -253,7 +253,7 @@ tests = {
         },
       };
 
-    checkObjects(expected, actual);
+    assert.deepEqual(expected, actual);
   }
 
 , 'test uuid length for string': function() {

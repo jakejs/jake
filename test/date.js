@@ -25,43 +25,43 @@ tests = {
   'test strftime for date': function() {
     var data = date.strftime(_date, "%w")
       , actual = _date.getDay();
-    assert.equal(data, actual);
+    assert.equal(actual, data);
   }
 
 , 'test leftPad for date': function() {
     var data = date.leftPad("geddy", 7, " ")
       , actual = "  geddy";
-    assert.equal(data, actual);
+    assert.equal(actual, data);
   }
 
 , 'test calcCentury using current year for date': function() {
     var data = date.calcCentury()
       , actual = '21';
-    assert.equal(data, actual);
+    assert.equal(actual, data);
   }
 
 , 'test calcCentury using 20th century year for date': function() {
     var data = date.calcCentury(2000)
       , actual = '20';
-    assert.equal(data, actual);
+    assert.equal(actual, data);
   }
 
 , 'test calcCentury using 1st century year for date': function() {
     var data = date.calcCentury(10)
       , actual = '1';
-    assert.equal(data, actual);
+    assert.equal(actual, data);
   }
 
 , 'test getMeridiem for date': function() {
     var data = date.getMeridiem(_date.getHours())
       , actual = (_date.getHours() > 11) ? 'PM' : 'AM';
-    assert.equal(data, actual);
+    assert.equal(actual, data);
   }
 
 , 'test leftPad for date': function() {
     var data = date.leftPad("geddy", 7, " ")
       , actual = "  geddy";
-    assert.equal(data, actual);
+    assert.equal(actual, data);
   }
 
 };

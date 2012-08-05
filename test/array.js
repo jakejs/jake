@@ -25,39 +25,39 @@ tests = {
   'test basic humanize for array': function () {
     var data = array.humanize(["array", "array", "array"])
       , actual = "array, array and array";
-    assert.equal(data, actual);
+    assert.equal(actual, data);
   }
 
 , 'test humanize with two items for array': function() {
     var data = array.humanize(["array", "array"])
       , actual = "array and array";
-    assert.equal(data, actual);
+    assert.equal(actual, data);
   }
 
 , 'test humanize with two items for array': function() {
     var data = array.humanize(["array"])
       , actual = "array";
-    assert.equal(data, actual);
+    assert.equal(actual, data);
   }
 
 , 'test basic included for array': function() {
     var test = ["array"]
       , data = array.included("array", test)
       , actual = test;
-    assert.equal(data, actual);
+    assert.equal(actual, data);
   }
 
 , 'test false included for array': function() {
     var data = array.included("nope", ["array"])
       , actual = false;
-    assert.equal(data, actual);
+    assert.equal(actual, data);
   }
 
 , 'test false boolean included for array': function() {
     var test = ["array", false]
       , data = array.included(false, test)
       , actual = test;
-    assert.equal(data, actual);
+    assert.equal(actual, data);
   }
 
 };

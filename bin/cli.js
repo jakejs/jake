@@ -53,9 +53,9 @@ if (!program.preemptiveOption()) {
 
   // Convenience aliases
   jake.program = program;
-  for (var p in utils) {
-    jake[p] = utils[p];
-  }
+  utils.mixin(jake, utils);
+  // File utils should be aliased directly on the base namespace
+  utils.mixin(jake, utils.file);
   jake.FileList = require(libPath + '/file_list').FileList;
   jake.PackageTask = require(libPath + '/package_task').PackageTask;
   jake.NpmPublishTask = require(libPath + '/npm_publish_task').NpmPublishTask;

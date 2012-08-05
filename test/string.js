@@ -22,7 +22,13 @@ var assert = require('assert')
 
 tests = {
 
-  'test toArray for string': function() {
+  'test escapeRegExpCharacters': function () {
+    var expected = '\\^\\/\\.\\*\\+\\?\\|\\(\\)\\[\\]\\{\\}\\\\'
+      actual = string.escapeRegExpChars('^/.*+?|()[]{}\\');
+    assert.equal(expected, actual);
+  }
+
+, 'test toArray for string': function() {
     var data = string.toArray('geddy')
       , actual = ['g', 'e', 'd', 'd', 'y'];
 

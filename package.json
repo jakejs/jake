@@ -19,7 +19,8 @@
   },
   "preferGlobal": true,
   "dependencies": {
-    "minimatch": "0.2.x"
+    "minimatch": "0.0.x",
+    "utilities": "0.0.x"
   },
   "devDependencies": {},
   "engines": {

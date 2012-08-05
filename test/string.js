@@ -76,6 +76,36 @@ tests = {
     assert.equal(data, actual);
   }
 
+, 'test chop special-case line-ending': function() {
+    var expected = 'geddy'
+      , actual = string.chop('geddy\r\n');
+    assert.equal(expected, actual);
+  }
+
+, 'test chop not actual special-case line-ending': function() {
+    var expected = 'geddy\n'
+      , actual = string.chop('geddy\n\r');
+    assert.equal(expected, actual);
+  }
+
+, 'test chop normal line-ending': function() {
+    var expected = 'geddy'
+      , actual = string.chop('geddy\n');
+    assert.equal(expected, actual);
+  }
+
+, 'test chop whatever character': function() {
+    var expected = 'gedd'
+      , actual = string.chop('geddy');
+    assert.equal(expected, actual);
+  }
+
+, 'test chop empty string': function() {
+    var expected = ''
+      , actual = string.chop('');
+    assert.equal(expected, actual);
+  }
+
 , 'test basic lpad for string': function() {
     var data = string.lpad('geddy', '&', 7)
       , actual = '&&geddy';

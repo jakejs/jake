@@ -28,12 +28,6 @@ tests = {
     assert.equal(actual, data);
   }
 
-, 'test leftPad for date': function() {
-    var data = date.leftPad("geddy", 7, " ")
-      , actual = "  geddy";
-    assert.equal(actual, data);
-  }
-
 , 'test calcCentury using current year for date': function() {
     var data = date.calcCentury()
       , actual = '21';
@@ -55,12 +49,6 @@ tests = {
 , 'test getMeridiem for date': function() {
     var data = date.getMeridiem(_date.getHours())
       , actual = (_date.getHours() > 11) ? 'PM' : 'AM';
-    assert.equal(actual, data);
-  }
-
-, 'test leftPad for date': function() {
-    var data = date.leftPad("geddy", 7, " ")
-      , actual = "  geddy";
     assert.equal(actual, data);
   }
 

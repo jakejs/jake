@@ -23,41 +23,38 @@ var assert = require('assert')
 tests = {
 
   'test basic humanize for array': function () {
-    var data = array.humanize(["array", "array", "array"])
-      , actual = "array, array and array";
-    assert.equal(actual, data);
+    var actual = array.humanize(["array", "array", "array"])
+      , expected = "array, array and array";
+    assert.equal(expected, actual);
   }
 
 , 'test humanize with two items for array': function() {
-    var data = array.humanize(["array", "array"])
-      , actual = "array and array";
-    assert.equal(actual, data);
+    var actual = array.humanize(["array", "array"])
+      , expected = "array and array";
+    assert.equal(expected, actual);
   }
 
 , 'test humanize with two items for array': function() {
-    var data = array.humanize(["array"])
-      , actual = "array";
-    assert.equal(actual, data);
+    var actual = array.humanize(["array"])
+      , expected = "array";
+    assert.equal(expected, actual);
   }
 
-, 'test basic included for array': function() {
+, 'test basic include for array': function() {
     var test = ["array"]
-      , data = array.included("array", test)
-      , actual = test;
-    assert.equal(actual, data);
+      , actual = array.include(test, "array");
+    assert.equal(true, actual);
   }
 
-, 'test false included for array': function() {
-    var data = array.included("nope", ["array"])
-      , actual = false;
-    assert.equal(actual, data);
+, 'test false include for array': function() {
+    var actual = array.include(["array"], 'nope');
+    assert.equal(false, actual);
   }
 
-, 'test false boolean included for array': function() {
+, 'test false boolean include for array': function() {
     var test = ["array", false]
-      , data = array.included(false, test)
-      , actual = test;
-    assert.equal(actual, data);
+      , actual = array.include(test, false);
+    assert.equal(true, actual);
   }
 
 };

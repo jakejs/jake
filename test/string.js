@@ -30,56 +30,56 @@ tests = {
 
 , 'test toArray for string': function() {
     var data = string.toArray('geddy')
-      , actual = ['g', 'e', 'd', 'd', 'y'];
+      , expected = ['g', 'e', 'd', 'd', 'y'];
 
     // Loop through each item and check
     // if not, then the arrays aren't _really_ the same
-    var i = actual.length;
+    var i = expected.length;
     while(--i >= 0) {
-      assert.equal(actual[i], data[i]);
+      assert.equal(expected[i], data[i]);
     }
   }
 
 , 'test reverse for string': function() {
     var data = string.reverse('yddeg')
-      , actual = 'geddy';
-    assert.equal(actual, data);
+      , expected = 'geddy';
+    assert.equal(expected, data);
   }
 
 , 'test basic ltrim for string': function() {
     var data = string.ltrim('   geddy')
-      , actual = 'geddy';
-    assert.equal(actual, data);
+      , expected = 'geddy';
+    assert.equal(expected, data);
   }
 
 , 'test custom char ltrim for string': function() {
     var data = string.ltrim('&&geddy', '&')
-      , actual = 'geddy';
-    assert.equal(actual, data);
+      , expected = 'geddy';
+    assert.equal(expected, data);
   }
 
 , 'test basic rtrim for string': function() {
     var data = string.rtrim('geddy  ')
-      , actual = 'geddy';
-    assert.equal(actual, data);
+      , expected = 'geddy';
+    assert.equal(expected, data);
   }
 
 , 'test custom char rtrim for string': function() {
     var data = string.rtrim('geddy&&', '&')
-      , actual = 'geddy';
-    assert.equal(actual, data);
+      , expected = 'geddy';
+    assert.equal(expected, data);
   }
 
 , 'test basic trim for string': function() {
     var data = string.trim(' geddy  ')
-      , actual = 'geddy';
-    assert.equal(actual, data);
+      , expected = 'geddy';
+    assert.equal(expected, data);
   }
 
 , 'test custom char trim for string': function() {
     var data = string.trim('&geddy&&', '&')
-      , actual = 'geddy';
-    assert.equal(actual, data);
+      , expected = 'geddy';
+    assert.equal(expected, data);
   }
 
 , 'test chop special-case line-ending': function() {
@@ -114,56 +114,56 @@ tests = {
 
 , 'test basic lpad for string': function() {
     var data = string.lpad('geddy', '&', 7)
-      , actual = '&&geddy';
-    assert.equal(actual, data);
+      , expected = '&&geddy';
+    assert.equal(expected, data);
   }
 
 , 'test lpad without width for string': function() {
     var data = string.lpad('geddy', '&')
-      , actual = 'geddy';
-    assert.equal(actual, data);
+      , expected = 'geddy';
+    assert.equal(expected, data);
   }
 
 , 'test lpad without width of char for string': function() {
     var data = string.lpad('geddy')
-      , actual = 'geddy';
-    assert.equal(actual, data);
+      , expected = 'geddy';
+    assert.equal(expected, data);
   }
 
 , 'test basic rpad for string': function() {
     var data = string.rpad('geddy', '&', 7)
-      , actual = 'geddy&&';
-    assert.equal(actual, data);
+      , expected = 'geddy&&';
+    assert.equal(expected, data);
   }
 
 , 'test rpad without width for string': function() {
     var data = string.rpad('geddy', '&')
-      , actual = 'geddy';
-    assert.equal(actual, data);
+      , expected = 'geddy';
+    assert.equal(expected, data);
   }
 
 , 'test rpad without width of char for string': function() {
     var data = string.rpad('geddy')
-      , actual = 'geddy';
-    assert.equal(actual, data);
+      , expected = 'geddy';
+    assert.equal(expected, data);
   }
 
 , 'test basic pad for string': function() {
     var data = string.pad('geddy', '&', 7)
-      , actual = '&geddy&';
-    assert.equal(actual, data);
+      , expected = '&geddy&';
+    assert.equal(expected, data);
   }
 
 , 'test pad without width for string': function() {
     var data = string.pad('geddy', '&')
-      , actual = 'geddy';
-    assert.equal(actual, data);
+      , expected = 'geddy';
+    assert.equal(expected, data);
   }
 
 , 'test pad without width of char for string': function() {
     var data = string.pad('geddy')
-      , actual = 'geddy';
-    assert.equal(actual, data);
+      , expected = 'geddy';
+    assert.equal(expected, data);
   }
 
   // We could test truncate and truncateHTML here, but helper tests already
@@ -171,77 +171,85 @@ tests = {
 
 , 'test nl2br for string': function() {
     var data = string.nl2br("geddy\n")
-      , actual = 'geddy<br />';
-    assert.equal(actual, data);
+      , expected = 'geddy<br />';
+    assert.equal(expected, data);
   }
 
 , 'test snakeize for string': function() {
     var data = string.snakeize("geddyJs")
-      , actual = 'geddy_js';
-    assert.equal(actual, data);
+      , expected = 'geddy_js';
+    assert.equal(expected, data);
   }
 
 , 'test snakeize with beginning caps for string': function() {
     var data = string.snakeize("GeddyJs")
-      , actual = 'geddy_js';
-    assert.equal(actual, data);
+      , expected = 'geddy_js';
+    assert.equal(expected, data);
   }
 
 , 'test camelize for string': function() {
     var data = string.camelize("geddy_js")
-      , actual = 'geddyJs';
-    assert.equal(actual, data);
+      , expected = 'geddyJs';
+    assert.equal(expected, data);
   }
 
 , 'test camelize with initialCap for string': function() {
     var data = string.camelize("geddy_js", {initialCap: true})
-      , actual = 'GeddyJs';
-    assert.equal(actual, data);
+      , expected = 'GeddyJs';
+    assert.equal(expected, data);
   }
 
 , 'test camelize with leadingUnderscore with no underscore for string': function() {
     var data = string.camelize("geddy_js", {leadingUnderscore: true})
-      , actual = 'geddyJs';
-    assert.equal(actual, data);
+      , expected = 'geddyJs';
+    assert.equal(expected, data);
   }
 
 , 'test camelize with leadingUnderscore with underscore for string': function() {
     var data = string.camelize("_geddy_js", {leadingUnderscore: true})
-      , actual = '_geddyJs';
-    assert.equal(actual, data);
+      , expected = '_geddyJs';
+    assert.equal(expected, data);
   }
 
 , 'test decapitalize for string': function() {
     var data = string.decapitalize("Geddy")
-      , actual = 'geddy';
-    assert.equal(actual, data);
+      , expected = 'geddy';
+    assert.equal(expected, data);
   }
 
 , 'test capitalize for string': function() {
     var data = string.capitalize("geddy")
-      , actual = 'Geddy';
-    assert.equal(actual, data);
+      , expected = 'Geddy';
+    assert.equal(expected, data);
   }
 
 , 'test dasherize for string': function() {
     var data = string.dasherize("geddyJs")
-      , actual = 'geddy-js';
-    assert.equal(actual, data);
+      , expected = 'geddy-js';
+    assert.equal(expected, data);
   }
 
 , 'test dasherize with custom replace char for string': function() {
     var data = string.dasherize("geddyJs", "_")
-      , actual = 'geddy_js';
-    assert.equal(actual, data);
+      , expected = 'geddy_js';
+    assert.equal(expected, data);
   }
 
 , 'test underscorize for string': function() {
     var data = string.underscorize("geddyJs")
-      , actual = 'geddy_js';
-    assert.equal(actual, data);
+      , expected = 'geddy_js';
+    assert.equal(expected, data);
   }
 
-, 'test inflection for string': function() {
+, 'test include for string with included string': function () {
+    assert.ok(string.include('foobarbaz', 'foo'));
+  }
+
+, 'test include for string with not included string': function () {
+    assert.ok(!string.include('foobarbaz', 'qux'));
+  }
+
+, 'test getInflections for string': function() {
     var actual = string.getInflections("string")
       , expected = {
         filename: {
@@ -258,7 +266,7 @@ tests = {
         },
       };
 
-    assert.deepEqual(actual, expected);
+    assert.deepEqual(expected, actual);
   }
 
 , 'test inflection with odd name for string': function() {
@@ -278,13 +286,13 @@ tests = {
         },
       };
 
-    assert.deepEqual(actual, expected);
+    assert.deepEqual(expected, actual);
   }
 
 , 'test uuid length for string': function() {
     var data = string.uuid(5).length
-      , actual = 5;
-    assert.equal(actual, data);
+      , expected = 5;
+    assert.equal(expected, data);
   }
 
 };

@@ -8,7 +8,9 @@ Note that Jake is a system-level tool, and wants to be installed globally.
 
 ### Installing from source
 
-Prerequisites: Jake requires Node.js. (<http://nodejs.org/>)
+Prerequisites: Jake requires [Node.js](<http://nodejs.org/>), and the
+[utilities](https://npmjs.org/package/utilities) and
+[minimatch](https://npmjs.org/package/minimatch) modules.
 
 Get Jake:
 
@@ -17,6 +19,10 @@ Get Jake:
 Build Jake:
 
     cd jake && make && sudo make install
+
+Even if you're installing Jake from source, you'll still need NPM for installing
+the few modules Jake depends on. `make install` will do this automatically for
+you.
 
 By default Jake is installed in "/usr/local." To install it into a different
 directory (e.g., one that doesn't require super-user privilege), pass the PREFIX

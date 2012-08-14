@@ -28,6 +28,8 @@ build:
 install:
 	@mkdir -p $(DESTDIR)$(PREFIX)/bin && \
     mkdir -p $(DESTDIR)$(PREFIX)/lib/node_modules/jake && \
+    mkdir -p ./node_modules && \
+    npm install utilities minimatch && \
 		cp -R ./* $(DESTDIR)$(PREFIX)/lib/node_modules/jake/ && \
 		ln -snf ../lib/node_modules/jake/bin/cli.js $(DESTDIR)$(PREFIX)/bin/jake && \
 		chmod 755 $(DESTDIR)$(PREFIX)/lib/node_modules/jake/bin/cli.js && \

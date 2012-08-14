@@ -7,7 +7,7 @@
     "jake",
     "geddy"
   ],
-  "version": "0.0.9",
+  "version": "0.0.10",
   "author": "Matthew Eernisse <mde@fleegix.org> (http://fleegix.org)",
   "main": "./lib/index.js",
   "repository": {

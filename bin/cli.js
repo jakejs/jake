@@ -30,7 +30,8 @@ var args = process.argv.slice(2)
   , pkg = JSON.parse(fs.readFileSync(__dirname + '/../package.json').toString())
   , opts
   , envVars
-  , taskNames;
+  , taskNames
+  , rootTask;
 
 jake.version = pkg.version;
 
@@ -80,7 +81,11 @@ if (!program.preemptiveOption()) {
     jake.showAllTaskDescriptions(opts.tasks);
   }
   else {
-    jake.Task['__root__'].invoke();
+    rootTask = jake.Task['__root__'];
+    rootTask.once('complete', function () {
+      jake.emit('complete');
+    });
+    rootTask.invoke();
   }
 }
 

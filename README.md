@@ -93,7 +93,7 @@ Add the directory of node.exe to the environment PATH variable.
     -t
     --trace                     Enable full backtrace.
 
-    -T
+    -T/ls
     --tasks                     Display the tasks (matching optional PATTERN)
                                 with descriptions, then exit.
 
@@ -292,6 +292,22 @@ An other solution is to desactivate permannently file-globbing for the `jake`
 command. You can do this by adding this line to your `.zshrc` file :
 
     alias jake="noglob jake"
+
+### Cleanup after all tasks run, jake 'complete' event
+
+The base 'jake' object is an EventEmitter, and fires a 'complete' event after
+running all tasks.
+
+This is sometimes useful when a task starts a process which keeps the Node
+event-loop running (e.g., a database connection). If you know you want to stop
+the running Node process after all tasks have finished, you can set a listener
+for the 'complete' event, like so:
+
+```javascript
+jake.addListener('complete', function () {
+  process.exit();
+});
+```
 
 ### Running tasks from within other tasks
 

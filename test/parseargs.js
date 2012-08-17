@@ -15,6 +15,10 @@ var parseargs = require('../lib/parseargs')
       , abbr: 'T'
       , preempts: true
       }
+    , { full: 'tasks'
+      , abbr: 'ls'
+      , preempts: true
+      }
     , { full: 'trace'
       , abbr: 't'
       , preempts: false

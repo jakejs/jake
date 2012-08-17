@@ -197,4 +197,18 @@ namespace('vronk', function () {
   });
 });
 
+// define namespace
+namespace('one', function() {
+  task('one', function() {
+    console.log('one:one');
+  });
+});
+
+// modify namespace (add task)
+namespace('one', function() {
+  task('two', ['one:one'], function() {
+    console.log('one:two');
+  });
+});
+
 

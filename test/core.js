@@ -1,0 +1,69 @@
+/*
+ * Utilities: A classic collection of JavaScript utilities
+ * Copyright 2112 Matthew Eernisse (mde@fleegix.org)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+*/
+
+var assert = require('assert')
+  , core = require('../lib/core')
+  , tests;
+
+tests = {
+
+  'test simple objectToString for core': function () {
+    var expected = 'theyre=their, youre=your'
+      , result = core.objectToString({theyre: 'their', youre: 'your'});
+    assert.equal(expected, result);
+  }
+
+, 'test objectToString with object as value in core': function () {
+    var expected = 'theyre=their, youre=youre, your=your'
+      , result = core.objectToString({theyre: 'their', youre: {youre: 'youre', your: 'your'}});
+    assert.equal(expected, result);
+  }
+
+, 'test objectToString with array as value in core': function () {
+    var expected = 'theyre=their, 0=youre, 1=your'
+      , result = core.objectToString({theyre: 'their', youre: ['youre', 'your']});
+    assert.equal(expected, result);
+  }
+
+, 'test simple mixin for core': function () {
+    var expected = {secret: 'asdf', geddy: 'geddyKey'}
+      , result = core.mixin({secret: 'asdf'}, {geddy: 'geddyKey'});
+    assert.deepEqual(expected, result);
+  }
+
+, 'test mixin with overiding key for core': function () {
+    var expected = {secret: 'geddySecret', geddy: 'geddyKey'}
+      , result = core.mixin({secret: 'asdf'}, {geddy: 'geddyKey', secret: 'geddySecret'});
+    assert.deepEqual(expected, result);
+  }
+
+, 'test simple enhance for core': function () {
+    var expected = {secret: 'asdf', geddy: 'geddyKey'}
+      , result = core.enhance({secret: 'asdf'}, {geddy: 'geddyKey'});
+    assert.deepEqual(expected, result);
+  }
+
+, 'test enhance with overiding key for core': function () {
+    var expected = {secret: 'geddySecret', geddy: 'geddyKey'}
+      , result = core.enhance({secret: 'asdf'}, {geddy: 'geddyKey', secret: 'geddySecret'});
+    assert.deepEqual(expected, result);
+  }
+
+};
+
+module.exports = tests;

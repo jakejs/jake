@@ -56,10 +56,14 @@ tests = {
     fs.rmdirSync('foo');
   }
 
-// TODO: Need Windows test with c:\\
 , 'test basedir with Unix absolute path': function () {
     var p = '/foo/bar/baz';
     assert.equal('/', file.basedir(p));
+  }
+
+, 'test basedir with Win absolute path': function () {
+    var p = 'C:\\foo\\bar\\baz';
+    assert.equal('C:\\', file.basedir(p));
   }
 
 , 'test basedir with Unix absolute path and double-asterisk': function () {

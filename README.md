@@ -609,8 +609,8 @@ being run.
 * 'stdout': When the stdout for the child-process recieves data. This streams
 the stdout data. Passes one arg, the chunk of data.
 
-* 'stdout': When the stderr for the child-process recieves data. This streams
-the sterr data. Passes one arg, the chunk of data.
+* 'stderr': When the stderr for the child-process recieves data. This streams
+the stderr data. Passes one arg, the chunk of data.
 
 * 'error': When a shell-command exits with a non-zero status-code. Passes two
 args -- the error message, and the status code. If you do not set an error

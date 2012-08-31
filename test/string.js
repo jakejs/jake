@@ -22,7 +22,79 @@ var assert = require('assert')
 
 tests = {
 
-  'test escapeRegExpCharacters': function () {
+  'test basic escapeXML for string': function() {
+    var expected = '&lt;html&gt;&lt;/html&gt;'
+      , actual = string.escapeXML('<html></html>');
+    assert.equal(expected, actual);
+  }
+
+, 'test all escape characters for escapeXML': function() {
+    var expected = '&lt;&gt;&amp;&quot;&#39;'
+      , actual = string.escapeXML('<>&"\'');
+    assert.equal(expected, actual);
+  }
+
+, 'test no escape characters with string for escapeXML': function() {
+    var expected = 'Geddy'
+      , actual = string.escapeXML('Geddy');
+    assert.equal(expected, actual);
+  }
+
+, 'test no escape characters with numbers for escapeXML': function() {
+    var expected = 05
+      , actual = string.escapeXML(05);
+    assert.equal(expected, actual);
+  }
+
+, 'test basic unescapeXML for string': function() {
+    var expected = '<html></html>'
+      , actual = string.unescapeXML('&lt;html&gt;&lt;/html&gt;');
+    assert.equal(expected, actual);
+  }
+
+, 'test all escape characters for unescapeXML': function() {
+    var expected = '<>&"\''
+      , actual = string.unescapeXML('&lt;&gt;&amp;&quot;&#39;');
+    assert.equal(expected, actual);
+  }
+
+, 'test no escape characters with string for unescapeXML': function() {
+    var expected = 'Geddy'
+      , actual = string.unescapeXML('Geddy');
+    assert.equal(expected, actual);
+  }
+
+, 'test no escape characters with numbers for unescapeXML': function() {
+    var expected = 05
+      , actual = string.unescapeXML(05);
+    assert.equal(expected, actual);
+  }
+
+, 'test basic needsEscape for string': function() {
+    var expected = true
+      , actual = string.needsEscape('Geddy>');
+    assert.equal(expected, actual);
+  }
+
+, 'test basic needsEscape thats false for string': function() {
+    var expected = false
+      , actual = string.needsEscape('Geddy');
+    assert.equal(expected, actual);
+  }
+
+, 'test basic needsUnescape for string': function() {
+    var expected = true
+      , actual = string.needsEscape('&quot;Geddy&quot;');
+    assert.equal(expected, actual);
+  }
+
+, 'test basic needsUnescape thats false for string': function() {
+    var expected = false
+      , actual = string.needsEscape('Geddy');
+    assert.equal(expected, actual);
+  }
+
+,  'test escapeRegExpCharacters': function () {
     var expected = '\\^\\/\\.\\*\\+\\?\\|\\(\\)\\[\\]\\{\\}\\\\'
       actual = string.escapeRegExpChars('^/.*+?|()[]{}\\');
     assert.equal(expected, actual);

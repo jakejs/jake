@@ -22,34 +22,52 @@ var date = require('../lib/date')
 
 tests = {
 
-  'test strftime for date': function() {
+  'test strftime for date': function () {
     var data = date.strftime(_date, "%w")
       , actual = _date.getDay();
     assert.equal(actual, data);
   }
 
-, 'test calcCentury using current year for date': function() {
+, 'test calcCentury using current year for date': function () {
     var data = date.calcCentury()
       , actual = '21';
     assert.equal(actual, data);
   }
 
-, 'test calcCentury using 20th century year for date': function() {
+, 'test calcCentury using 20th century year for date': function () {
     var data = date.calcCentury(2000)
       , actual = '20';
     assert.equal(actual, data);
   }
 
-, 'test calcCentury using 1st century year for date': function() {
+, 'test calcCentury using 1st century year for date': function () {
     var data = date.calcCentury(10)
       , actual = '1';
     assert.equal(actual, data);
   }
 
-, 'test getMeridiem for date': function() {
+, 'test getMeridiem for date': function () {
     var data = date.getMeridiem(_date.getHours())
       , actual = (_date.getHours() > 11) ? 'PM' : 'AM';
     assert.equal(actual, data);
+  }
+
+, 'test relativeTime week/weeks switchover': function () {
+    var dtA = new Date()
+      , dtB
+      , res;
+
+      dtB = date.add(dtA, 'day', 10);
+      dtB = date.add(dtB, 'hour', 23);
+      dtB = date.add(dtB, 'minute', 59);
+      dtB = date.add(dtB, 'second', 59);
+      dtB = date.add(dtB, 'millisecond', 999);
+    res = date.relativeTime(dtA, {now: dtB});
+    assert.equal('one week ago', res);
+
+    dtB = date.add(dtB, 'millisecond', 1);
+    res = date.relativeTime(dtA, {now: dtB});
+    assert.equal('about 2 weeks ago', res);
   }
 
 };

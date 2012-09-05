@@ -10,6 +10,9 @@
   "version": "0.0.12",
   "author": "Matthew Eernisse <mde@fleegix.org> (http://fleegix.org)",
   "main": "./lib/index.js",
+  "scripts": {
+    "test": "jake test"
+  },
   "repository": {
     "type": "git",
     "url": "git://github.com/mde/utilities.git"

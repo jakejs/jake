@@ -7,7 +7,7 @@
     "make",
     "rake"
   ],
-  "version": "0.3.14",
+  "version": "0.3.15",
   "author": "Matthew Eernisse <mde@fleegix.org> (http://fleegix.org)",
   "bin": {
     "jake": "./bin/cli.js"

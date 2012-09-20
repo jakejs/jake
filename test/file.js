@@ -18,6 +18,7 @@
 
 var assert = require('assert')
   , fs = require('fs')
+  , path = require('path')
   , file = require('../lib/file')
   , tests;
 
@@ -54,6 +55,76 @@ tests = {
     assert.equal(1, res.length);
     assert.equal('foo', res[0]);
     fs.rmdirSync('foo');
+  }
+
+, 'test readdirR': function () {
+    var res = []
+      , expected = [
+          'foo'
+        , 'foo/bar'
+        , 'foo/bar/baz'
+        , 'foo/bar/baz/qux'
+      ]
+
+    file.mkdirP('foo/bar/baz/qux', {silent: true});
+    res = file.readdirR('foo');
+
+    for (var i = 0, ii = res.length; i < ii; i++) {
+      assert.equal(expected[i], res[i]);
+    }
+    file.rmRf('foo', {silent: true});
+  }
+
+, 'test isAbsolute with Unix absolute path': function () {
+    var p = '/foo/bar/baz';
+    assert.equal('/', file.isAbsolute(p));
+  }
+
+, 'test isAbsolute with Unix relative path': function () {
+    var p = 'foo/bar/baz';
+    assert.equal(false, file.isAbsolute(p));
+  }
+
+, 'test isAbsolute with Win absolute path': function () {
+    var p = 'C:\\foo\\bar\\baz';
+    assert.equal('C:\\', file.isAbsolute(p));
+  }
+
+, 'test isAbsolute with Win relative path': function () {
+    var p = 'foo\\bar\\baz';
+    assert.equal(false, file.isAbsolute(p));
+  }
+
+, 'test absolutize with Unix absolute path': function () {
+    var expected = '/foo/bar/baz'
+      , actual = file.absolutize('/foo/bar/baz');
+    assert.equal(expected, actual);
+  }
+
+, 'test absolutize with Win absolute path': function () {
+    var expected = 'C:\\foo\\bar\\baz'
+      , actual = file.absolutize('C:\\foo\\bar\\baz');
+    assert.equal(expected, actual);
+  }
+
+, 'test absolutize with relative path': function () {
+    var expected = process.cwd()
+      , actual = '';
+
+    // We can't just create two different tests here
+    // because file.absolutize uses process.cwd()
+    // to get absolute path which is platform
+    // specific
+    if (process.platform === 'win32') {
+      expected += '\\foo\\bar\\baz'
+      actual = file.absolutize('foo\\bar\\baz')
+    }
+    else {
+      expected += '/foo/bar/baz'
+      actual = file.absolutize('foo/bar/baz');
+    }
+
+    assert.equal(expected, actual);
   }
 
 , 'test basedir with Unix absolute path': function () {

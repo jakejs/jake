@@ -28,30 +28,37 @@ tests = {
     assert.equal(expected, actual);
   }
 
-, 'test humanize with two items for array': function() {
+, 'test humanize with two items for array': function () {
     var actual = array.humanize(["array", "array"])
       , expected = "array and array";
     assert.equal(expected, actual);
   }
 
-, 'test humanize with two items for array': function() {
+, 'test humanize with a single item for array': function () {
     var actual = array.humanize(["array"])
       , expected = "array";
     assert.equal(expected, actual);
   }
 
-, 'test basic include for array': function() {
+, 'test humanize with no items for array': function () {
+    var actual = array.humanize([])
+      , expected = "";
+    assert.equal(expected, actual);
+  }
+
+, 'test basic include for array': function () {
     var test = ["array"]
       , actual = array.include(test, "array");
     assert.equal(true, actual);
   }
 
-, 'test false include for array': function() {
-    var actual = array.include(["array"], 'nope');
+, 'test false include for array': function () {
+    var test = ["array"]
+      , actual = array.include(test, 'nope');
     assert.equal(false, actual);
   }
 
-, 'test false boolean include for array': function() {
+, 'test false boolean include for array': function () {
     var test = ["array", false]
       , actual = array.include(test, false);
     assert.equal(true, actual);

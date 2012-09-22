@@ -108,11 +108,11 @@ API docs [can be found here](http://mde.github.com/jake/doc/).
 
 ## Tasks
 
-Use `task` to define tasks. Call it with two arguments (and two optional
-arguments):
+Use `task` to define tasks. It has one required argument, the task-name, and
+three optional arguments:
 
 ```javascript
-task(name, [prerequisites], action, [opts]);
+task(name, [prerequisites], [action], [opts]);
 ```
 
 The `name` argument is a String with the name of the task, and `prerequisites`
@@ -125,10 +125,10 @@ literals makes it not very useful.) The action is invoked with the Task object
 itself as the execution context (i.e, "this" inside the action references the
 Task object).
 
-The `opts` argument is an optional Object. When a task's operations are asynchronous, the
-`async` property should be set to `true`, and the task must call `complete()` to
-signal to Jake that the task is done, and execution can proceed. By default the
-`async` property is `false`.
+The `opts` argument is the normal JavaScript-style 'options' object. When a
+task's operations are asynchronous, the `async` property should be set to
+`true`, and the task must call `complete()` to signal to Jake that the task is
+done, and execution can proceed. By default the `async` property is `false`.
 
 Tasks created with `task` are always executed when asked for (or are a
 prerequisite). Tasks created with `file` are only executed if no file with the

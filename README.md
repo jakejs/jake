@@ -108,8 +108,8 @@ API docs [can be found here](http://mde.github.com/jake/doc/).
 
 ## Tasks
 
-Use `task` to define tasks. Call it with two arguments (and one optional
-argument):
+Use `task` to define tasks. Call it with two arguments (and two optional
+arguments):
 
 ```javascript
 task(name, [prerequisites], action, [opts]);
@@ -125,7 +125,7 @@ literals makes it not very useful.) The action is invoked with the Task object
 itself as the execution context (i.e, "this" inside the action references the
 Task object).
 
-The `opts` argument is optional. When a task's operations are asynchronous, the
+The `opts` argument is an optional Object. When a task's operations are asynchronous, the
 `async` property should be set to `true`, and the task must call `complete()` to
 signal to Jake that the task is done, and execution can proceed. By default the
 `async` property is `false`.

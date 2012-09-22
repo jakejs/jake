@@ -156,9 +156,9 @@ And here's an example of an asynchronous task:
 
 ```javascript
 desc('This is an asynchronous task.');
-task('asyncTask', function () {
+task('asyncTask', {async: true}, function () {
   setTimeout(complete, 1000);
-}, {async: true});
+});
 ```
 
 A Task is also an EventEmitter which emits the 'complete' event when it is
@@ -411,7 +411,7 @@ If a task called via `invoke` is asynchronous, you can set a listener on the
 
 ```javascript
 desc('Calls the async foo:baz task and its prerequisites.');
-task('invokeFooBaz', function () {
+task('invokeFooBaz', {async: true}, function () {
   var t = jake.Task['foo:baz'];
   t.addListener('complete', function () {
     console.log('Finished executing foo:baz');
@@ -422,7 +422,7 @@ task('invokeFooBaz', function () {
   });
   // Kick off foo:baz
   t.invoke();
-}, {async: true});
+});
 ```
 
 If you want to handle the errors in a task in some specific way, you can set a
@@ -569,7 +569,7 @@ that runs the tests:
 
 ```javascript
 desc('Runs the Jake tests.');
-task('test', function () {
+task('test', {async: true}, function () {
   var cmds = [
     'node ./tests/parseargs.js'
   , 'node ./tests/task_base.js'
@@ -579,7 +579,7 @@ task('test', function () {
     console.log('All tests passed.');
     complete();
   }, {printStdout: true});
-}, {async: true});
+});
 ```
 
 It also takes an optional options-object, with the following options:
@@ -658,12 +658,12 @@ to respect the quiet-flag, set your `printStdout` and `printStderr` options to
 false if the quiet-option is on:
 
 ```javascript
-task('echo', function () {
+task('echo', {async: true}, function () {
   jake.exec(['echo "hello"'], function () {
     jake.logger.log('Done.');
     complete();
   }, {printStdout: !jake.program.opts.quiet});
-}, {async: true});
+});
 ```
 
 ## PackageTask

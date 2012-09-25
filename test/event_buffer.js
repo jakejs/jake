@@ -29,7 +29,7 @@ tests = {
       , dest = new EventEmitter()
       , buff = new EventBuffer(source)
       , data = '';
-    dest.on('data', function(d) { data += d; });
+    dest.on('data', function (d) { data += d; });
     source.writeable = true;
     source.readable = true;
     source.emit('data', 'abcdef');

@@ -141,7 +141,7 @@ noInflections = [
 
 tests = {
 
-  'test es plural words for inflection': function() {
+  'test es plural words for inflection': function () {
     var i = esInflections.length
       , value;
 
@@ -152,7 +152,7 @@ tests = {
     }
   }
 
-, 'test es singular words for inflection': function() {
+, 'test es singular words for inflection': function () {
     var i = esInflections.length
       , value;
 
@@ -163,7 +163,7 @@ tests = {
     }
   }
 
-, 'test s plural words for inflection': function() {
+, 'test s plural words for inflection': function () {
     var i = sInflections.length
       , value;
 
@@ -174,7 +174,7 @@ tests = {
     }
   }
 
-, 'test s singular words for inflection': function() {
+, 'test s singular words for inflection': function () {
     var i = sInflections.length
       , value;
 
@@ -185,7 +185,7 @@ tests = {
     }
   }
 
-, 'test ies plural words for inflection': function() {
+, 'test ies plural words for inflection': function () {
     var i = iesInflections.length
       , value;
 
@@ -196,7 +196,7 @@ tests = {
     }
   }
 
-, 'test ies singular words for inflection': function() {
+, 'test ies singular words for inflection': function () {
     var i = iesInflections.length
       , value;
 
@@ -207,7 +207,7 @@ tests = {
     }
   }
 
-, 'test ves plural words for inflection': function() {
+, 'test ves plural words for inflection': function () {
     var i = vesInflections.length
       , value;
 
@@ -218,7 +218,7 @@ tests = {
     }
   }
 
-, 'test ves singular words for inflection': function() {
+, 'test ves singular words for inflection': function () {
     var i = vesInflections.length
       , value;
 
@@ -229,7 +229,7 @@ tests = {
     }
   }
 
-, 'test ices plural words for inflection': function() {
+, 'test ices plural words for inflection': function () {
     var i = icesInflections.length
       , value;
 
@@ -240,7 +240,7 @@ tests = {
     }
   }
 
-, 'test ices singular words for inflection': function() {
+, 'test ices singular words for inflection': function () {
     var i = icesInflections.length
       , value;
 
@@ -251,7 +251,7 @@ tests = {
     }
   }
 
-, 'test ren plural words for inflection': function() {
+, 'test ren plural words for inflection': function () {
     var i = renInflections.length
       , value;
 
@@ -262,7 +262,7 @@ tests = {
     }
   }
 
-, 'test ren singular words for inflection': function() {
+, 'test ren singular words for inflection': function () {
     var i = renInflections.length
       , value;
 
@@ -273,7 +273,7 @@ tests = {
     }
   }
 
-, 'test oes plural words for inflection': function() {
+, 'test oes plural words for inflection': function () {
     var i = oesInflections.length
       , value;
 
@@ -284,7 +284,7 @@ tests = {
     }
   }
 
-, 'test oes singular words for inflection': function() {
+, 'test oes singular words for inflection': function () {
     var i = oesInflections.length
       , value;
 
@@ -295,7 +295,7 @@ tests = {
     }
   }
 
-, 'test i plural words for inflection': function() {
+, 'test i plural words for inflection': function () {
     var i = iInflections.length
       , value;
 
@@ -306,7 +306,7 @@ tests = {
     }
   }
 
-, 'test i singular words for inflection': function() {
+, 'test i singular words for inflection': function () {
     var i = iInflections.length
       , value;
 
@@ -317,7 +317,7 @@ tests = {
     }
   }
 
-, 'test gender and people plural words for inflection': function() {
+, 'test gender and people plural words for inflection': function () {
     var i = genInflections.length
       , value;
 
@@ -328,7 +328,7 @@ tests = {
     }
   }
 
-, 'test gender and people singular words for inflection': function() {
+, 'test gender and people singular words for inflection': function () {
     var i = genInflections.length
       , value;
 
@@ -339,7 +339,7 @@ tests = {
     }
   }
 
-, 'test irregular plural words for inflection': function() {
+, 'test irregular plural words for inflection': function () {
     var i = irregularInflections.length
       , value;
 
@@ -350,7 +350,7 @@ tests = {
     }
   }
 
-, 'test irregular singular words for inflection': function() {
+, 'test irregular singular words for inflection': function () {
     var i = irregularInflections.length
       , value;
 
@@ -361,7 +361,7 @@ tests = {
     }
   }
 
-, 'test no change plural words for inflection': function() {
+, 'test no change plural words for inflection': function () {
     var i = noInflections.length
       , value;
 
@@ -372,7 +372,7 @@ tests = {
     }
   }
 
-, 'test no change singular words for inflection': function() {
+, 'test no change singular words for inflection': function () {
     var i = noInflections.length
       , value;
 

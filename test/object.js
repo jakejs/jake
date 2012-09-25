@@ -23,37 +23,37 @@ var object = require('../lib/object')
 
 tests = {
 
-  'test merge in object': function() {
+  'test merge in object': function () {
     var expected = {user: 'geddy', key: 'key'}
       , actual = object.merge({user: 'geddy'}, {key: 'key'});
     assert.deepEqual(actual, expected);
   }
 
-, 'test merge with overwriting keys in object': function() {
+, 'test merge with overwriting keys in object': function () {
     var expected = {user: 'geddy', key: 'key'}
       , actual = object.merge({user: 'geddy', key: 'geddyKey'}, {key: 'key'});
     assert.deepEqual(actual, expected);
   }
 
-, 'test reverseMerge in object': function() {
+, 'test reverseMerge in object': function () {
     var expected = {user: 'geddy', key: 'key'}
       , actual = object.reverseMerge({user: 'geddy'}, {key: 'key'});
     assert.deepEqual(actual, expected);
   }
 
-, 'test reverseMerge with keys overwriting default in object': function() {
+, 'test reverseMerge with keys overwriting default in object': function () {
     var expected = {user: 'geddy', key: 'geddyKey'}
     , actual = object.reverseMerge({user: 'geddy', key: 'geddyKey'}, {key: 'key'});
     assert.deepEqual(actual, expected);
   }
 
-, 'test isEmpty with non empty object in object': function() {
+, 'test isEmpty with non empty object in object': function () {
     var expected = false
       , actual = object.isEmpty({user: 'geddy'});
     assert.equal(actual, expected);
   }
 
-, 'test isEmpty with empty object in object': function() {
+, 'test isEmpty with empty object in object': function () {
     var expected = true
       , actual = object.isEmpty({});
     assert.equal(actual, expected);

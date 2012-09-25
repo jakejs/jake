@@ -22,73 +22,73 @@ var assert = require('assert')
 
 tests = {
 
-  'test basic escapeXML for string': function() {
+  'test basic escapeXML for string': function () {
     var expected = '&lt;html&gt;&lt;/html&gt;'
       , actual = string.escapeXML('<html></html>');
     assert.equal(expected, actual);
   }
 
-, 'test all escape characters for escapeXML': function() {
+, 'test all escape characters for escapeXML': function () {
     var expected = '&lt;&gt;&amp;&quot;&#39;'
       , actual = string.escapeXML('<>&"\'');
     assert.equal(expected, actual);
   }
 
-, 'test no escape characters with string for escapeXML': function() {
+, 'test no escape characters with string for escapeXML': function () {
     var expected = 'Geddy'
       , actual = string.escapeXML('Geddy');
     assert.equal(expected, actual);
   }
 
-, 'test no escape characters with numbers for escapeXML': function() {
+, 'test no escape characters with numbers for escapeXML': function () {
     var expected = 05
       , actual = string.escapeXML(05);
     assert.equal(expected, actual);
   }
 
-, 'test basic unescapeXML for string': function() {
+, 'test basic unescapeXML for string': function () {
     var expected = '<html></html>'
       , actual = string.unescapeXML('&lt;html&gt;&lt;/html&gt;');
     assert.equal(expected, actual);
   }
 
-, 'test all escape characters for unescapeXML': function() {
+, 'test all escape characters for unescapeXML': function () {
     var expected = '<>&"\''
       , actual = string.unescapeXML('&lt;&gt;&amp;&quot;&#39;');
     assert.equal(expected, actual);
   }
 
-, 'test no escape characters with string for unescapeXML': function() {
+, 'test no escape characters with string for unescapeXML': function () {
     var expected = 'Geddy'
       , actual = string.unescapeXML('Geddy');
     assert.equal(expected, actual);
   }
 
-, 'test no escape characters with numbers for unescapeXML': function() {
+, 'test no escape characters with numbers for unescapeXML': function () {
     var expected = 05
       , actual = string.unescapeXML(05);
     assert.equal(expected, actual);
   }
 
-, 'test basic needsEscape for string': function() {
+, 'test basic needsEscape for string': function () {
     var expected = true
       , actual = string.needsEscape('Geddy>');
     assert.equal(expected, actual);
   }
 
-, 'test basic needsEscape thats false for string': function() {
+, 'test basic needsEscape thats false for string': function () {
     var expected = false
       , actual = string.needsEscape('Geddy');
     assert.equal(expected, actual);
   }
 
-, 'test basic needsUnescape for string': function() {
+, 'test basic needsUnescape for string': function () {
     var expected = true
       , actual = string.needsEscape('&quot;Geddy&quot;');
     assert.equal(expected, actual);
   }
 
-, 'test basic needsUnescape thats false for string': function() {
+, 'test basic needsUnescape thats false for string': function () {
     var expected = false
       , actual = string.needsEscape('Geddy');
     assert.equal(expected, actual);
@@ -100,139 +100,139 @@ tests = {
     assert.equal(expected, actual);
   }
 
-, 'test toArray for string': function() {
+, 'test toArray for string': function () {
     var data = string.toArray('geddy')
       , expected = ['g', 'e', 'd', 'd', 'y'];
 
     // Loop through each item and check
     // if not, then the arrays aren't _really_ the same
     var i = expected.length;
-    while(--i >= 0) {
+    while (--i >= 0) {
       assert.equal(expected[i], data[i]);
     }
   }
 
-, 'test reverse for string': function() {
+, 'test reverse for string': function () {
     var data = string.reverse('yddeg')
       , expected = 'geddy';
     assert.equal(expected, data);
   }
 
-, 'test basic ltrim for string': function() {
+, 'test basic ltrim for string': function () {
     var data = string.ltrim('   geddy')
       , expected = 'geddy';
     assert.equal(expected, data);
   }
 
-, 'test custom char ltrim for string': function() {
+, 'test custom char ltrim for string': function () {
     var data = string.ltrim('&&geddy', '&')
       , expected = 'geddy';
     assert.equal(expected, data);
   }
 
-, 'test basic rtrim for string': function() {
+, 'test basic rtrim for string': function () {
     var data = string.rtrim('geddy  ')
       , expected = 'geddy';
     assert.equal(expected, data);
   }
 
-, 'test custom char rtrim for string': function() {
+, 'test custom char rtrim for string': function () {
     var data = string.rtrim('geddy&&', '&')
       , expected = 'geddy';
     assert.equal(expected, data);
   }
 
-, 'test basic trim for string': function() {
+, 'test basic trim for string': function () {
     var data = string.trim(' geddy  ')
       , expected = 'geddy';
     assert.equal(expected, data);
   }
 
-, 'test custom char trim for string': function() {
+, 'test custom char trim for string': function () {
     var data = string.trim('&geddy&&', '&')
       , expected = 'geddy';
     assert.equal(expected, data);
   }
 
-, 'test chop special-case line-ending': function() {
+, 'test chop special-case line-ending': function () {
     var expected = 'geddy'
       , actual = string.chop('geddy\r\n');
     assert.equal(expected, actual);
   }
 
-, 'test chop not actual special-case line-ending': function() {
+, 'test chop not actual special-case line-ending': function () {
     var expected = 'geddy\n'
       , actual = string.chop('geddy\n\r');
     assert.equal(expected, actual);
   }
 
-, 'test chop normal line-ending': function() {
+, 'test chop normal line-ending': function () {
     var expected = 'geddy'
       , actual = string.chop('geddy\n');
     assert.equal(expected, actual);
   }
 
-, 'test chop whatever character': function() {
+, 'test chop whatever character': function () {
     var expected = 'gedd'
       , actual = string.chop('geddy');
     assert.equal(expected, actual);
   }
 
-, 'test chop empty string': function() {
+, 'test chop empty string': function () {
     var expected = ''
       , actual = string.chop('');
     assert.equal(expected, actual);
   }
 
-, 'test basic lpad for string': function() {
+, 'test basic lpad for string': function () {
     var data = string.lpad('geddy', '&', 7)
       , expected = '&&geddy';
     assert.equal(expected, data);
   }
 
-, 'test lpad without width for string': function() {
+, 'test lpad without width for string': function () {
     var data = string.lpad('geddy', '&')
       , expected = 'geddy';
     assert.equal(expected, data);
   }
 
-, 'test lpad without width of char for string': function() {
+, 'test lpad without width of char for string': function () {
     var data = string.lpad('geddy')
       , expected = 'geddy';
     assert.equal(expected, data);
   }
 
-, 'test basic rpad for string': function() {
+, 'test basic rpad for string': function () {
     var data = string.rpad('geddy', '&', 7)
       , expected = 'geddy&&';
     assert.equal(expected, data);
   }
 
-, 'test rpad without width for string': function() {
+, 'test rpad without width for string': function () {
     var data = string.rpad('geddy', '&')
       , expected = 'geddy';
     assert.equal(expected, data);
   }
 
-, 'test rpad without width of char for string': function() {
+, 'test rpad without width of char for string': function () {
     var data = string.rpad('geddy')
       , expected = 'geddy';
     assert.equal(expected, data);
   }
 
-, 'test basic pad for string': function() {
+, 'test basic pad for string': function () {
     var data = string.pad('geddy', '&', 7)
       , expected = '&geddy&';
     assert.equal(expected, data);
   }
 
-, 'test pad without width for string': function() {
+, 'test pad without width for string': function () {
     var data = string.pad('geddy', '&')
       , expected = 'geddy';
     assert.equal(expected, data);
   }
 
-, 'test pad without width of char for string': function() {
+, 'test pad without width of char for string': function () {
     var data = string.pad('geddy')
       , expected = 'geddy';
     assert.equal(expected, data);
@@ -241,73 +241,73 @@ tests = {
   // We could test truncate and truncateHTML here, but helper tests already
   // include tests for them
 
-, 'test nl2br for string': function() {
+, 'test nl2br for string': function () {
     var data = string.nl2br("geddy\n")
       , expected = 'geddy<br />';
     assert.equal(expected, data);
   }
 
-, 'test snakeize for string': function() {
+, 'test snakeize for string': function () {
     var data = string.snakeize("geddyJs")
       , expected = 'geddy_js';
     assert.equal(expected, data);
   }
 
-, 'test snakeize with beginning caps for string': function() {
+, 'test snakeize with beginning caps for string': function () {
     var data = string.snakeize("GeddyJs")
       , expected = 'geddy_js';
     assert.equal(expected, data);
   }
 
-, 'test camelize for string': function() {
+, 'test camelize for string': function () {
     var data = string.camelize("geddy_js")
       , expected = 'geddyJs';
     assert.equal(expected, data);
   }
 
-, 'test camelize with initialCap for string': function() {
+, 'test camelize with initialCap for string': function () {
     var data = string.camelize("geddy_js", {initialCap: true})
       , expected = 'GeddyJs';
     assert.equal(expected, data);
   }
 
-, 'test camelize with leadingUnderscore with no underscore for string': function() {
+, 'test camelize with leadingUnderscore with no underscore for string': function () {
     var data = string.camelize("geddy_js", {leadingUnderscore: true})
       , expected = 'geddyJs';
     assert.equal(expected, data);
   }
 
-, 'test camelize with leadingUnderscore with underscore for string': function() {
+, 'test camelize with leadingUnderscore with underscore for string': function () {
     var data = string.camelize("_geddy_js", {leadingUnderscore: true})
       , expected = '_geddyJs';
     assert.equal(expected, data);
   }
 
-, 'test decapitalize for string': function() {
+, 'test decapitalize for string': function () {
     var data = string.decapitalize("Geddy")
       , expected = 'geddy';
     assert.equal(expected, data);
   }
 
-, 'test capitalize for string': function() {
+, 'test capitalize for string': function () {
     var data = string.capitalize("geddy")
       , expected = 'Geddy';
     assert.equal(expected, data);
   }
 
-, 'test dasherize for string': function() {
+, 'test dasherize for string': function () {
     var data = string.dasherize("geddyJs")
       , expected = 'geddy-js';
     assert.equal(expected, data);
   }
 
-, 'test dasherize with custom replace char for string': function() {
+, 'test dasherize with custom replace char for string': function () {
     var data = string.dasherize("geddyJs", "_")
       , expected = 'geddy_js';
     assert.equal(expected, data);
   }
 
-, 'test underscorize for string': function() {
+, 'test underscorize for string': function () {
     var data = string.underscorize("geddyJs")
       , expected = 'geddy_js';
     assert.equal(expected, data);
@@ -321,7 +321,7 @@ tests = {
     assert.ok(!string.include('foobarbaz', 'qux'));
   }
 
-, 'test getInflections for string': function() {
+, 'test getInflections for string': function () {
     var actual = string.getInflections("string")
       , expected = {
         filename: {
@@ -341,7 +341,7 @@ tests = {
     assert.deepEqual(expected, actual);
   }
 
-, 'test inflection with odd name for string': function() {
+, 'test inflection with odd name for string': function () {
     var actual = string.getInflections("snow_dog")
       , expected = {
         filename: {
@@ -361,7 +361,7 @@ tests = {
     assert.deepEqual(expected, actual);
   }
 
-, 'test uuid length for string': function() {
+, 'test uuid length for string': function () {
     var data = string.uuid(5).length
       , expected = 5;
     assert.equal(expected, data);

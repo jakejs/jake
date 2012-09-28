@@ -20,4 +20,4 @@
 var args = process.argv.slice(2)
   , jake = require('../lib/jake');
 
-jake.run(args);
+jake.run.apply(jake, args);

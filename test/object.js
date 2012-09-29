@@ -35,6 +35,12 @@ tests = {
     assert.deepEqual(actual, expected);
   }
 
+, 'test merge with objects as keys': function () {
+    var expected = {user: {name: 'geddy', password: 'random', key: 'key'}, key: 'key'}
+      , actual = object.merge({key: 'key'}, {user: {name: 'geddy', password: 'random', key: 'key'}});
+    assert.deepEqual(actual, expected);
+  }
+
 , 'test reverseMerge in object': function () {
     var expected = {user: 'geddy', key: 'key'}
       , actual = object.reverseMerge({user: 'geddy'}, {key: 'key'});
@@ -44,6 +50,12 @@ tests = {
 , 'test reverseMerge with keys overwriting default in object': function () {
     var expected = {user: 'geddy', key: 'geddyKey'}
     , actual = object.reverseMerge({user: 'geddy', key: 'geddyKey'}, {key: 'key'});
+    assert.deepEqual(actual, expected);
+  }
+
+, 'test reverseMerge with objects as keys': function () {
+    var expected = {user: {name: 'geddy', password: 'random', key: 'key'}, key: 'key'}
+      , actual = object.merge({user: {name: 'geddy', password: 'random', key: 'key'}}, {key: 'key'});
     assert.deepEqual(actual, expected);
   }
 

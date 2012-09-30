@@ -20,6 +20,7 @@ var assert = require('assert')
   , fs = require('fs')
   , path = require('path')
   , file = require('../lib/file')
+  , existsSync = path.existsSync || fs.existsSync
   , tests;
 
 tests = {
@@ -55,6 +56,28 @@ tests = {
     assert.equal(1, res.length);
     assert.equal('foo', res[0]);
     fs.rmdirSync('foo');
+  }
+
+, 'test cpR with same to and from will throw': function () {
+    assert.throws(function () {
+      file.cpR('foo.txt', 'foo.txt', {silent: true});
+    });
+  }
+
+, 'test cpR rename via copy in directory': function () {
+    file.mkdirP('foo', {silent: true});
+    fs.writeFileSync('foo/bar.txt', 'w00t');
+    file.cpR('foo/bar.txt', 'foo/baz.txt', {silent: true});
+    assert.ok(existsSync('foo/baz.txt'));
+    file.rmRf('foo', {silent: true});
+  }
+
+, 'test cpR rename via copy in base': function () {
+    fs.writeFileSync('bar.txt', 'w00t');
+    file.cpR('bar.txt', 'baz.txt', {silent: true});
+    assert.ok(existsSync('baz.txt'));
+    file.rmRf('bar.txt', {silent: true});
+    file.rmRf('baz.txt', {silent: true});
   }
 
 , 'test readdirR': function () {

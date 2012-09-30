@@ -81,19 +81,19 @@ tests = {
   }
 
 , 'test readdirR': function () {
-    var res = []
-      , expected = [
-          'foo'
-        , 'foo/bar'
-        , 'foo/bar/baz'
-        , 'foo/bar/baz/qux'
-      ]
+    var expected = [
+          ['foo']
+        , ['foo', 'bar']
+        , ['foo', 'bar', 'baz']
+        , ['foo', 'bar', 'baz', 'qux']
+        ]
+      , res;
 
     file.mkdirP('foo/bar/baz/qux', {silent: true});
     res = file.readdirR('foo');
 
     for (var i = 0, ii = res.length; i < ii; i++) {
-      assert.equal(expected[i], res[i]);
+      assert.equal(path.join.apply(path, expected[i]), res[i]);
     }
     file.rmRf('foo', {silent: true});
   }

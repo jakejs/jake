@@ -20,7 +20,7 @@ var assert = require('assert')
   , fs = require('fs')
   , path = require('path')
   , file = require('../lib/file')
-  , existsSync = path.existsSync || fs.existsSync
+  , existsSync = fs.existsSync || path.existsSync
   , tests;
 
 tests = {

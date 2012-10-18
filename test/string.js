@@ -238,8 +238,45 @@ tests = {
     assert.equal(expected, data);
   }
 
-  // We could test truncate and truncateHTML here, but helper tests already
-  // include tests for them
+, 'test single tags in truncateHTML': function () {
+    var str = string.truncateHTML('<p>Once upon a time in a world</p>', { length: 10 });
+    assert.equal(str, '<p>Once up...</p>');
+  }
+
+, 'test multiple tags in truncateHTML': function () {
+    var str = string.truncateHTML('<p>Once upon a time <small>in a world</small></p>', { length: 10 });
+    assert.equal(str, '<p>Once up...<small>in a wo...</small></p>');
+  }
+
+, 'test multiple tags but only truncate once in truncateHTML': function () {
+    var str = string.truncateHTML('<p>Once upon a time <small>in a world</small></p>', { length: 10, once: true });
+    assert.equal(str, '<p>Once up...<small>in a world</small></p>');
+  }
+
+, 'test standard truncate': function () {
+    var str = string.truncate('Once upon a time in a world', { length: 10 });
+    assert.equal(str, 'Once up...');
+  }
+
+, 'test custom omission in truncate': function () {
+    var str = string.truncate('Once upon a time in a world', { length: 10, omission: '///' });
+    assert.equal(str, 'Once up///');
+  }
+
+, 'test regex seperator in truncate': function () {
+    var str = string.truncate('Once upon a time in a world', { length: 15, seperator: /\s/ });
+    assert.equal(str, 'Once upon a...');
+  }
+
+, 'test string seperator in truncate': function () {
+    var str = string.truncate('Once upon a time in a world', { length: 15, seperator: ' ' });
+    assert.equal(str, 'Once upon a...');
+  }
+
+, 'test unsafe html in truncate': function () {
+    var str = string.truncate('<p>Once upon a time in a world</p>', { length: 20 });
+    assert.equal(str, '<p>Once upon a ti...');
+  }
 
 , 'test nl2br for string': function () {
     var data = string.nl2br("geddy\n")

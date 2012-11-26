@@ -385,7 +385,7 @@ task('invokeFooBar', function () {
   jake.Task['foo:bar'].invoke();
   // Does nothing
   jake.Task['foo:bar'].invoke();
-  // Only re-runs foo:bar, but not its prerequisites
+  // Re-runs foo:bar and all of its prerequisites
   jake.Task['foo:bar'].reenable(true);
   jake.Task['foo:bar'].invoke();
 });

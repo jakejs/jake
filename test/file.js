@@ -160,6 +160,11 @@ tests = {
     assert.equal('C:\\foo\\bar', file.basedir(p));
   }
 
+, 'test basedir with Unix root path': function () {
+    var p = '/';
+    assert.equal('/', file.basedir(p));
+  }
+
 , 'test basedir with Unix absolute path and double-asterisk': function () {
     var p = '/**/foo/bar/baz';
     assert.equal('/', file.basedir(p));
@@ -186,8 +191,24 @@ tests = {
   }
 
 , 'test basedir with leading dot-dot-slash and double-asterisk': function () {
-    var p = '../test/**/*.js';
-    assert.equal('../test', file.basedir(p));
+    var p = '../../test/**/*.js';
+    assert.equal('../../test', file.basedir(p));
+  }
+
+, 'test basedir with single-asterisk in dirname': function () {
+    var p = 'a/test*/file';
+    assert.equal('a', file.basedir(p));
+  }
+
+, 'test basedir with single filename': function () {
+    var p = 'filename';
+    assert.equal('.', file.basedir(p));
+  }
+
+, 'test basedir with empty path': function () {
+    var p = '';
+    assert.equal('.', file.basedir(p));
+    assert.equal('.', file.basedir());
   }
 
 };

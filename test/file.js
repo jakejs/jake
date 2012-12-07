@@ -152,12 +152,12 @@ tests = {
 
 , 'test basedir with Unix absolute path': function () {
     var p = '/foo/bar/baz';
-    assert.equal('/', file.basedir(p));
+    assert.equal('/foo/bar', file.basedir(p));
   }
 
 , 'test basedir with Win absolute path': function () {
     var p = 'C:\\foo\\bar\\baz';
-    assert.equal('C:\\', file.basedir(p));
+    assert.equal('C:\\foo\\bar', file.basedir(p));
   }
 
 , 'test basedir with Unix absolute path and double-asterisk': function () {
@@ -187,7 +187,7 @@ tests = {
 
 , 'test basedir with leading dot-dot-slash and double-asterisk': function () {
     var p = '../test/**/*.js';
-    assert.equal('..', file.basedir(p));
+    assert.equal('../test', file.basedir(p));
   }
 
 };

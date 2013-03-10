@@ -16,6 +16,7 @@ var helpers = new (function () {
       };
 
   this.exec = function (cmd, callback) {
+    cmd += ' --trace';
     exec(cmd, function (err, stdout, stderr) {
       var out = helpers.trim(stdout);
       if (err) {

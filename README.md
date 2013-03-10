@@ -2,9 +2,21 @@
 
 ### Installing with [NPM](http://npmjs.org/)
 
+Install globally with:
+
     npm install -g jake
 
-Note that Jake is a system-level tool, and wants to be installed globally.
+Or you may also install it as a development dependency in a package.json file:
+
+    // package.json
+    "devDependencies": {
+      "jake": "latest"
+    }
+
+Then install it with `npm install`
+
+Note Jake is intended to be mostly a command-line tool, but lately there have been
+changes to it so it can be either embedded, or run from inside your project.
 
 ### Installing from source
 

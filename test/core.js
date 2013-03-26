@@ -22,28 +22,52 @@ var assert = require('assert')
 
 tests = {
 
-  'test simple mixin for core': function () {
+  'simple mixin for core': function () {
     var expected = {secret: 'asdf', geddy: 'geddyKey'}
       , result = core.mixin({secret: 'asdf'}, {geddy: 'geddyKey'});
     assert.deepEqual(expected, result);
   }
 
-, 'test mixin with overiding key for core': function () {
+, 'mixin with overiding key for core': function () {
     var expected = {secret: 'geddySecret', geddy: 'geddyKey'}
       , result = core.mixin({secret: 'asdf'}, {geddy: 'geddyKey', secret: 'geddySecret'});
     assert.deepEqual(expected, result);
   }
 
-, 'test simple enhance for core': function () {
+, 'simple enhance for core': function () {
     var expected = {secret: 'asdf', geddy: 'geddyKey'}
       , result = core.enhance({secret: 'asdf'}, {geddy: 'geddyKey'});
     assert.deepEqual(expected, result);
   }
 
-, 'test enhance with overiding key for core': function () {
+, 'enhance with overiding key for core': function () {
     var expected = {secret: 'geddySecret', geddy: 'geddyKey'}
       , result = core.enhance({secret: 'asdf'}, {geddy: 'geddyKey', secret: 'geddySecret'});
     assert.deepEqual(expected, result);
+  }
+
+, 'isEmpty, empty string (true)': function () {
+    assert.ok(core.isEmpty(''));
+  }
+
+, 'isEmpty, null (true)': function () {
+    assert.ok(core.isEmpty(null));
+  }
+
+, 'isEmpty, undefined (true)': function () {
+    assert.ok(core.isEmpty(null));
+  }
+
+, 'isEmpty, NaN (true)': function () {
+    assert.ok(core.isEmpty(NaN));
+  }
+
+, 'isEmpty, invalid Date (true)': function () {
+    assert.ok(core.isEmpty(new Date(NaN)));
+  }
+
+, 'isEmpty, zero (false)': function () {
+    assert.ok(!core.isEmpty(0));
   }
 
 };

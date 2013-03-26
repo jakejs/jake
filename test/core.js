@@ -22,25 +22,7 @@ var assert = require('assert')
 
 tests = {
 
-  'test simple objectToString for core': function () {
-    var expected = 'theyre=their, youre=your'
-      , result = core.objectToString({theyre: 'their', youre: 'your'});
-    assert.equal(expected, result);
-  }
-
-, 'test objectToString with object as value in core': function () {
-    var expected = 'theyre=their, youre=youre, your=your'
-      , result = core.objectToString({theyre: 'their', youre: {youre: 'youre', your: 'your'}});
-    assert.equal(expected, result);
-  }
-
-, 'test objectToString with array as value in core': function () {
-    var expected = 'theyre=their, 0=youre, 1=your'
-      , result = core.objectToString({theyre: 'their', youre: ['youre', 'your']});
-    assert.equal(expected, result);
-  }
-
-, 'test simple mixin for core': function () {
+  'test simple mixin for core': function () {
     var expected = {secret: 'asdf', geddy: 'geddyKey'}
       , result = core.mixin({secret: 'asdf'}, {geddy: 'geddyKey'});
     assert.deepEqual(expected, result);

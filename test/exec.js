@@ -70,7 +70,6 @@ var tests = {
     ex.run();
   }
 
-/*
 , 'test piping results into next command': function (next) {
     var ex = jake.createExec('ls', function () {})
       , data
@@ -107,7 +106,6 @@ var tests = {
     });
     ex.run();
   }
-*/
 
 };
 

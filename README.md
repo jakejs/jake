@@ -414,6 +414,65 @@ task('passParams', function () {
 });
 ```
 
+### Managing asynchrony without prereqs (e.g., when using `invoke`)
+
+You can mix sync and async without problems when using normal prereqs, because
+the Jake execution loop takes care of the difference for you. But when you call
+`invoke` or `execute`, you have to manage the asynchrony yourself.
+
+Here's a correct working example:
+
+```javascript
+task('async1', ['async2'], {async: true}, function () {
+    console.log('-- async1 start ----------------');
+    setTimeout(function () {
+        console.log('-- async1 done ----------------');
+        complete();
+    }, 1000);
+});
+
+task('async2', {async: true}, function () {
+    console.log('-- async2 start ----------------');
+    setTimeout(function () {
+        console.log('-- async2 done ----------------');
+        complete();
+    }, 500);
+});
+
+task('init', ['async1', 'async2'], {async: true}, function () {
+    console.log('-- init start ----------------');
+    setTimeout(function () {
+        console.log('-- init done ----------------');
+        complete();
+    }, 100);
+});
+
+task('default', {async: true}, function () {
+  console.log('-- default start ----------------');
+  var init = jake.Task.init;
+  init.addListener('complete', function () {
+    console.log('-- default done ----------------');
+    complete();
+  });
+  init.invoke();
+});
+```
+
+You have to declare the "default" task as asynchronous as well, and call
+`complete` on it when "init" finishes. Here's the output:
+
+    -- default start ----------------
+    -- async2 start ----------------
+    -- async2 done ----------------
+    -- async1 start ----------------
+    -- async1 done ----------------
+    -- init start ----------------
+    -- init done ----------------
+    -- default done ----------------
+
+You get what you expect -- "default" starts, the rest runs, and finally
+"default" finishes.
+
 ### Evented tasks
 
 Tasks are EventEmitters. They can fire 'complete' and 'error' events.
@@ -587,20 +646,33 @@ task('test', {async: true}, function () {
   , 'node ./tests/task_base.js'
   , 'node ./tests/file_task.js'
   ];
-  jake.exec(cmds, function () {
+  jake.exec(cmds, {printStdout: true}, function () {
     console.log('All tests passed.');
     complete();
-  }, {printStdout: true});
+  });
+
+desc('Runs some apps in interactive mode.');
+task('interactiveTask', {async: true}, function () {
+  var cmds = [
+    'node' // Node conosle
+  , 'vim' // Open Vim
+  ];
+  jake.exec(cmds, {interactive: true}, function () {
+    complete();
+  });
 });
 ```
 
 It also takes an optional options-object, with the following options:
 
-* `printStdout` (print to stdout, default false)
+ * `interactive` (tasks are interactive, trumps printStdout and
+    printStderr below, default false)
 
-* `printStderr` (print to stderr, default false)
+ * `printStdout` (print to stdout, default false)
 
-* `breakOnError` (stop execution on error, default true)
+ * `printStderr` (print to stderr, default false)
+
+ * `breakOnError` (stop execution on error, default true)
 
 This command doesn't pipe input between commands -- it's for simple execution.
 

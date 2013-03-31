@@ -414,9 +414,11 @@ task('passParams', function () {
 });
 ```
 
+### Managing asynchrony without prereqs (e.g., when using `invoke`)
+
 You can mix sync and async without problems when using normal prereqs, because
 the Jake execution loop takes care of the difference for you. But when you call
-`invoke` you have to manage it yourself.
+`invoke` or `execute`, you have to manage it yourself.
 
 Here's a correct working example:
 

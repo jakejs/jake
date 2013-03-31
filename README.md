@@ -587,20 +587,33 @@ task('test', {async: true}, function () {
   , 'node ./tests/task_base.js'
   , 'node ./tests/file_task.js'
   ];
-  jake.exec(cmds, function () {
+  jake.exec(cmds, {printStdout: true}, function () {
     console.log('All tests passed.');
     complete();
-  }, {printStdout: true});
+  });
+
+desc('Runs some apps in interactive mode.');
+task('interactiveTask', {async: true}, function () {
+  var cmds = [
+    'node' // Node conosle
+  , 'vim' // Open Vim
+  ];
+  jake.exec(cmds, {interactive: true}, function () {
+    complete();
+  });
 });
 ```
 
 It also takes an optional options-object, with the following options:
 
-* `printStdout` (print to stdout, default false)
+ * `interactive` (tasks are interactive, trumps printStdout and
+    printStderr below, default false)
 
-* `printStderr` (print to stderr, default false)
+ * `printStdout` (print to stdout, default false)
 
-* `breakOnError` (stop execution on error, default true)
+ * `printStderr` (print to stderr, default false)
+
+ * `breakOnError` (stop execution on error, default true)
 
 This command doesn't pipe input between commands -- it's for simple execution.
 

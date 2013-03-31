@@ -211,4 +211,59 @@ namespace('one', function() {
   });
 });
 
+namespace('ruleTest', function () {
+  directory('rule');
 
+  desc('File task, concatenating two files together');
+  file({'rule/concat.txt': ['ruleTest:rule', 'fileTest:foo/src1.txt', 'fileTest:foo/src2.txt']}, function () {
+    console.log('fileTest:foo/concat.txt task');
+    var data1 = fs.readFileSync('foo/src1.txt');
+    var data2 = fs.readFileSync('foo/src2.txt');
+    fs.writeFileSync('foo/concat.txt', data1 + data2);
+  });
+
+/*
+  desc('File task, async creation with child_process.exec');
+  file('foo/src1.txt', function () {
+    fs.writeFile('foo/src1.txt', 'src1', function (err) {
+      if (err) {
+        throw err;
+      }
+      console.log('fileTest:foo/src1.txt task');
+      complete();
+    });
+  }, {async: true});
+
+  desc('File task, sync creation with writeFileSync');
+  file('foo/src2.txt', ['default'], function () {
+    fs.writeFileSync('foo/src2.txt', 'src2');
+    console.log('fileTest:foo/src2.txt task');
+  });
+
+  desc('File task, do not run unless the prereq file changes');
+  file('foo/from-src1.txt', ['fileTest:foo', 'fileTest:foo/src1.txt'], function () {
+    var data = fs.readFileSync('foo/src1.txt');
+    fs.writeFileSync('foo/from-src1.txt', data);
+    console.log('fileTest:foo/from-src1.txt task');
+  }, {async: true});
+
+  desc('File task, run if the prereq file changes');
+  task('touch-prereq', function() {
+    fs.writeFileSync('foo/prereq.txt', 'UPDATED');
+  })
+
+  desc('File task, has a preexisting file (with no associated task) as a prereq');
+  file('foo/from-prereq.txt', ['fileTest:foo', 'foo/prereq.txt'], function () {
+    var data = fs.readFileSync('foo/prereq.txt');
+    fs.writeFileSync('foo/from-prereq.txt', data);
+    console.log('fileTest:foo/from-prereq.txt task');
+  });
+
+  directory('foo/bar/baz');
+
+  desc('Write a file in a nested subdirectory');
+  file('foo/bar/baz/bamf.txt', ['foo/bar/baz'], function () {
+    fs.writeFileSync('foo/bar/baz/bamf.txt', 'w00t');
+  });
+*/
+});

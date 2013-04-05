@@ -17,8 +17,8 @@ file('tmp', ['tmp_init', 'tmp_dep1.o', 'tmp_dep2.o'], function (params) {
     fs.writeFileSync('tmp', data1 + data2);
 });
 
-rule('.o', '.c', function(obj, src) {
-  var cmd = util.format('cp %s %s', src, obj);
+rule('.o', '.c', function() {
+  var cmd = util.format('cp %s %s', this.source, this.name);
   console.log(cmd + ' task');
   jake.exec([cmd], function () {
     complete();
@@ -56,8 +56,8 @@ file('tmp_p', ['tmp_init', 'tmp_dep1.oo', 'tmp_dep2.oo'], function (params) {
     fs.writeFileSync('tmp_p', data1 + data2 + ' pattern');
 });
 
-rule('%.oo', '%.c', function(obj, src) {
-  var cmd = util.format('cp %s %s', src, obj);
+rule('%.oo', '%.c', function() {
+  var cmd = util.format('cp %s %s', this.source, this.name);
   console.log(cmd + ' task');
   jake.exec([cmd], function () {
     complete();
@@ -79,8 +79,8 @@ file('tmp_pf', [
     fs.writeFileSync('tmp_pf', data1 + data2 + ' pattern folder');
 });
 
-rule('tmpbin/%.oo', 'tmpsrc/%.c', function(obj, src) {
-  var cmd = util.format('cp %s %s', src, obj);
+rule('tmpbin/%.oo', 'tmpsrc/%.c', function() {
+  var cmd = util.format('cp %s %s', this.source, this.name);
   console.log(cmd + ' task');
   jake.exec([cmd], function () {
     complete();
@@ -151,8 +151,8 @@ namespace('rule', function() {
     });
   }, {async: true});
 
-  rule('tmpbin/%.oo', 'tmpsrc/%.c', function(obj, src) {
-    var cmd = util.format('cp %s %s', src, obj);
+  rule('tmpbin/%.oo', 'tmpsrc/%.c', function() {
+    var cmd = util.format('cp %s %s', this.source, this.name);
     console.log(cmd + ' ns task');
     jake.exec([cmd], function () {
       complete();
@@ -163,8 +163,8 @@ namespace('rule', function() {
 
 ////////////////////////////////////////////////////////////
 // Chain rule
-// rule('tmpbin/%.pdf', 'tmpbin/%.dvi', function(obj, src) {
-// rule('tmpbin/%.dvi', 'tmpsrc/%.tex', ['tmpbin'], function(obj, src) {
+// rule('tmpbin/%.pdf', 'tmpbin/%.dvi', function() { ...
+// rule('tmpbin/%.dvi', 'tmpsrc/%.tex', ['tmpbin'], function() { ...
 task('tmp_cr', [
     'chainrule:init'
   , 'chainrule:tmpbin/file1.pdf'
@@ -176,22 +176,22 @@ task('tmp_cr', [
 });
 
 namespace('chainrule', function() {
-  task('init', ['tmpsrc'], function () {
+  task('init', ['tmpsrc', 'tmpbin'], function () {
     fs.writeFileSync('tmpsrc/file1.tex', 'tex1 ');
     fs.writeFileSync('tmpsrc/file2.tex', 'tex2 ');
     console.log('chainrule init task');
   });
 
-  rule('tmpbin/%.pdf', 'tmpbin/%.dvi', function(obj, src) {
-    var cmd = util.format('cp %s %s', src, obj);
+  rule('tmpbin/%.pdf', 'tmpbin/%.dvi', function() {
+    var cmd = util.format('cp %s %s', this.source, this.name);
     console.log(cmd + ' dvi->pdf task');
     jake.exec([cmd], function () {
       complete();
     });
   }, { async : true });
 
-  rule('tmpbin/%.dvi', 'tmpsrc/%.tex', ['tmpbin'], function(obj, src) {
-    var cmd = util.format('cp %s %s', src, obj);
+  rule('tmpbin/%.dvi', 'tmpsrc/%.tex', ['tmpbin'], function() {
+    var cmd = util.format('cp %s %s', this.source, this.name);
     console.log(cmd + ' tex->dvi task');
     jake.exec([cmd], function () {
       complete();

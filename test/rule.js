@@ -2,7 +2,8 @@ var assert = require('assert')
   , fs = require('fs')
   , path = require('path')
   , exec = require('child_process').exec
-  , h = require('./helpers');
+  , h = require('./helpers')
+  , Matcher = require('../lib/rule').Matcher;
 
 var cleanUpAndNext = function (callback) {
   exec('rm -fr ./foo ./tmp*', function (err, stdout, stderr) {
@@ -22,6 +23,19 @@ var tests = {
 
 , 'after': function () {
     process.chdir('../');
+  }
+
+  //  - name   foo:bin/main.o
+  //  - pattern    bin/%.o
+  //  - source    src/%.c
+  //
+  // return {
+  //    'dep' : 'foo:src/main.c',
+  //    'file': 'src/main.c'
+  //  };
+, 'Matcher.source': function () {
+    var src = Matcher.source('foo:bin/main.o', 'bin/%.o', 'src/%.c');
+    assert.equal('foo:src/main.c', src);
   }
 
 , 'test rule w/o pattern': function (next) {

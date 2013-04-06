@@ -1,9 +1,10 @@
 var assert = require('assert')
   , h = require('./helpers')
-  , jake = {}
-  , utils = require('../lib/utils');
+  , api = require('../lib/api')
+  , Namespace = require('../lib/namespace').Namespace;
 
-utils.mixin(jake, utils);
+var jake = {};
+jake.defaultNamespace = new Namespace('default', null);
 
 var tests = {
   'before': function() {
@@ -12,6 +13,30 @@ var tests = {
 
 , 'after': function() {
     process.chdir('../');
+  }
+
+, 'resolve namespace by relative name': function () {
+    var foo
+      , bar
+      , baz;
+
+    foo = namespace('foo', function () {
+      bar = namespace('bar', function () {
+        baz = namespace('baz', function () {
+        });
+      });
+    });
+
+    assert.ok(foo === baz.resolveNamespace('foo'),
+        'foo -> "foo"');
+    assert.ok(bar === baz.resolveNamespace('foo:bar'),
+        'bar -> "foo:bar"');
+    assert.ok(bar === baz.resolveNamespace('bar'),
+        'bar -> "bar"');
+    assert.ok(baz === baz.resolveNamespace('foo:bar:baz'),
+        'baz -> "foo:bar:baz"');
+    assert.ok(baz === baz.resolveNamespace('bar:baz'),
+        'baz -> "bar:baz"');
   }
 
 , 'test modifying a namespace by adding a new task': function(next) {

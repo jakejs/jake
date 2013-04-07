@@ -1,5 +1,5 @@
 var exec = require('child_process').exec
-  , fs = require('fs') 
+  , fs = require('fs')
   , util = require('util')
 
 
@@ -199,7 +199,19 @@ namespace('chainrule', function() {
   }, { async : true });
 });
 ////////////////////////////////////////////////////////////
+namespace('precedence', function () {
+  task('foo', ['foo.html'], function () {
+    console.log('ran foo');
+  });
 
+  rule('.html', '.txt', function () {
+    console.log('created html');
+    var data = fs.readFileSync(this.source);
+    fs.writeFileSync(this.name, data.toString());
+  });
+});
+
+////////////////////////////////////////////////////////////
 task('clean', function() {
   exec('rm -fr ./foo ./tmp*', function (err, stdout, stderr) {
     if (err) { throw err }

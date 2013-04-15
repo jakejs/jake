@@ -18,8 +18,9 @@ var cleanUpAndNext = function (callback) {
 
 var tests = {
 
-  'before': function () {
+  'before': function (next) {
     process.chdir('./test');
+    cleanUpAndNext(next);
   }
 
 , 'after': function () {

@@ -3,7 +3,8 @@ var assert = require('assert')
   , path = require('path')
   , exec = require('child_process').exec
   , h = require('./helpers')
-  , Matcher = require('../lib/rule').Matcher;
+  , Matcher = require('../lib/rule').Matcher
+  , utils = require('../lib/utils');
 
 var cleanUpAndNext = function (callback) {
   exec('rm -fr ./foo ./tmp*', function (err, stdout, stderr) {
@@ -121,6 +122,73 @@ var tests = {
       cleanUpAndNext(next);
     });
   }
+
+, 'test rule with source file not created yet': function (next) {
+    utils.file.rmRf('foo.txt', {silent: true});
+    utils.file.rmRf('foo.html', {silent: true});
+    h.exec('../bin/cli.js  -f Jakefile.rule precedence:test', {breakOnError: false},
+        function (out) {
+      // foo.txt prereq doesn't exist yet
+      assert.ok(out.toString().indexOf('Unknown task "foo.txt"') > -1);
+      next();
+    });
+  }
+
+, 'test rule with source file now created': function (next) {
+    fs.writeFileSync('foo.txt', '');
+    h.exec('../bin/cli.js  -f Jakefile.rule precedence:test', function (out) {
+      var output = [
+        'created html'
+      , 'ran foo'
+      ];
+      assert.equal(output.join('\n'), out);
+      next();
+    });
+  }
+
+, 'test rule with objective file now created': function (next) {
+    fs.writeFileSync('foo.txt', '');
+    h.exec('../bin/cli.js  -f Jakefile.rule precedence:test', function (out) {
+      var output = [
+        'ran foo'
+      ];
+      assert.equal(output.join('\n'), out);
+      next();
+    });
+  }
+
+, 'test rule with source file modified': function (next) {
+    setTimeout(function () {
+      exec('touch foo.txt', function (err, data) {
+        if (err) {
+          throw err;
+        }
+        h.exec('../bin/cli.js  -f Jakefile.rule precedence:test', function (out) {
+          var output = [
+            'created html'
+          , 'ran foo'
+          ];
+          assert.equal(output.join('\n'), out);
+          //next();
+          cleanUpAndNext(next);
+        });
+      });
+    }, 1000); // Wait to do the touch to ensure mod-time is different
+  }
+
+/*
+, 'test rule with objective file now created': function (next) {
+    // Remove just the source file
+    utils.file.rmRf('foo.txt', {silent: true});
+    h.exec('../bin/cli.js  -f Jakefile.rule precedence:test', function (out) {
+      var output = [
+        'ran foo'
+      ];
+      assert.equal(output.join('\n'), out);
+      cleanUpAndNext(next);
+    });
+  }
+*/
 
 };
 

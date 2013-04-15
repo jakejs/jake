@@ -200,7 +200,7 @@ namespace('chainrule', function() {
 });
 ////////////////////////////////////////////////////////////
 namespace('precedence', function () {
-  task('foo', ['foo.html'], function () {
+  task('test', ['foo.html'], function () {
     console.log('ran foo');
   });
 

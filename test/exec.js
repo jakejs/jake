@@ -24,14 +24,17 @@ var tests = {
         }
       , incr = 0; // Increment with each event to check order
     assert.ok(ex instanceof jake.Exec);
+
+    var addListenerAndIncrement = function (p) {
+      ex.addListener(p, function () {
+        evts[p][1] = incr;
+        incr++;
+      });
+    };
+
     // Make sure basic events fire and fire in the right order
     for (var p in evts) {
-      (function (p) {
-        ex.addListener(p, function () {
-          evts[p][1] = incr;
-          incr++;
-        });
-      })(p);
+      addListenerAndIncrement(p);
     }
     ex.run();
     ex.addListener('end', function () {

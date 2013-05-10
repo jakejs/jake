@@ -6,7 +6,7 @@ var assert = require('assert')
 
 var cleanUpAndNext = function (callback) {
   exec('rm -fr ./foo', function (err, stdout, stderr) {
-    if (err) { throw err }
+    if (err) { throw err; }
     if (stderr || stdout) {
       console.log (stderr || stdout);
     }

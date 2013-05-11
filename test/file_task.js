@@ -111,7 +111,7 @@ var tests = {
 
 , 'test nested directory-task': function (next) {
     h.exec('../bin/cli.js fileTest:foo/bar/baz/bamf.txt', function (out) {
-      data = fs.readFileSync(process.cwd() + '/foo/bar/baz/bamf.txt');
+      var data = fs.readFileSync(process.cwd() + '/foo/bar/baz/bamf.txt');
       assert.equal('w00t', data);
       cleanUpAndNext(next);
     });

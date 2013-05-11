@@ -17,6 +17,7 @@ var helpers = new (function () {
 
   this.exec = function () {
     var args = Array.prototype.slice.call(arguments)
+      , arg
       , cmd = args.shift()
       , opts = {}
       , callback;

@@ -1,10 +1,10 @@
+// Load the jake global
+require('../lib/jake');
+
 var assert = require('assert')
   , h = require('./helpers')
   , api = require('../lib/api')
   , Namespace = require('../lib/namespace').Namespace;
-
-var jake = {};
-jake.defaultNamespace = new Namespace('default', null);
 
 var tests = {
   'before': function() {

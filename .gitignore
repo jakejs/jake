@@ -1,0 +1,10 @@
+*.swp
+*.swo
+dist
+.idea/
+tags
+nbproject/
+node_modules
+tmtags
+*.DS_Store
+

@@ -119,7 +119,7 @@ var tests = {
     assert.equal(undefined, res.taskName);
   }
 
-, 'test --trace does not expect a value, -f does (throw howdy away)': function () {
+, 'test --trace does not expect a value (equal), -f does (throw howdy away)': function () {
     res = p.parse(z('--trace=howdy --jakefile=zoobie'));
     assert.equal(true, res.opts.trace);
     assert.equal('zoobie', res.opts.jakefile);

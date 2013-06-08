@@ -15,12 +15,32 @@ var helpers = new (function () {
         }
       };
 
-  this.exec = function (cmd, callback) {
+  this.exec = function () {
+    var args = Array.prototype.slice.call(arguments)
+      , arg
+      , cmd = args.shift()
+      , opts = {}
+      , callback;
+    // Optional opts/callback or callback/opts
+    while ((arg = args.shift())) {
+      if (typeof arg == 'function') {
+        callback = arg;
+      }
+      else {
+        opts = arg;
+      }
+    }
+
     cmd += ' --trace';
     exec(cmd, function (err, stdout, stderr) {
       var out = helpers.trim(stdout);
       if (err) {
-        throw err;
+        if (opts.breakOnError === false) {
+          return callback(err);
+        }
+        else {
+          throw err;
+        }
       }
       if (stderr) {
         callback(stderr);

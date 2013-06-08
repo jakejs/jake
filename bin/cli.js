@@ -17,7 +17,9 @@
  *
 */
 
-var args = process.argv.slice(2)
-  , jake = require('../lib/jake');
+// Load `jake` global
+require('../lib/jake');
+
+var args = process.argv.slice(2);
 
 jake.run.apply(jake, args);

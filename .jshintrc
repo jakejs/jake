@@ -1,0 +1,19 @@
+{
+  "laxcomma": true,
+  "laxbreak": true,
+  "supernew": true,
+  "curly": true,
+  "immed": true,
+  "undef": true,
+  "node": true,
+  "globals": {
+    "jake": false,
+    "task": false,
+    "namespace": false,
+    "desc": false,
+    "complete": false,
+    "file": false,
+    "directory": false,
+    "fail": false
+  }
+}

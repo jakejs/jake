@@ -1,9 +1,8 @@
 var assert = require('assert')
   , h = require('./helpers')
-  , jake = {}
   , utils = require('../lib/utils');
 
-utils.mixin(jake, utils);
+utils.mixin(utils, utils);
 
 var tests = {
   'before': function () {
@@ -15,7 +14,7 @@ var tests = {
   }
 
 , 'test basic exec': function (next) {
-    var ex = jake.createExec('ls', function () {})
+    var ex = utils.createExec('ls', function () {})
       , evts = { // Events should fire in this order
           cmdStart: [0, null]
         , stdout: [1, null]
@@ -23,15 +22,18 @@ var tests = {
         , end: [3, null]
         }
       , incr = 0; // Increment with each event to check order
-    assert.ok(ex instanceof jake.Exec);
+    assert.ok(ex instanceof utils.Exec);
+
+    var addListenerAndIncrement = function (p) {
+      ex.addListener(p, function () {
+        evts[p][1] = incr;
+        incr++;
+      });
+    };
+
     // Make sure basic events fire and fire in the right order
     for (var p in evts) {
-      (function (p) {
-        ex.addListener(p, function () {
-          evts[p][1] = incr;
-          incr++;
-        });
-      })(p);
+      addListenerAndIncrement(p);
     }
     ex.run();
     ex.addListener('end', function () {
@@ -44,7 +46,7 @@ var tests = {
   }
 
 , 'test an exec failure': function (next) {
-    var ex = jake.createExec('false', function () {});
+    var ex = utils.createExec('false', function () {});
     ex.addListener('error', function (msg, code) {
       assert.equal(1, code);
       next();
@@ -53,7 +55,7 @@ var tests = {
   }
 
 , 'test exec stdout events': function (next) {
-    var ex = jake.createExec('echo "foo"', function () {});
+    var ex = utils.createExec('echo "foo"', function () {});
     ex.addListener('stdout', function (data) {
       assert.equal("foo", h.trim(data.toString()));
       next();
@@ -62,7 +64,7 @@ var tests = {
   }
 
 , 'test exec stderr events': function (next) {
-    var ex = jake.createExec('echo "foo" 1>&2', function () {});
+    var ex = utils.createExec('echo "foo" 1>&2', function () {});
     ex.addListener('stderr', function (data) {
       assert.equal("foo", h.trim(data.toString()));
       next();
@@ -71,7 +73,7 @@ var tests = {
   }
 
 , 'test piping results into next command': function (next) {
-    var ex = jake.createExec('ls', function () {})
+    var ex = utils.createExec('ls', function () {})
       , data
       , appended = false;
 

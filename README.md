@@ -173,11 +173,11 @@ task('asyncTask', {async: true}, function () {
 });
 ```
 
-A Task is also an EventEmitter which emits the 'complete' event when it is
-finished. This allows asynchronous tasks to be run from within other asked via
-either `invoke` or `execute`, and ensure they will complete before the rest of
-the containing task executes. See the section "Running tasks from within other
-tasks," below.
+A Task is also an EventEmitter which emits the 'start' event when it begins to
+run, and the 'complete' event when it is finished. This allows asynchronous
+tasks to be run from within other asked via either `invoke` or `execute`, and
+ensure they will complete before the rest of the containing task executes. See
+the section "Running tasks from within other tasks," below.
 
 ### File-tasks
 
@@ -307,8 +307,8 @@ command. You can do this by adding this line to your `.zshrc` file :
 
 ### Cleanup after all tasks run, jake 'complete' event
 
-The base 'jake' object is an EventEmitter, and fires a 'complete' event after
-running all tasks.
+The base 'jake' object is an EventEmitter, and fires a 'start' event before
+running, and a 'complete' event after running all tasks.
 
 This is sometimes useful when a task starts a process which keeps the Node
 event-loop running (e.g., a database connection). If you know you want to stop

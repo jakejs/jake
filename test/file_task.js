@@ -6,7 +6,7 @@ var assert = require('assert')
 
 var cleanUpAndNext = function (callback) {
   exec('rm -fr ./foo', function (err, stdout, stderr) {
-    if (err) { throw err }
+    if (err) { throw err; }
     if (stderr || stdout) {
       console.log (stderr || stdout);
     }
@@ -16,8 +16,9 @@ var cleanUpAndNext = function (callback) {
 
 var tests = {
 
-  'before': function () {
+  'before': function (next) {
     process.chdir('./test');
+    cleanUpAndNext(next);
   }
 
 , 'after': function () {
@@ -42,9 +43,23 @@ var tests = {
       h.exec('../bin/cli.js fileTest:foo/from-src1.txt', function (out) {
         // Second time should be a no-op
         assert.equal('', out);
-        cleanUpAndNext(next);
+        next(); // Don't clean up
       });
     });
+  }
+
+, 'file-task where prereq file is modified': function (next) {
+    setTimeout(function () {
+      exec('touch ./foo/src1.txt', function (err, data) {
+        if (err) {
+          throw err;
+        }
+        h.exec('../bin/cli.js fileTest:foo/from-src1.txt', function (out) {
+          assert.equal('fileTest:foo/from-src1.txt task', out);
+          cleanUpAndNext(next);
+        });
+      });
+    }, 1000); // Wait to do the touch to ensure mod-time is different
   }
 
 , 'test where a file-task prereq does not change with --always-make': function (next) {
@@ -96,7 +111,7 @@ var tests = {
 
 , 'test nested directory-task': function (next) {
     h.exec('../bin/cli.js fileTest:foo/bar/baz/bamf.txt', function (out) {
-      data = fs.readFileSync(process.cwd() + '/foo/bar/baz/bamf.txt');
+      var data = fs.readFileSync(process.cwd() + '/foo/bar/baz/bamf.txt');
       assert.equal('w00t', data);
       cleanUpAndNext(next);
     });

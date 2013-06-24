@@ -845,6 +845,12 @@ If a test needs to run asynchronously, simply define the test-function with a
 single argument, a callback. Jake will define this as an asynchronous task, and
 will wait until the callback is called in the test function to run the next test.
 
+If you name your test 'before', it will run before any of the other tests you
+export. You can use it for test-setup. If you name a test 'after', it will run
+after all the other tests have finished. You can use it for teardown. The
+'before' and 'after' will only run once per test module -- *not* before and
+after each test.
+
 Here's an example test-file:
 
 ```javascript
@@ -852,7 +858,13 @@ var assert = require('assert')
   , tests;
 
 tests = {
-  'sync test': function () {
+  'before': function () {
+    // Do some setup here
+  }
+, 'after': function () {
+    // Do some teardown here
+  }
+, 'sync test': function () {
     // Assert something
     assert.ok(true);
   }

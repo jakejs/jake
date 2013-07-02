@@ -17,6 +17,9 @@
     "type": "git",
     "url": "git://github.com/mde/utilities.git"
   },
+  "devDependencies": {
+    "jake": "latest"
+  },
   "engines": {
     "node": "*"
   }

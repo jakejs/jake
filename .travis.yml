@@ -1,4 +1,7 @@
 language: node_js
 node_js:
+  - "0.10"
   - "0.8"
   - "0.6"
+
+script: ./node_modules/jake/bin/cli.js test --trace

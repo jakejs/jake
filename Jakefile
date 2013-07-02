@@ -1,6 +1,11 @@
 
 var t = new jake.TestTask('Utilities', function () {
   this.testFiles.include('test/*.js');
+  
+  // Can't reliably test ports on travis
+  if(process.env.CI) {
+    this.testFiles.exclude('test/network.js');
+  }
 });
 
 namespace('doc', function () {

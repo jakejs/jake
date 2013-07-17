@@ -35,7 +35,7 @@ var tests = {
   //    'dep' : 'foo:src/main.c',
   //    'file': 'src/main.c'
   //  };
-, 'Matcher.source': function () {
+, 'test Matcher.source': function () {
     var src = Matcher.source('foo:bin/main.o', 'bin/%.o', 'src/%.c');
     assert.equal('foo:src/main.c', src);
   }

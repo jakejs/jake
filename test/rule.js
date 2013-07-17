@@ -130,7 +130,7 @@ var tests = {
     h.exec('../bin/cli.js  -f Jakefile.rule precedence:test', {breakOnError: false},
         function (out) {
       // foo.txt prereq doesn't exist yet
-      assert.ok(out.toString().indexOf('Unknown task "foo.txt"') > -1);
+      assert.ok(out.toString().indexOf('Unknown task "foo.html"') > -1);
       next();
     });
   }
@@ -138,9 +138,10 @@ var tests = {
 , 'test rule with source file now created': function (next) {
     fs.writeFileSync('foo.txt', '');
     h.exec('../bin/cli.js  -f Jakefile.rule precedence:test', function (out) {
+      // Should run prereq and test task
       var output = [
         'created html'
-      , 'ran foo'
+      , 'ran test'
       ];
       assert.equal(output.join('\n'), out);
       next();
@@ -150,8 +151,9 @@ var tests = {
 , 'test rule with objective file now created': function (next) {
     fs.writeFileSync('foo.txt', '');
     h.exec('../bin/cli.js  -f Jakefile.rule precedence:test', function (out) {
+      // Should only run test task
       var output = [
-        'ran foo'
+        'ran test'
       ];
       assert.equal(output.join('\n'), out);
       next();
@@ -165,9 +167,10 @@ var tests = {
           throw err;
         }
         h.exec('../bin/cli.js  -f Jakefile.rule precedence:test', function (out) {
+          // Should again run both prereq and test task
           var output = [
             'created html'
-          , 'ran foo'
+          , 'ran test'
           ];
           assert.equal(output.join('\n'), out);
           //next();
@@ -177,19 +180,20 @@ var tests = {
     }, 1000); // Wait to do the touch to ensure mod-time is different
   }
 
-/*
-, 'test rule with objective file now created': function (next) {
+, 'test rule with existing objective file and no source (should be normal file-task)':
+      function (next) {
     // Remove just the source file
     utils.file.rmRf('foo.txt', {silent: true});
     h.exec('../bin/cli.js  -f Jakefile.rule precedence:test', function (out) {
+      // Should treat existing objective file as plain file-task,
+      // and just run test-task
       var output = [
-        'ran foo'
+        'ran test'
       ];
       assert.equal(output.join('\n'), out);
       cleanUpAndNext(next);
     });
   }
-*/
 
 };
 

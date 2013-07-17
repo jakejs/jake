@@ -201,7 +201,7 @@ namespace('chainrule', function() {
 ////////////////////////////////////////////////////////////
 namespace('precedence', function () {
   task('test', ['foo.html'], function () {
-    console.log('ran foo');
+    console.log('ran test');
   });
 
   rule('.html', '.txt', function () {

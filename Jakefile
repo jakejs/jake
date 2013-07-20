@@ -30,14 +30,19 @@ namespace('doc', function () {
 desc('Generate docs for Jake');
 task('doc', ['doc:generate']);
 
-npmPublishTask('jake', [
-  'Makefile'
-, 'Jakefile'
-, 'README.md'
-, 'package.json'
-, 'lib/**'
-, 'bin/**'
-, 'test/**'
-]);
+npmPublishTask('jake', function () {
+  this.packageFiles.include([
+    'Makefile'
+  , 'Jakefile'
+  , 'README.md'
+  , 'package.json'
+  , 'lib/*'
+  , 'bin/*'
+  , 'tests/*'
+    ]);
+  this.packageFiles.exclude([
+    'test/tmp'
+  ]);
+});
 
 

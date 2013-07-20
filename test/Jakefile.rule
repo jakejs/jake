@@ -211,6 +211,35 @@ namespace('precedence', function () {
   });
 });
 
+namespace('regexPattern', function () {
+  task('test', ['foo.html'], function () {
+    console.log('ran test');
+  });
+
+  rule(/\.html$/, '.txt', function () {
+    console.log('created html');
+    var data = fs.readFileSync(this.source);
+    fs.writeFileSync(this.name, data.toString());
+  });
+});
+
+namespace('sourceFunction', function () {
+
+  var srcFunc = function (taskName) {
+    return taskName.replace(/\.[^.]+$/, '.txt');
+  };
+
+  task('test', ['foo.html'], function () {
+    console.log('ran test');
+  });
+
+  rule('.html', srcFunc, function () {
+    console.log('created html');
+    var data = fs.readFileSync(this.source);
+    fs.writeFileSync(this.name, data.toString());
+  });
+});
+
 ////////////////////////////////////////////////////////////
 task('clean', function() {
   exec('rm -fr ./foo ./tmp*', function (err, stdout, stderr) {

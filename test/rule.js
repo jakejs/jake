@@ -35,8 +35,8 @@ var tests = {
   //    'dep' : 'foo:src/main.c',
   //    'file': 'src/main.c'
   //  };
-, 'test Matcher.source': function () {
-    var src = Matcher.source('foo:bin/main.o', 'bin/%.o', 'src/%.c');
+, 'test Matcher.getSource': function () {
+    var src = Matcher.getSource('foo:bin/main.o', 'bin/%.o', 'src/%.c');
     assert.equal('foo:src/main.c', src);
   }
 
@@ -124,20 +124,24 @@ var tests = {
     });
   }
 
-, 'test rule with source file not created yet': function (next) {
+};
+
+['precedence', 'regexPattern', 'sourceFunction'].forEach(function (key) {
+
+  tests['test rule with source file not created yet (' + key  + ')'] = function (next) {
     utils.file.rmRf('foo.txt', {silent: true});
     utils.file.rmRf('foo.html', {silent: true});
-    h.exec('../bin/cli.js  -f Jakefile.rule precedence:test', {breakOnError: false},
+    h.exec('../bin/cli.js  -f Jakefile.rule ' + key + ':test', {breakOnError: false},
         function (out) {
       // foo.txt prereq doesn't exist yet
       assert.ok(out.toString().indexOf('Unknown task "foo.html"') > -1);
       next();
     });
-  }
+  };
 
-, 'test rule with source file now created': function (next) {
+  tests['test rule with source file now created (' + key  + ')'] = function (next) {
     fs.writeFileSync('foo.txt', '');
-    h.exec('../bin/cli.js  -f Jakefile.rule precedence:test', function (out) {
+    h.exec('../bin/cli.js  -f Jakefile.rule ' + key + ':test', function (out) {
       // Should run prereq and test task
       var output = [
         'created html'
@@ -146,11 +150,11 @@ var tests = {
       assert.equal(output.join('\n'), out);
       next();
     });
-  }
+  };
 
-, 'test rule with objective file now created': function (next) {
+  tests['test rule with objective file now created (' + key  + ')'] = function (next) {
     fs.writeFileSync('foo.txt', '');
-    h.exec('../bin/cli.js  -f Jakefile.rule precedence:test', function (out) {
+    h.exec('../bin/cli.js  -f Jakefile.rule ' + key + ':test', function (out) {
       // Should only run test task
       var output = [
         'ran test'
@@ -158,15 +162,15 @@ var tests = {
       assert.equal(output.join('\n'), out);
       next();
     });
-  }
+  };
 
-, 'test rule with source file modified': function (next) {
+  tests['test rule with source file modified (' + key  + ')'] = function (next) {
     setTimeout(function () {
       exec('touch foo.txt', function (err, data) {
         if (err) {
           throw err;
         }
-        h.exec('../bin/cli.js  -f Jakefile.rule precedence:test', function (out) {
+        h.exec('../bin/cli.js  -f Jakefile.rule ' + key + ':test', function (out) {
           // Should again run both prereq and test task
           var output = [
             'created html'
@@ -178,13 +182,13 @@ var tests = {
         });
       });
     }, 1000); // Wait to do the touch to ensure mod-time is different
-  }
+  };
 
-, 'test rule with existing objective file and no source (should be normal file-task)':
-      function (next) {
+  tests['test rule with existing objective file and no source ' +
+      ' (should be normal file-task) (' + key  + ')'] = function (next) {
     // Remove just the source file
     utils.file.rmRf('foo.txt', {silent: true});
-    h.exec('../bin/cli.js  -f Jakefile.rule precedence:test', function (out) {
+    h.exec('../bin/cli.js  -f Jakefile.rule ' + key + ':test', function (out) {
       // Should treat existing objective file as plain file-task,
       // and just run test-task
       var output = [
@@ -193,9 +197,12 @@ var tests = {
       assert.equal(output.join('\n'), out);
       cleanUpAndNext(next);
     });
-  }
+  };
 
-};
+});
+
+
+
 
 module.exports = tests;
 

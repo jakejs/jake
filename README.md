@@ -246,6 +246,23 @@ namespace('foo', function () {
 
 In this example, the foo:baz task depends on the the default and foo:bar tasks.
 
+### Rules
+
+When you add a filename as a prerequisite for a task, but there is not a file on
+disk, or a file-task defined for it, Jake can create file-tasks on the fly from
+Rules.
+
+Here's an example:
+
+```javascript
+rule('.o', '.c', { async : true }, function() {
+  var cmd = 'cc ' + this.source + ' -c -o ' + this.name;
+  jake.exec(cmd, function () {
+    complete();
+  });
+});
+```
+
 ### Passing parameters to jake
 
 Parameters can be passed to Jake two ways: plain arguments, and environment

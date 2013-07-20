@@ -1032,7 +1032,7 @@ npmPublishTask('jake', function () {
   , 'package.json'
   , 'lib/*'
   , 'bin/*'
-  , 'tests/*'
+  , 'test/*'
     ]);
   this.packageFiles.exclude([
     'test/tmp'

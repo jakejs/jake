@@ -750,42 +750,6 @@ task('echo', {async: true}, function () {
 });
 ```
 
-## PackageTask
-
-Instantiating a PackageTask programmically creates a set of tasks for packaging
-up your project for distribution. Here's an example:
-
-```javascript
-var t = new jake.PackageTask('fonebone', 'v0.1.2112', function () {
-  var fileList = [
-    'Jakefile'
-  , 'README.md'
-  , 'package.json'
-  , 'lib/*'
-  , 'bin/*'
-  , 'tests/*'
-  ];
-  this.packageFiles.include(fileList);
-  this.needTarGz = true;
-  this.needTarBz2 = true;
-});
-```
-
-This will automatically create a 'package' task that will assemble the specified
-files in 'pkg/fonebone-v0.1.2112,' and compress them according to the specified
-options. After running `jake package`, you'll have the following in pkg/:
-
-    fonebone-v0.1.2112
-    fonebone-v0.1.2112.tar.bz2
-    fonebone-v0.1.2112.tar.gz
-
-PackageTask also creates a 'clobber' task that removes the pkg/
-directory.
-
-The [PackageTask API
-docs](http://mde.github.com/jake/doc/symbols/jake.PackageTask.html) include a
-lot more information, including different archiving options.
-
 ### FileList
 
 Jake's FileList takes a list of glob-patterns and file-names, and lazy-creates a
@@ -817,16 +781,53 @@ with an array of items, or mutliple single parameters. Items can be
 glob-patterns, individual file-names, string-representations of
 regular-expressions, or regular-expression literals.
 
-## TestTask
+## PackageTask
 
-Instantiating a TestTask programmically creates a simple task for running tests
-for your project. The first argument of the constructor is the project-name
-(used in the description of the task), and the second argument is a function
-that defines the task. It allows you to specifify what files to run as tests,
-and what to name the task that gets created (defaults to "test" if unset).
+When you create a PackageTask, it programmically creates a set of tasks for
+packaging up your project for distribution. Here's an example:
 
 ```javascript
-var t = new jake.TestTask('fonebone', function () {
+packageTask('fonebone', 'v0.1.2112', function () {
+  var fileList = [
+    'Jakefile'
+  , 'README.md'
+  , 'package.json'
+  , 'lib/*'
+  , 'bin/*'
+  , 'tests/*'
+  ];
+  this.packageFiles.include(fileList);
+  this.needTarGz = true;
+  this.needTarBz2 = true;
+});
+```
+
+This will automatically create a 'package' task that will assemble the specified
+files in 'pkg/fonebone-v0.1.2112,' and compress them according to the specified
+options. After running `jake package`, you'll have the following in pkg/:
+
+    fonebone-v0.1.2112
+    fonebone-v0.1.2112.tar.bz2
+    fonebone-v0.1.2112.tar.gz
+
+PackageTask also creates a 'clobber' task that removes the pkg/
+directory.
+
+The [PackageTask API
+docs](http://mde.github.com/jake/doc/symbols/jake.PackageTask.html) include a
+lot more information, including different archiving options.
+
+## TestTask
+
+When you create a TestTask, it programmically creates a simple task for running
+tests for your project. The first argument of the constructor is the
+project-name (used in the description of the task), and the second argument is a
+function that defines the task. It allows you to specifify what files to run as
+tests, and what to name the task that gets created (defaults to "test" if
+unset).
+
+```javascript
+testTask('fonebone', function () {
   var fileList = [
     'tests/*'
   , 'lib/adapters/**/test.js'
@@ -885,6 +886,42 @@ module.exports = tests;
 
 Jake's tests are also a good example of use of a TestTask.
 
+## WatchTask
+
+When you create a WatchTask, it will watch a directory of files for changes, and
+run a task or set of tasks anytime there's a change.
+
+```javascript
+// Assumes there's an 'assets' task
+watchTask(['assets'], function () {
+  this.watchFiles.include([
+    './**/*.ejs'
+  ]);
+});
+```
+
+By default, it will watch the current directory for these files:
+
+```javascript
+[ './**/*.js'
+, './**/*.coffee'
+, './**/*.css'
+, './**/*.less'
+, './**/*.scss'
+]
+```
+
+It will exclude these files:
+
+```javascript
+[ 'node_modules/**'
+, '.git/**'
+]
+```
+
+The list of watched files is in a FileList, with the normal `include`/`exclude`
+API.
+
 ## NpmPublishTask
 
 The NpmPublishTask builds on top of PackageTask to allow you to do a version
@@ -895,7 +932,7 @@ NPM.
 Here's an example from Jake's Jakefile:
 
 ```javascript
-var p = new jake.NpmPublishTask('jake', [
+npmPublishTask('jake', [
   'Makefile'
 , 'Jakefile'
 , 'README.md'

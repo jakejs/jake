@@ -16,7 +16,7 @@
 ### 0.4
 + Embeddable Jake, non-CLI use
 
-### v0.3
+### 0.3
 + TestTask, for minimal test-running
 + Chaining support for FileList API
 + Node v0.8 compatibility
@@ -24,7 +24,7 @@
 + `namespace` appends instead of overwriting
 + Numerous PackageTask archiving fixes
 
-### v0.2
+### 0.2
 + NpmPublishTask, for automating NPM publishing
 + FileUtils, for sync filesystem manipulation
 + Evented tasks
@@ -33,7 +33,7 @@
 + Massive refactor of task/file-task/directory-task
 + Shit-ton of new tests
 
-### v0.1
+### 0.1
 + FileTask, DirectoryTask
 + PackageTask, for easy project packaging
 + FileList, for lazy-access of long lists of filenames, pattern-matching

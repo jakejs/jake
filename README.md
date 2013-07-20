@@ -255,11 +255,52 @@ Rules.
 Here's an example:
 
 ```javascript
-rule('.o', '.c', { async : true }, function() {
+rule('.o', '.c', {async: true}, function () {
   var cmd = 'cc ' + this.source + ' -c -o ' + this.name;
   jake.exec(cmd, function () {
     complete();
   });
+});
+```
+
+This rule will take effect for any task-name that ends in '.o', but will require
+the existence of a prerequisite source file with the same name ending in '.c'.
+
+For example, with this rule, if you reference a task 'foobarbaz.o' as a
+prerequisite somewhere in one of your Jake tasks, rather than complaining about
+this file not existing, or the lack of a task with that name, Jake will
+automatically create a FileTask for 'foobarbaz.o' with the action specified in
+the rule you've defined. (The usual action would be to create 'foobarbaz.o' from
+'foobarbaz.c'). If 'foobarbaz.c' does not exist, it will recursively attempt
+synthesize a viable rule for it as well.
+
+#### Regex patterns
+
+You can use regular expresions to match file extensions as well:
+
+```javascript
+rule(/\.o$/, '.c', {async: true}, function () {
+  var cmd = 'cc ' + this.source + ' -c -o ' + this.name;
+  jake.exec(cmd, function () {
+    complete();
+  });
+});
+```
+
+#### Source files from functions
+
+You can also use a function to calculate the name of the desired source-file to
+use, instead of assuming simple suffix-substitution:
+
+```javascript
+// Match .less.css or .scss.css and run appropriate preprocessor
+var getSourceFilename = function (name) {
+  // Strip off the extension for the filename
+  return name.replace(/\.css$/, '');
+};
+rule(/\.\w{2,4}\.css$/, getSourceFilename, {async: true}, function () {
+  // Get appropriate preprocessor for this.source, e.g., foo.less
+  // Generate a file with filename of this.name, e.g., foo.less.css
 });
 ```
 
@@ -428,6 +469,40 @@ task('passParams', function () {
   var t = jake.Task['foo:bar'];
   // Calls foo:bar, passing along current args
   t.invoke.apply(t, arguments);
+});
+```
+
+### Getting values out of tasks
+
+Passing a value to the `complete` function for async tasks (or simply returning
+a value from sync tasks) will set a 'value' property on the completed task. This
+same value will also be passed as the task emits its 'complete' event.
+
+After a task is completed, this value will be also available in the '.value'
+property on the task. Calling `reenable` on the task will clear this value.
+
+
+```javascript
+task('environment', {async: true}, function () {
+  // Do some sort of I/O to figure out the environment value
+  doSomeAsync(function (err, val) {
+    if (err) { throw err }
+    complete(val);
+  });
+});
+
+task("someTaskWithEnvViaPrereq", ["envrionment"], function () {
+  api = jake.Task["envrionment"].value;
+  console.log(api);
+});
+
+task("someTaskWithEnvViaInvoke", {async: true}, function () {
+  var env = jake.Task["envrionment"];
+  env.addListener('complete', function (api) {
+    console.log(api);
+    complete();
+  });
+  env.invoke();
 });
 ```
 
@@ -942,22 +1017,27 @@ API.
 ## NpmPublishTask
 
 The NpmPublishTask builds on top of PackageTask to allow you to do a version
-bump of your project, package it, and publish it to NPM. Define the task with
-your project's name, and the list of files you want packaged and published to
-NPM.
+tump of your project, package it, and publish it to NPM. Define the task with
+your project's name, and call `include`/`exclude` on the `packageFiles` FileList
+to create the list of files you want packaged and published to NPM.
 
 Here's an example from Jake's Jakefile:
 
 ```javascript
-npmPublishTask('jake', [
-  'Makefile'
-, 'Jakefile'
-, 'README.md'
-, 'package.json'
-, 'lib/*'
-, 'bin/*'
-, 'tests/*'
-]);
+npmPublishTask('jake', function () {
+  this.packageFiles.include([
+    'Makefile'
+  , 'Jakefile'
+  , 'README.md'
+  , 'package.json'
+  , 'lib/*'
+  , 'bin/*'
+  , 'tests/*'
+    ]);
+  this.packageFiles.exclude([
+    'test/tmp'
+  ]);
+});
 ```
 
 The NpmPublishTask will automatically create a `publish` task which performs the

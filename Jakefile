@@ -1,7 +1,7 @@
 var fs = require('fs')
   , path = require('path');
 
-var t = new jake.TestTask('Jake', function () {
+testTask('Jake', function () {
   this.testFiles.include('test/*.js');
   this.testFiles.exclude('test/helpers.js');
 });
@@ -30,7 +30,7 @@ namespace('doc', function () {
 desc('Generate docs for Jake');
 task('doc', ['doc:generate']);
 
-var p = new jake.NpmPublishTask('jake', [
+npmPublishTask('jake', [
   'Makefile'
 , 'Jakefile'
 , 'README.md'

@@ -110,8 +110,8 @@ var tests = {
   }
 
 , 'test promise async task': function (next) {
-    h.exec('node ../bin/cli.js bar:promise', function (out) {
-      assert.equal('bar:promise task', out);
+    h.exec('node ../bin/cli.js bar:dependOnpromise', function (out) {
+      assert.equal('bar:promise task\nbar:dependOnpromise task', out);
       next();
     });
   }

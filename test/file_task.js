@@ -2,7 +2,8 @@ var assert = require('assert')
   , fs = require('fs')
   , path = require('path')
   , exec = require('child_process').exec
-  , h = require('./helpers');
+  , h = require('./helpers')
+  , u = require('utilities');
 
 var cleanUpAndNext = function (callback) {
   exec('rm -fr ./foo', function (err, stdout, stderr) {
@@ -76,35 +77,35 @@ var tests = {
 
 , 'test a preexisting file': function (next) {
     var prereqData = 'howdy';
-    h.exec('mkdir -p foo', function (out) {
-      fs.writeFileSync('foo/prereq.txt', prereqData);
+    u.file.rmRf('foo');
+    u.file.mkdirP('foo');
+    fs.writeFileSync('foo/prereq.txt', prereqData);
+    h.exec('node ../bin/cli.js fileTest:foo/from-prereq.txt', function (out) {
+      var data;
+      assert.equal('fileTest:foo/from-prereq.txt task', out);
+      data = fs.readFileSync(process.cwd() + '/foo/from-prereq.txt');
+      assert.equal(prereqData, data.toString());
       h.exec('node ../bin/cli.js fileTest:foo/from-prereq.txt', function (out) {
-        var data;
-        assert.equal('fileTest:foo/from-prereq.txt task', out);
-        data = fs.readFileSync(process.cwd() + '/foo/from-prereq.txt');
-        assert.equal(prereqData, data.toString());
-        h.exec('node ../bin/cli.js fileTest:foo/from-prereq.txt', function (out) {
-          // Second time should be a no-op
-          assert.equal('', out);
-          cleanUpAndNext(next);
-        });
+        // Second time should be a no-op
+        assert.equal('', out);
+        cleanUpAndNext(next);
       });
     });
   }
 
 , 'test a preexisting file with --always-make flag': function (next) {
     var prereqData = 'howdy';
-    h.exec('mkdir -p foo', function (out) {
-      fs.writeFileSync('foo/prereq.txt', prereqData);
-      h.exec('node ../bin/cli.js fileTest:foo/from-prereq.txt', function (out) {
-        var data;
+    u.file.rmRf('foo');
+    u.file.mkdirP('foo');
+    fs.writeFileSync('foo/prereq.txt', prereqData);
+    h.exec('node ../bin/cli.js fileTest:foo/from-prereq.txt', function (out) {
+      var data;
+      assert.equal('fileTest:foo/from-prereq.txt task', out);
+      data = fs.readFileSync(process.cwd() + '/foo/from-prereq.txt');
+      assert.equal(prereqData, data.toString());
+      h.exec('node ../bin/cli.js -B fileTest:foo/from-prereq.txt', function (out) {
         assert.equal('fileTest:foo/from-prereq.txt task', out);
-        data = fs.readFileSync(process.cwd() + '/foo/from-prereq.txt');
-        assert.equal(prereqData, data.toString());
-        h.exec('node ../bin/cli.js -B fileTest:foo/from-prereq.txt', function (out) {
-          assert.equal('fileTest:foo/from-prereq.txt task', out);
-          cleanUpAndNext(next);
-        });
+        cleanUpAndNext(next);
       });
     });
   }

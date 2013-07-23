@@ -991,6 +991,7 @@ watchTask(['assets'], function () {
   ]);
 });
 ```
+Run `jake watch` to start up the WatchTask.
 
 By default, it will watch the current directory for these files:
 
@@ -1030,9 +1031,9 @@ npmPublishTask('jake', function () {
   , 'Jakefile'
   , 'README.md'
   , 'package.json'
-  , 'lib/*'
-  , 'bin/*'
-  , 'test/*'
+  , 'lib/**'
+  , 'bin/**'
+  , 'test/**'
     ]);
   this.packageFiles.exclude([
     'test/tmp'

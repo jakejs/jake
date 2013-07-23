@@ -37,9 +37,9 @@ npmPublishTask('jake', function () {
   , 'Jakefile'
   , 'README.md'
   , 'package.json'
-  , 'lib/*'
-  , 'bin/*'
-  , 'test/*'
+  , 'lib/**'
+  , 'bin/**'
+  , 'test/**'
     ]);
   this.packageFiles.exclude([
     'test/tmp'

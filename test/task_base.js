@@ -111,7 +111,7 @@ var tests = {
 
 , 'test promise async task': function (next) {
     h.exec('node ../bin/cli.js bar:dependOnpromise', function (out) {
-      assert.equal('bar:promise task\nbar:dependOnpromise task', out);
+      assert.equal('bar:promise task\nbar:dependOnpromise task saw value 123654', out);
       next();
     });
   }

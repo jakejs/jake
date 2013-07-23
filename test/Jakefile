@@ -85,12 +85,13 @@ namespace('bar', function () {
     return Q()
     .then(function() {
       console.log('bar:promise task');
+      return 123654;
     });
   });
 
   desc('The bar:dependOnpromise task waits for a promise based async test');
   task('dependOnpromise', ['promise'], function() {
-      console.log('bar:dependOnpromise task');
+      console.log('bar:dependOnpromise task saw value', jake.Task["bar:promise"].value);
   });
 
   desc('The bar:brokenPromise task is a failing promised based async task.');

@@ -57,7 +57,8 @@ var tests = {
 , 'test exec stdout events': function (next) {
     var ex = utils.createExec('echo "foo"', function () {});
     ex.addListener('stdout', function (data) {
-      assert.equal("foo", h.trim(data.toString()));
+      //  on Windows, h.trim(data) was "\\\"foo\\"
+      assert.notEqual(data.toString().indexOf("foo"), -1);
       next();
     });
     ex.run();
@@ -66,7 +67,8 @@ var tests = {
 , 'test exec stderr events': function (next) {
     var ex = utils.createExec('echo "foo" 1>&2', function () {});
     ex.addListener('stderr', function (data) {
-      assert.equal("foo", h.trim(data.toString()));
+      //  on Windows, h.trim(data) was "\\\"foo\\"
+      assert.notEqual(data.toString().indexOf("foo"), -1);
       next();
     });
     ex.run();

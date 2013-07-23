@@ -991,6 +991,7 @@ watchTask(['assets'], function () {
   ]);
 });
 ```
+Run `jake watch` to start up the WatchTask.
 
 By default, it will watch the current directory for these files:
 

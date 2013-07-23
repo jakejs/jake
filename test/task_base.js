@@ -109,6 +109,20 @@ var tests = {
     });
   }
 
+, 'test promise async task': function (next) {
+    h.exec('node ../bin/cli.js bar:promise', function (out) {
+      assert.equal('bar:promise task', out);
+      next();
+    });
+  }
+
+, 'test failing promise async task': function (next) {
+    h.exec('node ../bin/cli.js bar:brokenPromise', {breakOnError:false}, function (out) {
+      assert.equal(1, out.code);
+      next();
+    });
+  }
+
 , 'test that current-prereq index gets reset': function (next) {
     h.exec('node ../bin/cli.js hoge:kira', function (out) {
       assert.equal('hoge:hoge task\nhoge:piyo task\nhoge:fuga task\n' +

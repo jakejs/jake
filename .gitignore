@@ -7,4 +7,5 @@ nbproject/
 node_modules
 tmtags
 *.DS_Store
+test/tmp*
 

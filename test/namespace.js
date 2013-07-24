@@ -40,7 +40,7 @@ var tests = {
   }
 
 , 'test modifying a namespace by adding a new task': function(next) {
-    h.exec('../bin/cli.js one:two', function(out) {
+    h.exec('node ../bin/cli.js one:two', function(out) {
       assert.equal('one:one\none:two', out);
       next();
     });

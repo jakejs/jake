@@ -4,6 +4,7 @@ var fs = require('fs')
 testTask('Jake', function () {
   this.testFiles.include('test/*.js');
   this.testFiles.exclude('test/helpers.js');
+  this.testFiles.exclude('test\\helpers.js'); //  windows..  resolvePath() results are normalized
 });
 
 namespace('doc', function () {

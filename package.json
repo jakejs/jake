@@ -20,10 +20,11 @@
   "preferGlobal": true,
   "dependencies": {
     "minimatch": "0.2.x",
-    "utilities": "0.0.x",
+    "utilities": "0.0.x"
+  },
+  "devDependencies": {
     "q": "0.9.x"
   },
-  "devDependencies": {},
   "engines": {
     "node": "*"
   }

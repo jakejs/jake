@@ -800,7 +800,7 @@ has an `append` method for adding new commands to the list of commands to run.
 Here's an example:
 
 ```javascript
-var ex = jake.createExec(['do_thing.sh'], {printStdout: true});
+var ex = jake.createExec(['do_thing.sh']);
 ex.addListener('error', function (msg, code) {
   if (code == 127) {
     console.log("Couldn't find do_thing script, trying do_other_thing");

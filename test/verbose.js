@@ -49,6 +49,28 @@ var tests = {
       next();
     });
   }
+, '--verbose should trace execution times': function (next) {
+    h.exec('../bin/cli.js --verbose noAction', function (out) {
+      var lines = out.split('\n');
+
+      var runtimeNotifications = _.map(lines, function(line) {
+        var match = (/^  ([^ ]+) \d+ms$/).exec(line);
+        if (!match)
+          return null;
+        else
+          return match[1];
+      });
+
+      runtimeNotifications = _.filter(runtimeNotifications, function(v) {
+        return v != null;
+      });
+
+      assert.deepEqual(runtimeNotifications, [
+          'default', 'noAction'
+        ]);
+      next();
+    });
+  }
 };
 
 module.exports = tests;

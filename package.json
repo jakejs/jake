@@ -23,7 +23,8 @@
     "utilities": "0.0.x"
   },
   "devDependencies": {
-    "q": "0.9.x"
+    "q": "0.9.x",
+    "underscore": "1.5.x"
   },
   "engines": {
     "node": "*"

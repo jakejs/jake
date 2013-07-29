@@ -35,6 +35,19 @@ var tests = {
         ]);
       next();
     });
+  }  
+  , '--verbose should trace when oddly defined task starts': function (next) {
+    h.exec('../bin/cli.js --verbose noAction', function (out) {
+      var lines = out.split('\n');
+      var executingNotifications = _.filter(lines, function(line) {
+        return /^Executing/.test(line);
+      });
+      assert.deepEqual(executingNotifications, [
+          'Executing default',
+          'Executing noAction'
+        ]);
+      next();
+    });
   }
 };
 

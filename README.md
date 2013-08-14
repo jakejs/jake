@@ -248,9 +248,8 @@ In this example, the foo:baz task depends on the the default and foo:bar tasks.
 
 ### Rules
 
-When you add a filename as a prerequisite for a task, but there is not a file on
-disk, or a file-task defined for it, Jake can create file-tasks on the fly from
-Rules.
+When you add a filename as a prerequisite for a task, but there is not a a
+file-task defined for it, Jake can create file-tasks on the fly from Rules.
 
 Here's an example:
 

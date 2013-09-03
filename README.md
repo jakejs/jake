@@ -108,6 +108,9 @@ Add the directory of node.exe to the environment PATH variable.
     -T/ls
     --tasks                     Display the tasks (matching optional PATTERN)
                                 with descriptions, then exit.
+                                
+    -Ti/lsi
+    --indent-tasks              Display the tasks indented by namespace, then exit.
 
 ### Jakefile syntax
 
@@ -655,6 +658,18 @@ Setting a value for -T/--tasks will filter the list by that value:
     jake foo:fonebone  # This the foo:fonebone task
 
 The list displayed will be all tasks whose namespace/name contain the filter-string.
+
+You can also use `-Ti/lsi` to print a list of tasks indented by namespace.
+
+    $ jake -Ti
+    task default       # This is the default task.
+    task asdf          # This is the asdf task.
+    task concat.txt    # File task, concating two files together
+    task failure       # Failing task.
+    task lookup        # Jake task lookup by name.
+    namespace foo
+        task bar       # This the foo:bar task
+        task fonebone  # This the foo:fonebone task
 
 ## Breaking things up into multiple files
 

@@ -1051,6 +1051,21 @@ following steps:
 6. Publish it to NPM
 7. Clean up the package
 
+If you want to publish to a private NPM repository, you can specify a custom publishing command:
+
+```javascript
+npmPublishTask('jake', function () {
+  this.packageFiles.include([
+  , 'index.js'
+  , 'package.json'
+    ]);
+
+  // Publishes using the gemfury cli
+  // `%filename` will be replaced with the package filename
+  this.publishCmd = 'fury push %filename';
+});
+```
+
 ## CoffeeScript Jakefiles
 
 Jake can also handle Jakefiles in CoffeeScript. Be sure to make it

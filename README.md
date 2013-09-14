@@ -984,7 +984,7 @@ run a task or set of tasks anytime there's a change.
 
 ```javascript
 // Assumes there's an 'assets' task
-watchTask(['assets'], function () {
+watchTask('watch', ['assets'], function () {
   this.watchFiles.include([
     './**/*.ejs'
   ]);

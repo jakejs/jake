@@ -1,5 +1,7 @@
 ### Jake -- JavaScript build tool for Node.js
 
+[![Build Status](https://travis-ci.org/mde/jake.png?branch=master)](https://travis-ci.org/mde/jake)
+
 ### Installing with [NPM](http://npmjs.org/)
 
 Install globally with:

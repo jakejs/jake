@@ -13,6 +13,20 @@ task({'noAction': ['default']});
 desc('No action, no prereqs.');
 task('noActionNoPrereqs');
 
+desc('Task that throws');
+task('throwy', function () {
+  var errorListener = function (err) {
+    process.stderr.write('Emitted: ');
+    process.stderr.write(err.toString());
+
+    jake.removeListener('error', errorListener);
+  };
+
+  jake.on('error', errorListener);
+
+  throw new Error('I am bad');
+});
+
 desc('Accepts args and env vars.');
 task('argsEnvVars', function () {
   var res = {
@@ -79,7 +93,7 @@ namespace('bar', function () {
     console.log('bar:foo task');
     complete();
   }, {async: true});
-  
+
   desc('The bar:promise task is a promised based async task.');
   task('promise', function() {
     return Q()

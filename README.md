@@ -365,7 +365,7 @@ command. You can do this by adding this line to your `.zshrc` file :
 ### Cleanup after all tasks run, jake 'complete' event
 
 The base 'jake' object is an EventEmitter, and fires a 'start' event before
-running, and a 'complete' event after running all tasks.
+running, an 'error' event after an uncaught exception, and a 'complete' event after running all tasks.
 
 This is sometimes useful when a task starts a process which keeps the Node
 event-loop running (e.g., a database connection). If you know you want to stop

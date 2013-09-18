@@ -145,6 +145,13 @@ var tests = {
     });
   }
 
+, 'test listening for jake error-event': function (next) {
+    h.exec('../bin/cli.js throwy', function (out) {
+      assert.equal(out, 'Emitted: Error: I am bad');
+      next();
+    });
+  }
+
 };
 
 module.exports = tests;

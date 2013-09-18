@@ -1,3 +1,10 @@
+### 0.7
++ Updated API for include/exclude in NPMPublishTask
++ beforeEach/afterEach for TaskTask
++ Custom publishing command for NPMPublishTask
++ FileList fixes for Windows
++ Fixed output for stdout/stderr when piped
+
 ### 0.6
 + Rule, for generating file-tasks on the fly
 + WatchTask, for running tasks on file/directory changes

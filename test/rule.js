@@ -4,16 +4,33 @@ var assert = require('assert')
   , exec = require('child_process').exec
   , h = require('./helpers')
   , Matcher = require('../lib/rule').Matcher
-  , utils = require('../lib/utils');
+  , utils = require('utilities');
 
 var cleanUpAndNext = function (callback) {
-  exec('rm -fr ./foo ./tmp*', function (err, stdout, stderr) {
-    if (err) { throw err; }
-    if (stderr || stdout) {
-      console.log (stderr || stdout);
-    }
-    callback();
+  // Gotta add globbing to file utils rmRf
+  var tmpFiles = [
+    'tmp'
+  , 'tmp_ns'
+  , 'tmp_cr'
+  , 'tmp_p'
+  , 'tmp_pf'
+  , 'tmpbin'
+  , 'tmpsrc'
+  , 'tmp_dep1.c'
+  , 'tmp_dep1.o'
+  , 'tmp_dep1.oo'
+  , 'tmp_dep2.c'
+  , 'tmp_dep2.o'
+  , 'tmp_dep2.oo'
+  , 'foo'
+  , 'foo.html'
+  ];
+  tmpFiles.forEach(function (f) {
+    utils.file.rmRf(f, {
+      silent: true
+    });
   });
+  callback();
 };
 
 var tests = {
@@ -166,7 +183,7 @@ var tests = {
 
   tests['test rule with source file modified (' + key  + ')'] = function (next) {
     setTimeout(function () {
-      exec('touch foo.txt', function (err, data) {
+      fs.writeFile('foo.txt', '', function (err, data) {
         if (err) {
           throw err;
         }
@@ -187,6 +204,7 @@ var tests = {
   tests['test rule with existing objective file and no source ' +
       ' (should be normal file-task) (' + key  + ')'] = function (next) {
     // Remove just the source file
+    fs.writeFileSync('foo.html', '');
     utils.file.rmRf('foo.txt', {silent: true});
     h.exec('../bin/cli.js  -f Jakefile.rule ' + key + ':test', function (out) {
       // Should treat existing objective file as plain file-task,

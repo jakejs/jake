@@ -1,6 +1,7 @@
 var exec = require('child_process').exec
   , fs = require('fs')
   , util = require('util')
+  , utils = require('utilities');
 
 
 task('default', ['tmp']);
@@ -241,11 +242,7 @@ namespace('sourceFunction', function () {
 });
 
 ////////////////////////////////////////////////////////////
-task('clean', function() {
-  exec('rm -fr ./foo ./tmp*', function (err, stdout, stderr) {
-    if (err) { throw err }
-    if (stderr || stdout) {
-      console.log (stderr || stdout);
-    }
-  });
+task('clean', function () {
+  utils.file.rmRf('./foo');
+  utils.file.rmRf('./tmp');
 });

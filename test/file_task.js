@@ -2,16 +2,14 @@ var assert = require('assert')
   , fs = require('fs')
   , path = require('path')
   , exec = require('child_process').exec
-  , h = require('./helpers');
+  , h = require('./helpers')
+  , utils = require('utilities');
 
 var cleanUpAndNext = function (callback) {
-  exec('rm -fr ./foo', function (err, stdout, stderr) {
-    if (err) { throw err; }
-    if (stderr || stdout) {
-      console.log (stderr || stdout);
-    }
-    callback();
+  utils.file.rmRf('./foo', {
+    silent: true
   });
+  callback();
 };
 
 var tests = {
@@ -50,7 +48,7 @@ var tests = {
 
 , 'file-task where prereq file is modified': function (next) {
     setTimeout(function () {
-      exec('touch ./foo/src1.txt', function (err, data) {
+      fs.writeFile('./foo/src1.txt', '', function (err, data) {
         if (err) {
           throw err;
         }
@@ -59,7 +57,7 @@ var tests = {
           cleanUpAndNext(next);
         });
       });
-    }, 1000); // Wait to do the touch to ensure mod-time is different
+    }, 1000); // Wait to do the mod to ensure mod-time is different
   }
 
 , 'test where a file-task prereq does not change with --always-make': function (next) {
@@ -76,35 +74,33 @@ var tests = {
 
 , 'test a preexisting file': function (next) {
     var prereqData = 'howdy';
-    h.exec('mkdir -p foo', function (out) {
-      fs.writeFileSync('foo/prereq.txt', prereqData);
+    utils.file.mkdirP('foo');
+    fs.writeFileSync('foo/prereq.txt', prereqData);
+    h.exec('../bin/cli.js fileTest:foo/from-prereq.txt', function (out) {
+      var data;
+      assert.equal('fileTest:foo/from-prereq.txt task', out);
+      data = fs.readFileSync(process.cwd() + '/foo/from-prereq.txt');
+      assert.equal(prereqData, data.toString());
       h.exec('../bin/cli.js fileTest:foo/from-prereq.txt', function (out) {
-        var data;
-        assert.equal('fileTest:foo/from-prereq.txt task', out);
-        data = fs.readFileSync(process.cwd() + '/foo/from-prereq.txt');
-        assert.equal(prereqData, data.toString());
-        h.exec('../bin/cli.js fileTest:foo/from-prereq.txt', function (out) {
-          // Second time should be a no-op
-          assert.equal('', out);
-          cleanUpAndNext(next);
-        });
+        // Second time should be a no-op
+        assert.equal('', out);
+        cleanUpAndNext(next);
       });
     });
   }
 
 , 'test a preexisting file with --always-make flag': function (next) {
     var prereqData = 'howdy';
-    h.exec('mkdir -p foo', function (out) {
-      fs.writeFileSync('foo/prereq.txt', prereqData);
-      h.exec('../bin/cli.js fileTest:foo/from-prereq.txt', function (out) {
-        var data;
+    utils.file.mkdirP('foo');
+    fs.writeFileSync('foo/prereq.txt', prereqData);
+    h.exec('../bin/cli.js fileTest:foo/from-prereq.txt', function (out) {
+      var data;
+      assert.equal('fileTest:foo/from-prereq.txt task', out);
+      data = fs.readFileSync(process.cwd() + '/foo/from-prereq.txt');
+      assert.equal(prereqData, data.toString());
+      h.exec('../bin/cli.js -B fileTest:foo/from-prereq.txt', function (out) {
         assert.equal('fileTest:foo/from-prereq.txt task', out);
-        data = fs.readFileSync(process.cwd() + '/foo/from-prereq.txt');
-        assert.equal(prereqData, data.toString());
-        h.exec('../bin/cli.js -B fileTest:foo/from-prereq.txt', function (out) {
-          assert.equal('fileTest:foo/from-prereq.txt task', out);
-          cleanUpAndNext(next);
-        });
+        cleanUpAndNext(next);
       });
     });
   }

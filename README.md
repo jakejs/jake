@@ -914,13 +914,14 @@ lot more information, including different archiving options.
 
 When you create a TestTask, it programmically creates a simple task for running
 tests for your project. The first argument of the constructor is the
-project-name (used in the description of the task), and the second argument is a
-function that defines the task. It allows you to specifify what files to run as
-tests, and what to name the task that gets created (defaults to "test" if
-unset).
+project-name (used in the description of the task), the second (optional)
+argument is a list of prerequisite tasks to run before the tests, and the final
+argument is a function that defines the task. It allows you to specifify what
+files to run as tests, and what to name the task that gets created (defaults to
+"test" if unset).
 
 ```javascript
-testTask('fonebone', function () {
+testTask('fonebone', ['asdf', 'qwer'], function () {
   var fileList = [
     'tests/*'
   , 'lib/adapters/**/test.js'

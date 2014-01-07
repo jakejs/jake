@@ -876,7 +876,7 @@ regular-expressions, or regular-expression literals.
 
 ## PackageTask
 
-When you create a PackageTask, it programmically creates a set of tasks for
+When you create a PackageTask, it programmatically creates a set of tasks for
 packaging up your project for distribution. Here's an example:
 
 ```javascript
@@ -912,7 +912,7 @@ lot more information, including different archiving options.
 
 ## TestTask
 
-When you create a TestTask, it programmically creates a simple task for running
+When you create a TestTask, it programmatically creates a simple task for running
 tests for your project. The first argument of the constructor is the
 project-name (used in the description of the task), and the second argument is a
 function that defines the task. It allows you to specifify what files to run as

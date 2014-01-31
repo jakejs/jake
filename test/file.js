@@ -57,6 +57,16 @@ tests = {
     assert.equal('foo', res[0]);
     fs.rmdirSync('foo');
   }
+  
+, 'test cpR with same name and different directory': function () {
+      file.mkdirP('foo', {silent: true});
+      fs.writeFileSync('foo/bar.txt', 'w00t');
+      file.cpR('foo', 'bar', {silent: true});
+      assert.ok(existsSync('bar/bar.txt'));
+      file.rmRf('foo', {silent: true});
+      file.rmRf('bar', {silent: true});
+      
+  }
 
 , 'test cpR with same to and from will throw': function () {
     assert.throws(function () {

@@ -404,6 +404,16 @@ tests = {
     assert.equal(expected, data);
   }
 
+, 'test stripTags': function () {
+    var html = '<div>foo</div><p>bar<br/>wooby</p>'
+      , expected = 'foobarwooby';
+    assert.equal(string.stripTags(html), expected);
+  }
+, 'test stripTags with allowed <br>': function () {
+    var html = '<div>foo</div><p>bar<br/>wooby</p>'
+      , expected = 'foobar<br/>wooby';
+    assert.equal(string.stripTags(html, '<br>'), expected);
+  }
 };
 
 module.exports = tests;

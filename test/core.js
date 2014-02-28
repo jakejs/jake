@@ -69,7 +69,29 @@ tests = {
 , 'isEmpty, zero (false)': function () {
     assert.ok(!core.isEmpty(0));
   }
+,
+  'bind': function () {
+    function bar() {}
 
+    function foo() {
+      assert.equal(this.name, 'bar');
+    }
+
+    var fooBoundToBar = core.bind(bar, foo);
+    fooBoundToBar();
+  }
+,
+  'bind, arguments': function () {
+    function bar() {}
+
+    function foo(arg) {
+      assert.equal(this.name, 'bar');
+      assert.equal(arg, 'cats');
+    }
+
+    var fooBoundToBarWithCats = core.bind(bar, foo, 'cats');
+    fooBoundToBarWithCats();
+  }
 };
 
 module.exports = tests;

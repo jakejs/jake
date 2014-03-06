@@ -914,13 +914,14 @@ lot more information, including different archiving options.
 
 When you create a TestTask, it programmatically creates a simple task for running
 tests for your project. The first argument of the constructor is the
-project-name (used in the description of the task), and the second argument is a
-function that defines the task. It allows you to specifify what files to run as
-tests, and what to name the task that gets created (defaults to "test" if
-unset).
+project-name (used in the description of the task), the second (optional)
+argument is a list of prerequisite tasks to run before the tests, and the final
+argument is a function that defines the task. It allows you to specifify what
+files to run as tests, and what to name the task that gets created (defaults to
+"test" if unset).
 
 ```javascript
-testTask('fonebone', function () {
+testTask('fonebone', ['asdf', 'qwer'], function () {
   var fileList = [
     'tests/*'
   , 'lib/adapters/**/test.js'
@@ -945,6 +946,9 @@ after all the other tests have finished. You can use it for teardown. The
 'before' and 'after' will only run once per test module -- *not* before and
 after each test.
 
+If you name your test 'beforeEach', it will run before each test. You can also
+name a test 'afterEach' for a test that runs after each test.
+
 Here's an example test-file:
 
 ```javascript
@@ -957,6 +961,12 @@ tests = {
   }
 , 'after': function () {
     // Do some teardown here
+  }
+, 'beforeEach': function () {
+    // Something to do before every test
+  }
+, 'afterEach': function () {
+    // Something to do after every test
   }
 , 'sync test': function () {
     // Assert something

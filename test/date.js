@@ -52,24 +52,6 @@ tests = {
     assert.equal(actual, data);
   }
 
-, 'test relativeTime week/weeks switchover': function () {
-    var dtA = new Date()
-      , dtB
-      , res;
-
-      dtB = date.add(dtA, 'day', 10);
-      dtB = date.add(dtB, 'hour', 23);
-      dtB = date.add(dtB, 'minute', 59);
-      dtB = date.add(dtB, 'second', 59);
-      dtB = date.add(dtB, 'millisecond', 999);
-    res = date.relativeTime(dtA, {now: dtB});
-    assert.equal('one week ago', res);
-
-    dtB = date.add(dtB, 'millisecond', 1);
-    res = date.relativeTime(dtA, {now: dtB});
-    assert.equal('about 2 weeks ago', res);
-  }
-
 };
 
 module.exports = tests;

@@ -52,6 +52,33 @@ tests = {
     assert.equal(actual, data);
   }
 
+, 'test parse UTC': function () {
+    var dt = date.parse('1970-01-01T00:00:00Z');
+    assert.equal(0, dt.getTime());
+  }
+
+, 'test parse with offset basic': function () {
+    var dt;
+    dt = date.parse('1970-01-01T00:00:00-0100');
+    assert.equal(3600000, dt.getTime());
+    dt = date.parse('1970-01-01T00:00:00+0100');
+    assert.equal(-3600000, dt.getTime());
+  }
+
+, 'test parse with offset extended': function () {
+    var dt;
+    dt = date.parse('1970-01-01T00:00:00-01:00');
+    assert.equal(3600000, dt.getTime());
+    dt = date.parse('1970-01-01T00:00:00+01:00');
+    assert.equal(-3600000, dt.getTime());
+  }
+
+, 'test parse floating (i.e., local offset)': function () {
+    var dt;
+    dt = date.parse('1970-01-01T00:00:00');
+    assert.equal(dt.getTime() / 1000 / 60, dt.getTimezoneOffset());
+  }
+
 };
 
 module.exports = tests;

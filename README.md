@@ -946,6 +946,9 @@ after all the other tests have finished. You can use it for teardown. The
 'before' and 'after' will only run once per test module -- *not* before and
 after each test.
 
+If you name your test 'beforeEach', it will run before each test. You can also
+name a test 'afterEach' for a test that runs after each test.
+
 Here's an example test-file:
 
 ```javascript
@@ -958,6 +961,12 @@ tests = {
   }
 , 'after': function () {
     // Do some teardown here
+  }
+, 'beforeEach': function () {
+    // Something to do before every test
+  }
+, 'afterEach': function () {
+    // Something to do after every test
   }
 , 'sync test': function () {
     // Assert something

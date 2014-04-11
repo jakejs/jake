@@ -76,6 +76,12 @@ tests = {
     assert.equal(actual, data);
   }
 
+, 'test paramify with a nested object': function() {
+    var data = uri.paramify({name: {foo: 'bar', list: [2, 3, 4], obj: {a: 2, b: {c: 2}}}})
+      , actual = 'name[foo]=bar&name[list][0]=2&name[list][1]=3&name[list][2]=4&name[obj][a]=2&name[obj][b][c]=2';
+    assert.equal(actual, data);
+  }
+
 , 'test objectify for uri': function () {
     var expected = {name: 'user'}
       , actual = uri.objectify('name=user');

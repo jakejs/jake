@@ -1,0 +1,23 @@
+var fs = require('fs')
+  , utils = require('utilities');
+
+fs.writeFileSync('package.json', '{"version": "0.0.1"}');
+utils.file.mkdirP('tmp_publish');
+utils.file.mkdirP('pkg');
+
+npmPublishTask('zerb', function () {
+  this.packageFiles.include([
+  , 'package.json'
+  , 'tmp_publish/**'
+    ]);
+  this.publishCmd = 'node -p -e "%filename"';
+  this.gitCmd = 'true'
+});
+
+task('publishTest', {async: true}, function () {
+  var p = jake.Task['publish'];
+  p.on('complete', function () {
+    console.log('done');
+  });
+  p.invoke();
+});

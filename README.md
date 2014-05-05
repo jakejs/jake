@@ -132,7 +132,7 @@ task(name, [prerequisites], [action], [opts]);
 The `name` argument is a String with the name of the task, and `prerequisites`
 is an optional Array arg of the list of prerequisite tasks to perform first.
 
-The `action` is a Function defininng the action to take for the task. (Note that
+The `action` is a Function defining the action to take for the task. (Note that
 Object-literal syntax for name/prerequisites in a single argument a la Rake is
 also supported, but JavaScript's lack of support for dynamic keys in Object
 literals makes it not very useful.) The action is invoked with the Task object
@@ -177,8 +177,8 @@ task('asyncTask', {async: true}, function () {
 
 A Task is also an EventEmitter which emits the 'start' event when it begins to
 run, and the 'complete' event when it is finished. This allows asynchronous
-tasks to be run from within other asked via either `invoke` or `execute`, and
-ensure they will complete before the rest of the containing task executes. See
+tasks to be run from within other tasks via either `invoke` or `execute`, and
+ensures they will complete before the rest of the containing task executes. See
 the section "Running tasks from within other tasks," below.
 
 ### File-tasks
@@ -277,7 +277,7 @@ synthesize a viable rule for it as well.
 
 #### Regex patterns
 
-You can use regular expresions to match file extensions as well:
+You can use regular expressions to match file extensions as well:
 
 ```javascript
 rule(/\.o$/, '.c', {async: true}, function () {
@@ -359,7 +359,7 @@ quotes like this to pass parameters :
 
     jake 'awesome[foo,bar,baz]'
 
-An other solution is to desactivate permannently file-globbing for the `jake`
+An other solution is to deactivate permanently file-globbing for the `jake`
 command. You can do this by adding this line to your `.zshrc` file :
 
     alias jake="noglob jake"
@@ -876,7 +876,7 @@ regular-expressions, or regular-expression literals.
 
 ## PackageTask
 
-When you create a PackageTask, it programmically creates a set of tasks for
+When you create a PackageTask, it programmatically creates a set of tasks for
 packaging up your project for distribution. Here's an example:
 
 ```javascript
@@ -912,7 +912,7 @@ lot more information, including different archiving options.
 
 ## TestTask
 
-When you create a TestTask, it programmically creates a simple task for running
+When you create a TestTask, it programmatically creates a simple task for running
 tests for your project. The first argument of the constructor is the
 project-name (used in the description of the task), the second (optional)
 argument is a list of prerequisite tasks to run before the tests, and the final

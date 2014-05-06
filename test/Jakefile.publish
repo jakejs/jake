@@ -3,21 +3,28 @@ var fs = require('fs')
 
 fs.writeFileSync('package.json', '{"version": "0.0.1"}');
 utils.file.mkdirP('tmp_publish');
-utils.file.mkdirP('pkg');
+fs.writeFileSync('tmp_publish/foo.txt', 'FOO');
 
 npmPublishTask('zerb', function () {
   this.packageFiles.include([
-  , 'package.json'
+    'package.json'
   , 'tmp_publish/**'
     ]);
-  this.publishCmd = 'node -p -e "%filename"';
-  this.gitCmd = 'true'
+  this.publishCmd = 'node -p -e "\'%filename\'"';
+  this.gitCmd = 'echo'
+  this.scheduleDelay = 0;
+
+  this._ensureRepoClean = function () {};
+  this._getCurrentBranch = function () {
+    return 'v0.0'
+  };
 });
 
 task('publishTest', {async: true}, function () {
   var p = jake.Task['publish'];
   p.on('complete', function () {
     console.log('done');
+    complete();
   });
   p.invoke();
 });

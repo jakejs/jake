@@ -1,9 +1,3 @@
-var fs = require('fs')
-  , utils = require('utilities');
-
-fs.writeFileSync('package.json', '{"version": "0.0.1"}');
-utils.file.mkdirP('tmp_publish');
-fs.writeFileSync('tmp_publish/foo.txt', 'FOO');
 
 npmPublishTask('zerb', function () {
   this.packageFiles.include([

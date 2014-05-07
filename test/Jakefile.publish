@@ -1,13 +1,11 @@
 var fs = require('fs')
   , utils = require('utilities');
 
-task('createSourceFiles', function () {
-  fs.writeFileSync('package.json', '{"version": "0.0.1"}');
-  utils.file.mkdirP('tmp_publish');
-  fs.writeFileSync('tmp_publish/foo.txt', 'FOO');
-});
+fs.writeFileSync('package.json', '{"version": "0.0.1"}');
+utils.file.mkdirP('tmp_publish');
+fs.writeFileSync('tmp_publish/foo.txt', 'FOO');
 
-publishTask('zerb', ['createSourceFiles'], function () {
+publishTask('zerb', function () {
   this.packageFiles.include([
     'package.json'
   , 'tmp_publish/**'

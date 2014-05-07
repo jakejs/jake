@@ -1026,17 +1026,20 @@ It will exclude these files:
 The list of watched files is in a FileList, with the normal `include`/`exclude`
 API.
 
-## NpmPublishTask
+## PublishTask
 
-The NpmPublishTask builds on top of PackageTask to allow you to do a version
-tump of your project, package it, and publish it to NPM. Define the task with
-your project's name, and call `include`/`exclude` on the `packageFiles` FileList
-to create the list of files you want packaged and published to NPM.
+The PublishTask builds on top of PackageTask to allow you to do a version
+bump of your project, package it, and publish it to NPM (or
+somewhere else). Define the task with your project's name, and
+call `include`/`exclude` on the `packageFiles` FileList to create
+the list of files you want packaged and published to NPM. You can
+also pass a list of prerequisite tasks to run before defining
+tasks for publishing.
 
 Here's an example from Jake's Jakefile:
 
 ```javascript
-npmPublishTask('jake', function () {
+publishTask('foo', ['bar', 'baz'], function () {
   this.packageFiles.include([
     'Makefile'
   , 'Jakefile'
@@ -1052,7 +1055,7 @@ npmPublishTask('jake', function () {
 });
 ```
 
-The NpmPublishTask will automatically create a `publish` task which performs the
+The PublishTask will automatically create a `publish` task which performs the
 following steps:
 
 1. Bump the version number in your package.json
@@ -1066,7 +1069,7 @@ following steps:
 If you want to publish to a private NPM repository, you can specify a custom publishing command:
 
 ```javascript
-npmPublishTask('jake', function () {
+npmPublishTask('zerb', function () {
   this.packageFiles.include([
   , 'index.js'
   , 'package.json'

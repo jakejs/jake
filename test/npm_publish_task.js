@@ -8,15 +8,9 @@ var tests = {
 
   'before': function () {
     process.chdir('./test');
-    // Create some source files to work with
-    fs.writeFileSync('package.json', '{"version": "0.0.1"}');
-    utils.file.mkdirP('tmp_publish');
-    fs.writeFileSync('tmp_publish/foo.txt', 'FOO');
   }
 
 , 'after': function () {
-    utils.file.rmRf('tmp_publish', {silent: true});
-    utils.file.rmRf('package.json', {silent: true});
     process.chdir('../');
   }
 

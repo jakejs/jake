@@ -1,5 +1,13 @@
+var fs = require('fs')
+  , utils = require('utilities');
 
-npmPublishTask('zerb', function () {
+task('createSourceFiles', function () {
+  fs.writeFileSync('package.json', '{"version": "0.0.1"}');
+  utils.file.mkdirP('tmp_publish');
+  fs.writeFileSync('tmp_publish/foo.txt', 'FOO');
+});
+
+publishTask('zerb', ['createSourceFiles'], function () {
   this.packageFiles.include([
     'package.json'
   , 'tmp_publish/**'
@@ -14,11 +22,7 @@ npmPublishTask('zerb', function () {
   };
 });
 
-task('publishTest', {async: true}, function () {
-  var p = jake.Task['publish'];
-  p.on('complete', function () {
-    console.log('done');
-    complete();
-  });
-  p.invoke();
+jake.Task['publish'].on('complete', function () {
+  utils.file.rmRf('tmp_publish', {silent: true});
+  utils.file.rmRf('package.json', {silent: true});
 });

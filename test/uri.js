@@ -88,6 +88,12 @@ tests = {
     assert.equal(actual, data);
   }
 
+, 'test paramify with a nested array and index option': function() {
+    var data = uri.paramify({foo: [['bar'], {a: 2, b: {c: 2}}]}, { index: true })
+      , actual = 'foo[0][0]=bar&foo[1][a]=2&foo[1][b][c]=2';
+    assert.equal(actual, data);
+  }
+
 , 'test objectify for uri': function () {
     var expected = {name: 'user'}
       , actual = uri.objectify('name=user');

@@ -656,7 +656,13 @@ Setting a value for -T/--tasks will filter the list by that value:
     jake foo:bar       # This the foo:bar task
     jake foo:fonebone  # This the foo:fonebone task
 
-The list displayed will be all tasks whose namespace/name contain the filter-string.
+The list displayed will be all tasks whose namespace/name contain
+the filter-string.
+
+Internally, passing this CLI flag calls
+`jake.showAllTaskDescriptions`, and passes it the filter -- so
+`jake -T foo` is equivalent to calling
+`jake.showAllTaskDescriptions('foo');`.
 
 ## Breaking things up into multiple files
 

@@ -6,6 +6,7 @@ var fs = require('fs')
 content = content.replace(/<code:javascript>/g, '<pre><code>')
     .replace(/<\/code>/g, '</code></pre>');
 content = md(content);
+content = content.replace(/\&#39;/g, "'");
 content = hl(content, false, true);
 
 var Main = function () {

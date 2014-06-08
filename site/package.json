@@ -1,0 +1,12 @@
+{
+  "name": "site",
+  "version": "0.0.1",
+  "author": "",
+  "dependencies": {
+    "marked": "^0.3.2"
+  },
+  "devDependencies": {},
+  "engines": {
+    "node": "0.8.x"
+  }
+}

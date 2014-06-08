@@ -1,0 +1,40 @@
+@charset "ISO-8859-1";
+@font-face {
+    font-family: 'Superclarendon';
+    src: url('font/superclarendon/superclarendon-regular-webfont.eot');
+    src: url('font/superclarendon/superclarendon-regular-webfont.eot?#iefix') format('eot'),
+         url('font/superclarendon/superclarendon-regular-webfont.woff') format('woff'),
+         url('font/superclarendon/superclarendon-regular-webfont.ttf') format('truetype'),
+         url('font/superclarendon/superclarendon-regular-webfont.svg#webfont/superclarendono0FHfmnM') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body {
+  margin: 0;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 15px;
+  line-height: 18px;
+  color: #333333;
+  background-color: #ffffff;
+  text-align: center;
+}
+a {
+  color: #cc8800;
+  text-decoration: none;
+}
+a:hover {
+  color: #805500;
+  text-decoration: underline;
+}
+p {
+  font-size: 16px;
+  line-height: 24px;
+}
+a {
+  color: #766;
+}
+a:hover {
+  color: #776666;
+}
+

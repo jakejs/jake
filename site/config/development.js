@@ -17,7 +17,7 @@
 */
 
 var config = {
-  appName: 'Geddy App (development)'
+  appName: 'Jake JavaScript Build Tool (development)'
 , detailedErrors: true
 , debug: true
 , watch: {
@@ -36,12 +36,6 @@ var config = {
 , port: 4000
 , model: {
     defaultAdapter: 'filesystem'
-  }
-, sessions: {
-    store: 'filesystem'
-  , filename: '_session_store.json'
-  , key: 'sid'
-  , expiry: 14 * 24 * 60 * 60
   }
 };
 

@@ -17,23 +17,10 @@
 */
 
 var config = {
-  appName: 'Geddy App'
+  appName: 'Jake JavaScript Build Tool'
 , detailedErrors: false
 , hostname: null
-, port: 4000
-, model: {
-    defaultAdapter: 'mongo'
-  }
-, db: {
-    mongo: {
-      username: null
-    , dbname: 'production'
-    , prefix: null
-    , password: null
-    , host: 'localhost'
-    , port: 27017
-    }
-  }
+, port: 4003
 
 /* // Using Postgres as the default, with only a Postgres DB
 , model: {

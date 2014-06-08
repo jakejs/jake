@@ -34,9 +34,6 @@ var config = {
   }
 , hostname: null
 , port: 4000
-, model: {
-    defaultAdapter: 'filesystem'
-  }
 };
 
 module.exports = config;

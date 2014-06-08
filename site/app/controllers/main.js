@@ -1,6 +1,6 @@
 var fs = require('fs')
   , md = require('marked')
-  , content = fs.readFileSync('../README.md').toString()
+  , content = fs.readFileSync('../docs/overview.md').toString()
   , hl = require('highlight').Highlight;
 
 content = content.replace(/<code:javascript>/g, '<pre><code>')

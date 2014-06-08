@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "author": "",
   "dependencies": {
+    "highlight": "^0.2.3",
     "marked": "^0.3.2"
   },
   "devDependencies": {},

@@ -163,6 +163,28 @@ tests = {
     }
   }
 
+, 'test es plural words for inflection consistency': function() {
+    var i = esInflections.length
+      , value;
+
+    while (--i >= 0) {
+      value = esInflections[i];
+
+      assert.equal(value[1], inflection.pluralize(value[1]))
+    }
+  }
+
+, 'test es singular words for inflection consistency': function() {
+    var i = esInflections.length
+      , value;
+
+    while (--i >= 0) {
+      value = esInflections[i];
+
+      assert.equal(value[0], inflection.singularize(value[0]))
+    }
+  }
+
 , 'test s plural words for inflection': function () {
     var i = sInflections.length
       , value;
@@ -182,6 +204,28 @@ tests = {
       value = sInflections[i];
 
       assert.equal(value[0], inflection.singularize(value[1]))
+    }
+  }
+
+, 'test s plural words for inflection consistency': function () {
+    var i = sInflections.length
+      , value;
+
+    while (--i >= 0) {
+      value = sInflections[i];
+
+      assert.equal(value[1], inflection.pluralize(value[1]))
+    }
+  }
+
+, 'test s singular words for inflection consistency': function () {
+    var i = sInflections.length
+      , value;
+
+    while (--i >= 0) {
+      value = sInflections[i];
+
+      assert.equal(value[0], inflection.singularize(value[0]))
     }
   }
 
@@ -207,6 +251,28 @@ tests = {
     }
   }
 
+, 'test ies plural words for inflection consistency': function () {
+    var i = iesInflections.length
+      , value;
+
+    while (--i >= 0) {
+      value = iesInflections[i];
+
+      assert.equal(value[1], inflection.pluralize(value[1]))
+    }
+  }
+
+, 'test ies singular words for inflection consistency': function () {
+    var i = iesInflections.length
+      , value;
+
+    while (--i >= 0) {
+      value = iesInflections[i];
+
+      assert.equal(value[0], inflection.singularize(value[0]))
+    }
+  }
+
 , 'test ves plural words for inflection': function () {
     var i = vesInflections.length
       , value;
@@ -226,6 +292,28 @@ tests = {
       value = vesInflections[i];
 
       assert.equal(value[0], inflection.singularize(value[1]))
+    }
+  }
+
+, 'test ves plural words for inflection consistency': function () {
+    var i = vesInflections.length
+      , value;
+
+    while (--i >= 0) {
+      value = vesInflections[i];
+
+      assert.equal(value[1], inflection.pluralize(value[1]))
+    }
+  }
+
+, 'test ves singular words for inflection consistency': function () {
+    var i = vesInflections.length
+      , value;
+
+    while (--i >= 0) {
+      value = vesInflections[i];
+
+      assert.equal(value[0], inflection.singularize(value[0]))
     }
   }
 
@@ -250,6 +338,27 @@ tests = {
       assert.equal(value[0], inflection.singularize(value[1]))
     }
   }
+, 'test ices plural words for inflection consistency': function () {
+    var i = icesInflections.length
+      , value;
+
+    while (--i >= 0) {
+      value = icesInflections[i];
+
+      assert.equal(value[1], inflection.pluralize(value[1]))
+    }
+  }
+
+, 'test ices singular words for inflection consistency': function () {
+    var i = icesInflections.length
+      , value;
+
+    while (--i >= 0) {
+      value = icesInflections[i];
+
+      assert.equal(value[0], inflection.singularize(value[0]))
+    }
+  }
 
 , 'test ren plural words for inflection': function () {
     var i = renInflections.length
@@ -270,6 +379,27 @@ tests = {
       value = renInflections[i];
 
       assert.equal(value[0], inflection.singularize(value[1]))
+    }
+  }
+, 'test ren plural words for inflection consistency': function () {
+    var i = renInflections.length
+      , value;
+
+    while (--i >= 0) {
+      value = renInflections[i];
+
+      assert.equal(value[1], inflection.pluralize(value[1]))
+    }
+  }
+
+, 'test ren singular words for inflection consistency': function () {
+    var i = renInflections.length
+      , value;
+
+    while (--i >= 0) {
+      value = renInflections[i];
+
+      assert.equal(value[0], inflection.singularize(value[0]))
     }
   }
 
@@ -294,6 +424,27 @@ tests = {
       assert.equal(value[0], inflection.singularize(value[1]))
     }
   }
+, 'test oes plural words for inflection consistency': function () {
+    var i = oesInflections.length
+      , value;
+
+    while (--i >= 0) {
+      value = oesInflections[i];
+
+      assert.equal(value[1], inflection.pluralize(value[1]))
+    }
+  }
+
+, 'test oes singular words for inflection consistency': function () {
+    var i = oesInflections.length
+      , value;
+
+    while (--i >= 0) {
+      value = oesInflections[i];
+
+      assert.equal(value[0], inflection.singularize(value[0]))
+    }
+  }
 
 , 'test i plural words for inflection': function () {
     var i = iInflections.length
@@ -314,6 +465,27 @@ tests = {
       value = iInflections[i];
 
       assert.equal(value[0], inflection.singularize(value[1]))
+    }
+  }
+, 'test i plural words for inflection consistency': function () {
+    var i = iInflections.length
+      , value;
+
+    while (--i >= 0) {
+      value = iInflections[i];
+
+      assert.equal(value[1], inflection.pluralize(value[1]))
+    }
+  }
+
+, 'test i singular words for inflection consistency': function () {
+    var i = iInflections.length
+      , value;
+
+    while (--i >= 0) {
+      value = iInflections[i];
+
+      assert.equal(value[0], inflection.singularize(value[0]))
     }
   }
 
@@ -338,6 +510,27 @@ tests = {
       assert.equal(value[0], inflection.singularize(value[1]))
     }
   }
+, 'test gender and people plural words for inflection consistency': function () {
+    var i = genInflections.length
+      , value;
+
+    while (--i >= 0) {
+      value = genInflections[i];
+
+      assert.equal(value[1], inflection.pluralize(value[1]))
+    }
+  }
+
+, 'test gender and people singular words for inflection consistency': function () {
+    var i = genInflections.length
+      , value;
+
+    while (--i >= 0) {
+      value = genInflections[i];
+
+      assert.equal(value[0], inflection.singularize(value[0]))
+    }
+  }
 
 , 'test irregular plural words for inflection': function () {
     var i = irregularInflections.length
@@ -360,6 +553,27 @@ tests = {
       assert.equal(value[0], inflection.singularize(value[1]))
     }
   }
+, 'test irregular plural words for inflection consistency': function () {
+    var i = irregularInflections.length
+      , value;
+
+    while (--i >= 0) {
+      value = irregularInflections[i];
+
+      assert.equal(value[1], inflection.pluralize(value[1]))
+    }
+  }
+
+, 'test irregular singular words for inflection consistency': function () {
+    var i = irregularInflections.length
+      , value;
+
+    while (--i >= 0) {
+      value = irregularInflections[i];
+
+      assert.equal(value[0], inflection.singularize(value[0]))
+    }
+  }
 
 , 'test no change plural words for inflection': function () {
     var i = noInflections.length
@@ -380,6 +594,27 @@ tests = {
       value = noInflections[i];
 
       assert.equal(value[0], inflection.singularize(value[1]))
+    }
+  }
+, 'test no change plural words for inflection consistency': function () {
+    var i = noInflections.length
+      , value;
+
+    while (--i >= 0) {
+      value = noInflections[i];
+
+      assert.equal(value[1], inflection.pluralize(value[1]))
+    }
+  }
+
+, 'test no change singular words for inflection consistency': function () {
+    var i = noInflections.length
+      , value;
+
+    while (--i >= 0) {
+      value = noInflections[i];
+
+      assert.equal(value[0], inflection.singularize(value[0]))
     }
   }
 

@@ -62,12 +62,20 @@ namespace('foo', function () {
     console.log('foo:qux task');
   });
 
-  desc('The foo:frang task, calls foo:bar with passed args as a prerequisite.');
+  desc('The foo:frang task,`invokes` foo:bar with passed args as a prerequisite.');
   task('frang', function () {
     var task = jake.Task['foo:bar'];
     // Do args pass-through
     task.invoke.apply(task, arguments);
     console.log('foo:frang task');
+  });
+
+  desc('The foo:frang task, `executes` foo:bar with passed args as a prerequisite.');
+  task('zerb', function () {
+    var task = jake.Task['foo:bar'];
+    // Do args pass-through
+    task.execute.apply(task, arguments);
+    console.log('foo:zerb task');
   });
 
   desc('The foo:zoobie task, has no prerequisites.');

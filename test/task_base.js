@@ -95,6 +95,13 @@ var tests = {
     });
   }
 
+, 'test a prereq with args via execute': function (next) {
+    h.exec('../bin/cli.js foo:zerb[zxcv,uiop]', function (out) {
+      assert.equal('foo:bar[zxcv,uiop] task\nfoo:zerb task', out);
+      next();
+    });
+  }
+
 , 'test prereq execution-order': function (next) {
     h.exec('../bin/cli.js hoge:fuga', function (out) {
       assert.equal('hoge:hoge task\nhoge:piyo task\nhoge:fuga task', out);

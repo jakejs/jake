@@ -823,7 +823,7 @@ task('echo', {async: true}, function () {
 });
 ```
 
-### FileList
+## FileList
 
 Jake's FileList takes a list of glob-patterns and file-names, and lazy-creates a
 list of files to include. Instead of immediately searching the filesystem to

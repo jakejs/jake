@@ -19,22 +19,36 @@ body {
   background-color: #ffffff;
   text-align: center;
 }
+h2, h3 {
+  font-family: Superclarendon;
+}
 a {
-  color: #cc8800;
+  color: #8f4d3e;
   text-decoration: none;
+  background-color: #fff!important;
 }
 a:hover {
-  color: #805500;
+  color: #999;
   text-decoration: underline;
 }
 p {
   font-size: 16px;
   line-height: 24px;
 }
-a {
-  color: #766;
-}
-a:hover {
-  color: #776666;
+
+.container-fluid {
+  margin-right: auto;
+    margin-left: auto;
+      min-width: 1024px;
+      }
+
+.nav li {
+  font-size: 26px;
+  display: inline-block;
+  margin: 0 12px;
+  color: #3f3f3f;
+  line-height: 56px;
+  font-variant: small-caps;
+  font-weight: bold;
 }
 

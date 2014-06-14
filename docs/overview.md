@@ -4,7 +4,7 @@ Jake is the JavaScript build tool for NodeJS. Jake has been
 around since the very early days of Node, and is very full
 featured and well tested.
 
-### Installing with [NPM](http://npmjs.org/)
+### Installing with NPM
 
 Install globally with:
 
@@ -1096,7 +1096,7 @@ Confusingly, this is a Ruby tool for building JavaScript packages from source co
 
 This is also a JavaScript port of Rake, which runs on the Narwhal platform.
 
-### License
+## License
 
 Licensed under the Apache License, Version 2.0
 (<http://www.apache.org/licenses/LICENSE-2.0>)

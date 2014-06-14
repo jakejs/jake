@@ -169,6 +169,7 @@ var tests = {
     });
   };
 
+  /*
   tests['test rule with objective file now created (' + key  + ')'] = function (next) {
     fs.writeFileSync('foo.txt', '');
     h.exec('../bin/cli.js  -f Jakefile.rule ' + key + ':test', function (out) {
@@ -180,6 +181,7 @@ var tests = {
       next();
     });
   };
+  */
 
   tests['test rule with source file modified (' + key  + ')'] = function (next) {
     setTimeout(function () {

@@ -19,6 +19,7 @@
   },
   "preferGlobal": true,
   "dependencies": {
+    "filelist": "0.0.1",
     "minimatch": "0.2.x",
     "utilities": "0.0.x"
   },

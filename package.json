@@ -20,8 +20,8 @@
   "preferGlobal": true,
   "dependencies": {
     "filelist": "0.0.x",
-    "~minimatch": "0.2.0",
-    "~chalk": "0.4.0",
+    "minimatch": "~0.2.0",
+    "chalk": "~0.4.0",
     "utilities": "0.0.x"
   },
   "devDependencies": {

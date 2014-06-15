@@ -19,8 +19,9 @@
   },
   "preferGlobal": true,
   "dependencies": {
-    "filelist": "0.0.1",
+    "filelist": "0.0.x",
     "minimatch": "0.2.x",
+    "chalk": "0.4.x",
     "utilities": "0.0.x"
   },
   "devDependencies": {

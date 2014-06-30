@@ -23,7 +23,7 @@ var tests = {
           , 'Created package for zerb v0.0.2'
           , 'Publishing zerb v0.0.2'
           , 'pkg/zerb-v0.0.2.tar.gz'
-          , 'Published to NPM'
+          , 'BOOM! Published.'
           , 'Cleaned up package'
           ].join('\n');
       assert.equal(expected, out);

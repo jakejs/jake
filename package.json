@@ -19,9 +19,10 @@
   },
   "preferGlobal": true,
   "dependencies": {
+    "async": "^0.9.0",
+    "chalk": "0.4.x",
     "filelist": "0.0.x",
     "minimatch": "0.2.x",
-    "chalk": "0.4.x",
     "utilities": "0.0.x"
   },
   "devDependencies": {

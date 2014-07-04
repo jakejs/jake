@@ -975,14 +975,14 @@ When you create a WatchTask, it will watch a directory of files for changes, and
 run a task or set of tasks anytime there's a change.
 
 ```javascript
-// Assumes there's an 'assets' task
-watchTask(['assets'], function () {
+// Assumes there's an 'assets' task, creates a task called 'watch'
+watchTask('watch', ['assets'], function () {
   this.watchFiles.include([
     './**/*.ejs'
   ]);
 });
 ```
-Run `jake watch` to start up the WatchTask.
+Run `jake <task name>` to start up the WatchTask.
 
 By default, it will watch the current directory for these files:
 
@@ -995,7 +995,7 @@ By default, it will watch the current directory for these files:
 ]
 ```
 
-It will exclude these files:
+By default, it will exclude these files:
 
 ```javascript
 [ 'node_modules/**'

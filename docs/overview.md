@@ -618,10 +618,9 @@ the tasks are asynchronous and do not block NodeJS event loop like executing she
 You can enable and limit the number of simultaneous tasks with the ```parallelLimit```
 task option. Because the order in which the tasks executed in parallel will finish
 is not known these tasks **cannot** call the global `complete` function. Instead they
-**must** finish the specific task either by calling ```task.complete()```  or
-```complete(task)```
+**must** finish the specific task either by calling ```task.complete()```  or ```complete(task)```
 
-The folowing example uses ```setTimout`` to finish the two tasks out of order. The entire task takes 550ms to complete :
+The folowing example uses ```setTimout``` to finish two tasks out of order. The entire task takes 550ms to complete :
 
 ```javascript
 task("A", {async: true}, function() {
@@ -640,7 +639,7 @@ task("B", {async: true}, function() {
     task.complete();
   },250);
 });
-task("simple1", ["A","B"], {async: true, parallelLimit: 2}, function() {
+task("parallel", ["A","B"], {async: true, parallelLimit: 2}, function() {
   var task = this;
   setTimeout(function() {
     task.complete();

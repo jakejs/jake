@@ -257,7 +257,7 @@ namespace('one', function() {
 });
 
 
-namespace('concurrent', function() {
+namespace('parallel', function() {
   task("A", {async: true}, function() {
     console.log("Started A");
     var task = this;
@@ -306,37 +306,37 @@ namespace('concurrent', function() {
       throw new Error("I failed");
     },50);
   });
-  task("simple1", ["A","B"], {async: true, concurrentLimit: 2}, function() {
+  task("simple1", ["A","B"], {async: true, parallelLimit: 2}, function() {
     var task = this;
     setTimeout(function() {
       task.complete();
     },50);
   });
-  task("simple2", ["C","D"], {async: true, concurrentLimit: 2}, function() {
+  task("simple2", ["C","D"], {async: true, parallelLimit: 2}, function() {
     var task = this;
     setTimeout(function() {
       task.complete();
     },50);
   });
-  task("seqconcurrent", ["simple1","simple2"], {async: true}, function() {
+  task("seqparallel", ["simple1","simple2"], {async: true}, function() {
     var task = this;
     setTimeout(function() {
       task.complete();
     },50);
   });
-  task("concurrentconcurrent", ["simple1","simple2"], {async: true, concurrentLimit: 2}, function() {
+  task("parallelparallel", ["simple1","simple2"], {async: true, parallelLimit: 2}, function() {
     var task = this;
     setTimeout(function() {
       task.complete();
     },50);
   });
-  task("subdep", ["A","Ba"], {async: true, concurrentLimit: 2}, function() {
+  task("subdep", ["A","Ba"], {async: true, parallelLimit: 2}, function() {
     var task = this;
     setTimeout(function() {
       task.complete();
     },50);
   });
-  task("fail", ["A", "B", "Afail"], {async: true, concurrentLimit: 3}, function() {
+  task("fail", ["A", "B", "Afail"], {async: true, parallelLimit: 3}, function() {
     var task = this;
     setTimeout(function() {
       task.complete();

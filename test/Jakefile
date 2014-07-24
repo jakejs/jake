@@ -257,3 +257,90 @@ namespace('one', function() {
 });
 
 
+namespace('parallel', function() {
+  task("A", {async: true}, function() {
+    console.log("Started A");
+    var task = this;
+    setTimeout(function() {
+      console.log("Finished A");
+      task.complete();
+    }, 200);
+  });
+  task("B", {async: true}, function() {
+    console.log("Started B");
+    var task = this;
+    setTimeout(function() {
+      console.log("Finished B");
+      task.complete();
+    },50);
+  });
+  task("C", {async: true}, function() {
+    console.log("Started C");
+    var task = this;
+    setTimeout(function() {
+      console.log("Finished C");
+      task.complete();
+    }, 100);
+  });
+  task("D", {async: true}, function() {
+    console.log("Started D");
+    var task = this;
+    setTimeout(function() {
+      console.log("Finished D");
+      task.complete();
+    },300);
+  });
+  task("Ba", ["A"], {async: true}, function() {
+    console.log("Started Ba");
+    var task = this;
+    setTimeout(function() {
+      console.log("Finished Ba");
+      task.complete();
+    },50);
+  });
+  task("Afail", {async: true}, function() {
+    console.log("Started failing task");
+    var task = this;
+    setTimeout(function() {
+      console.log("Failing B with error");
+      throw new Error("I failed");
+    },50);
+  });
+  task("simple1", ["A","B"], {async: true, parallelLimit: 2}, function() {
+    var task = this;
+    setTimeout(function() {
+      task.complete();
+    },50);
+  });
+  task("simple2", ["C","D"], {async: true, parallelLimit: 2}, function() {
+    var task = this;
+    setTimeout(function() {
+      task.complete();
+    },50);
+  });
+  task("seqparallel", ["simple1","simple2"], {async: true}, function() {
+    var task = this;
+    setTimeout(function() {
+      task.complete();
+    },50);
+  });
+  task("parallelparallel", ["simple1","simple2"], {async: true, parallelLimit: 2}, function() {
+    var task = this;
+    setTimeout(function() {
+      task.complete();
+    },50);
+  });
+  task("subdep", ["A","Ba"], {async: true, parallelLimit: 2}, function() {
+    var task = this;
+    setTimeout(function() {
+      task.complete();
+    },50);
+  });
+  task("fail", ["A", "B", "Afail"], {async: true, parallelLimit: 3}, function() {
+    var task = this;
+    setTimeout(function() {
+      task.complete();
+    },50);
+  });
+
+});

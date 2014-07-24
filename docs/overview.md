@@ -610,6 +610,43 @@ The process will exit with a status of 42.
 
 Uncaught errors will also abort the currently running task.
 
+
+### Running prerequisites in parallel
+
+Jake can run the prerequisites of a task in parallel. This only makes sense when 
+the tasks are asynchronous and do not block NodeJS event loop like executing shell commands. 
+You can enable and limit the number of simultaneous tasks with the ```parallelLimit```
+task option. Because the order in which the tasks executed in parallel will finish
+is not known these tasks **cannot** call the global `complete` function. Instead they
+**must** finish the specific task either by calling ```task.complete()```  or ```complete(task)```
+
+The folowing example uses ```setTimout``` to finish two tasks out of order. The entire task takes 550ms to complete :
+
+```javascript
+task("A", {async: true}, function() {
+  console.log("Started A");
+  var task = this;
+  setTimeout(function() {
+    console.log("Finished A");
+    task.complete();
+  }, 500);
+});
+task("B", {async: true}, function() {
+  console.log("Started B");
+  var task = this;
+  setTimeout(function() {
+    console.log("Finished B");
+    task.complete();
+  },250);
+});
+task("parallel", ["A","B"], {async: true, parallelLimit: 2}, function() {
+  var task = this;
+  setTimeout(function() {
+    task.complete();
+  },50);
+});
+```
+
 ### Showing the list of tasks
 
 Passing `jake` the -T or --tasks flag will display the full list of tasks

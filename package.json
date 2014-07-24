@@ -26,7 +26,7 @@
   },
   "devDependencies": {
     "q": "0.9.x",
-    "geddy": "13.0.x"
+    "geddy": "0.12.x"
   },
   "engines": {
     "node": "*"

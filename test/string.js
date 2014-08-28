@@ -362,15 +362,18 @@ tests = {
     var actual = string.getInflections("string")
       , expected = {
         filename: {
-            singular: "string"
+            normal: "string"
+          , singular: "string"
           , plural: "strings"
         },
         constructor: {
-            singular: "String"
+            normal: "String"
+          , singular: "String"
           , plural: "Strings"
         },
         property: {
-            singular: "string"
+            normal: "string"
+          , singular: "string"
           , plural: "strings"
         },
       };
@@ -382,15 +385,18 @@ tests = {
     var actual = string.getInflections("snow_dog")
       , expected = {
         filename: {
-            singular: "snow_dog"
+            normal: "snow_dog"
+          , singular: "snow_dog"
           , plural: "snow_dogs"
         },
         constructor: {
-            singular: "SnowDog"
+            normal: "SnowDog"
+          , singular: "SnowDog"
           , plural: "SnowDogs"
         },
         property: {
-            singular: "snowDog"
+            normal: "snowDog"
+          , singular: "snowDog"
           , plural: "snowDogs"
         },
       };

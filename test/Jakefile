@@ -351,7 +351,7 @@ task('selfdepconst', [], function() {
   });
 });
 task('selfdepdyn', function() {
-  task('selfdeppar', [], {parallelLimit: 1}, function() {
+  task('selfdeppar', [], {parallelLimit: 2}, function() {
     console.log("I will depend on myself and will fail at runtime");
   });
   task('selfdeppar', ['selfdeppar']);

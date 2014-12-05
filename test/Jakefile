@@ -344,3 +344,16 @@ namespace('parallel', function() {
   });
 
 });
+
+task('selfdepconst', [], function() {
+  task('selfdep', ['selfdep'], function() {
+    console.log("I made a task that depends on itself");
+  });
+});
+task('selfdepdyn', function() {
+  task('selfdeppar', [], {parallelLimit: 2}, function() {
+    console.log("I will depend on myself and will fail at runtime");
+  });
+  task('selfdeppar', ['selfdeppar']);
+  jake.Task['selfdeppar'].invoke();
+});

@@ -927,6 +927,11 @@ The [PackageTask API
 docs](http://mde.github.com/jake/doc/symbols/jake.PackageTask.html) include a
 lot more information, including different archiving options.
 
+### Windows Specific Warning
+In a windows environment tar will fail unless you have manually added some form of
+tar compatible executable on your path, you can specify the `tarCommand` if needed 
+to use a different executable on the path to achieve the same result.
+
 ## TestTask
 
 When you create a TestTask, it programmatically creates a simple task for running

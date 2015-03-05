@@ -801,10 +801,14 @@ being run.
 being run.
 
 * 'stdout': When the stdout for the child-process recieves data. This streams
-the stdout data. Passes one arg, the chunk of data.
+the stdout data. Passes one arg, the chunk of data. (When using the printStdout
+option, these events are not available as the stdoout of the child process is
+inherited directly from the current process.)
 
 * 'stderr': When the stderr for the child-process recieves data. This streams
-the stderr data. Passes one arg, the chunk of data.
+the stderr data. Passes one arg, the chunk of data. (When using the printStderr
+option, these events are not available as the stderr of the child process is
+inherited directly from the current process.)
 
 * 'error': When a shell-command exits with a non-zero status-code. Passes two
 args -- the error message, and the status code. If you do not set an error

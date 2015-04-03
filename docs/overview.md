@@ -801,10 +801,14 @@ being run.
 being run.
 
 * 'stdout': When the stdout for the child-process recieves data. This streams
-the stdout data. Passes one arg, the chunk of data.
+the stdout data. Passes one arg, the chunk of data. (When using the printStdout
+option, these events are not available as the stdoout of the child process is
+inherited directly from the current process.)
 
 * 'stderr': When the stderr for the child-process recieves data. This streams
-the stderr data. Passes one arg, the chunk of data.
+the stderr data. Passes one arg, the chunk of data. (When using the printStderr
+option, these events are not available as the stderr of the child process is
+inherited directly from the current process.)
 
 * 'error': When a shell-command exits with a non-zero status-code. Passes two
 args -- the error message, and the status code. If you do not set an error
@@ -926,6 +930,11 @@ directory.
 The [PackageTask API
 docs](http://mde.github.com/jake/doc/symbols/jake.PackageTask.html) include a
 lot more information, including different archiving options.
+
+### Windows Specific Warning
+In a windows environment tar will fail unless you have manually added some form of
+tar compatible executable on your path, you can specify the `tarCommand` if needed 
+to use a different executable on the path to achieve the same result.
 
 ## TestTask
 

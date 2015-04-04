@@ -1035,6 +1035,7 @@ By default, it will watch the current directory for these files:
 ```javascript
 [ './**/*.js'
 , './**/*.coffee'
+, './**/*.ls'
 , './**/*.css'
 , './**/*.less'
 , './**/*.scss'
@@ -1130,6 +1131,30 @@ task 'new', ->
 namespace 'foo', ->
   task 'next', (param) ->
     console.log 'ello from next with param: ' + param
+```
+
+## LiveScript Jakefiles
+
+Jake can also handle Jakefiles in LiveScript. Be sure to make it Jakefile.ls so Jake knows it's in LiveScript.
+
+Here's an example:
+
+```livescript
+require! \util
+
+desc 'This is the default task.'
+task \default, (params) !->
+  console.log 'This is the default task.'
+  console.log (util.inspect arguments)
+  jake.Task[\new].invoke []
+
+task \new !->
+  console.log 'ello from new'
+  jake.Task[\foo:next].invoke [\param]
+
+namespace \foo ->
+  task \next (param) !->
+    console.log "ello from next with param: #param"
 ```
 
 ## Related projects

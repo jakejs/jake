@@ -9,6 +9,7 @@
   ],
   "version": "8.0.12",
   "author": "Matthew Eernisse <mde@fleegix.org> (http://fleegix.org)",
+  "license": "Apache-2.0",
   "bin": {
     "jake": "./bin/cli.js"
   },

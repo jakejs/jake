@@ -90,10 +90,6 @@ Add the directory of node.exe to the environment PATH variable.
 A Jakefile is just executable JavaScript. You can include whatever JavaScript
 you want in it.
 
-## API Docs
-
-API docs [can be found here](http://mde.github.com/jake/doc/).
-
 ## Tasks
 
 Use `task` to define tasks. It has one required argument, the task-name, and

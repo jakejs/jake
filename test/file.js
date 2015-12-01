@@ -57,6 +57,61 @@ tests = {
     assert.equal('foo', res[0]);
     fs.rmdirSync('foo');
   }
+
+, 'test rmRf with symlink subdir': function () {
+    file.mkdirP('foo');
+    file.mkdirP('bar');
+    fs.writeFileSync('foo/hello.txt', 'hello, it\'s me');
+    fs.symlinkSync('../foo', 'bar/foo');
+    file.rmRf('bar', {silent: true});
+
+    // Make sure the bar directory was successfully deleted
+    var barDeleted = false;
+    try {
+      var stat = fs.statSync('bar');
+    } catch(err) {
+      if(err.code == 'ENOENT') {
+        barDeleted = true;
+      }
+    }
+    assert.equal(true, barDeleted);
+
+    // Make sure that the file inside the linked folder wasn't deleted
+    res = fs.readdirSync('foo');
+    assert.equal(1, res.length);
+    assert.equal('hello.txt', res[0]);
+
+    // Cleanup
+    fs.unlinkSync('foo/hello.txt');
+    fs.rmdirSync('foo');
+  }
+
+, 'test rmRf with symlinked dir': function () {
+    file.mkdirP('foo');
+    fs.writeFileSync('foo/hello.txt', 'hello!');
+    fs.symlinkSync('foo', 'bar');
+    file.rmRf('bar', {silent: true});
+
+    // Make sure the bar directory was successfully deleted
+    var barDeleted = false;
+    try {
+      var stat = fs.statSync('bar');
+    } catch(err) {
+      if(err.code == 'ENOENT') {
+        barDeleted = true;
+      }
+    }
+    assert.equal(true, barDeleted);
+
+    // Make sure that the file inside the linked folder wasn't deleted
+    res = fs.readdirSync('foo');
+    assert.equal(1, res.length);
+    assert.equal('hello.txt', res[0]);
+
+    // Cleanup
+    fs.unlinkSync('foo/hello.txt');
+    fs.rmdirSync('foo');
+  }
   
 , 'test cpR with same name and different directory': function () {
       file.mkdirP('foo', {silent: true});

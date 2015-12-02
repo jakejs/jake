@@ -796,12 +796,12 @@ being run.
 * 'cmdEnd': When a command finishes. Passes one arg, the command
 being run.
 
-* 'stdout': When the stdout for the child-process recieves data. This streams
+* 'stdout': When the stdout for the child-process receives data. This streams
 the stdout data. Passes one arg, the chunk of data. (When using the printStdout
 option, these events are not available as the stdoout of the child process is
 inherited directly from the current process.)
 
-* 'stderr': When the stderr for the child-process recieves data. This streams
+* 'stderr': When the stderr for the child-process receives data. This streams
 the stderr data. Passes one arg, the chunk of data. (When using the printStderr
 option, these events are not available as the stderr of the child process is
 inherited directly from the current process.)

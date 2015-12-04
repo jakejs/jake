@@ -145,6 +145,93 @@ tests = {
     file.rmRf('baz.txt', {silent: true});
   }
 
+, 'test cpR keeps file mode': function () {
+    fs.writeFileSync('bar.txt', 'w00t', {mode: 0750});
+    fs.writeFileSync('bar1.txt', 'w00t!', {mode: 0744});
+    file.cpR('bar.txt', 'baz.txt', {silent: true});
+    file.cpR('bar1.txt', 'baz1.txt', {silent: true});
+
+    assert.ok(existsSync('baz.txt'));
+    assert.ok(existsSync('baz1.txt'));
+    var bazStat = fs.statSync('baz.txt');
+    var bazStat1 = fs.statSync('baz1.txt');
+    assert.equal(0750, bazStat.mode & 07777);
+    assert.equal(0744, bazStat1.mode & 07777);
+
+    file.rmRf('bar.txt', {silent: true});
+    file.rmRf('baz.txt', {silent: true});
+    file.rmRf('bar1.txt', {silent: true});
+    file.rmRf('baz1.txt', {silent: true});
+  }
+
+, 'test cpR keeps file mode when overwriting with preserveMode': function () {
+    fs.writeFileSync('bar.txt', 'w00t', {mode: 0755});
+    fs.writeFileSync('baz.txt', 'w00t!', {mode: 0744});
+    file.cpR('bar.txt', 'baz.txt', {silent: true, preserveMode: true});
+
+    assert.ok(existsSync('baz.txt'));
+    var bazStat = fs.statSync('baz.txt');
+    assert.equal(0755, bazStat.mode & 07777);
+
+    file.rmRf('bar.txt', {silent: true});
+    file.rmRf('baz.txt', {silent: true});
+  }
+
+, 'test cpR does not keep file mode when overwriting': function () {
+    fs.writeFileSync('bar.txt', 'w00t', {mode: 0766});
+    fs.writeFileSync('baz.txt', 'w00t!', {mode: 0744});
+    file.cpR('bar.txt', 'baz.txt', {silent: true});
+
+    assert.ok(existsSync('baz.txt'));
+    var bazStat = fs.statSync('baz.txt');
+    assert.equal(0744, bazStat.mode & 07777);
+
+    file.rmRf('bar.txt', {silent: true});
+    file.rmRf('baz.txt', {silent: true});
+  }
+
+, 'test cpR copies file mode recursively': function () {
+    fs.mkdirSync('foo');
+    fs.writeFileSync('foo/bar.txt', 'w00t', {mode: 0740});
+    file.cpR('foo', 'baz', {silent: true});
+
+    assert.ok(existsSync('baz'));
+    var barStat = fs.statSync('baz/bar.txt');
+    assert.equal(0740, barStat.mode & 07777);
+
+    file.rmRf('foo');
+    file.rmRf('baz');
+  }
+
+, 'test cpR keeps file mode recursively': function () {
+    fs.mkdirSync('foo');
+    fs.writeFileSync('foo/bar.txt', 'w00t', {mode: 0740});
+    fs.mkdirSync('baz');
+    fs.mkdirSync('baz/foo');
+    fs.writeFileSync('baz/foo/bar.txt', 'w00t!', {mode: 0755});
+    file.cpR('foo', 'baz', {silent: true, preserveMode: true});
+
+    assert.ok(existsSync('baz'));
+    var barStat = fs.statSync('baz/foo/bar.txt');
+    assert.equal(0740, barStat.mode & 07777);
+
+    file.rmRf('foo');
+    file.rmRf('baz');
+  }
+
+, 'test cpR copies directory mode recursively': function () {
+    fs.mkdirSync('foo', 0755);
+    fs.mkdirSync('foo/bar', 0700);
+    file.cpR('foo', 'bar');
+
+    assert.ok(existsSync('foo'));
+    var fooBarStat = fs.statSync('bar/bar');
+    assert.equal(0700, fooBarStat.mode & 07777);
+
+    file.rmRf('foo');
+    file.rmRf('bar');
+  }
+
 , 'test readdirR': function () {
     var expected = [
           ['foo']

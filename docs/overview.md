@@ -334,6 +334,42 @@ command. You can do this by adding this line to your `.zshrc` file :
 
     alias jake="noglob jake"
 
+### Setup jake program global settings
+
+Jake supports the ability to setup global settings (to program) and later use this settings in tasks.
+
+This is may be useful when tasks was split to some files in `jakelib` but must use some settings, f.e. path to directory:
+
+```javascript
+// At Jakefile
+jake.program.setAppVars('libDir', '../foo/lib');
+jake.program.setAppVars({'srcDir': '../bazz/src', 'binDir': '../foo/bin'});
+```
+
+And later use it:
+
+```javascript
+// At  jakelib/common.jake
+desc('Clear lib.');
+task('clearLib', function () {
+  var libDir = jake.program.appVars.libDir;
+  // Do something with libDir value
+});
+```
+
+```javascript
+// At  jakelib/build.jake
+desc('Build lib.');
+task('buildLib', function () {
+  var libDir = jake.program.appVars.libDir,
+      srcDir = jake.program.appVars.srcDir,
+      binDir = jake.program.appVars.binDir;
+  // Do something with libDir value
+});
+```
+
+With application variables it will be easy to have one source of settings to rule it.
+
 ### Cleanup after all tasks run, jake 'complete' event
 
 The base 'jake' object is an EventEmitter, and fires a 'start' event before

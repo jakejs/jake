@@ -191,7 +191,7 @@ namespace(name, namespaceTasks);
 ```
 
 Where is `name` is the name of the namespace, and `namespaceTasks` is a function
-with calls inside it to `task` or `desc` definining all the tasks for that
+with calls inside it to `task` or `desc` defining all the tasks for that
 namespace.
 
 Here's an example:
@@ -216,7 +216,7 @@ namespace('foo', function () {
 });
 ```
 
-In this example, the foo:baz task depends on the the default and foo:bar tasks.
+In this example, the foo:baz task depends on the default and foo:bar tasks.
 
 ### Rules
 
@@ -651,7 +651,7 @@ available in a Jakefile, along with their descriptions:
     $ jake -T
     jake default       # This is the default task.
     jake asdf          # This is the asdf task.
-    jake concat.txt    # File task, concating two files together
+    jake concat.txt    # File task, concatenating two files together
     jake failure       # Failing task.
     jake lookup        # Jake task lookup by name.
     jake foo:bar       # This the foo:bar task
@@ -798,7 +798,7 @@ being run.
 
 * 'stdout': When the stdout for the child-process receives data. This streams
 the stdout data. Passes one arg, the chunk of data. (When using the printStdout
-option, these events are not available as the stdoout of the child process is
+option, these events are not available as the stdout of the child process is
 inherited directly from the current process.)
 
 * 'stderr': When the stderr for the child-process receives data. This streams
@@ -887,7 +887,7 @@ single parameters. Items can be either glob-patterns, or individual file-names.
 
 The `exclude` method will prevent files from being included in the list. These
 files must resolve to actual files on the filesystem. It can be called either
-with an array of items, or mutliple single parameters. Items can be
+with an array of items, or multiple single parameters. Items can be
 glob-patterns, individual file-names, string-representations of
 regular-expressions, or regular-expression literals.
 
@@ -938,7 +938,7 @@ When you create a TestTask, it programmatically creates a simple task for runnin
 tests for your project. The first argument of the constructor is the
 project-name (used in the description of the task), the second (optional)
 argument is a list of prerequisite tasks to run before the tests, and the final
-argument is a function that defines the task. It allows you to specifify what
+argument is a function that defines the task. It allows you to specify what
 files to run as tests, and what to name the task that gets created (defaults to
 "test" if unset).
 

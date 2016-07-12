@@ -760,7 +760,7 @@ task('test', {async: true}, function () {
 desc('Runs some apps in interactive mode.');
 task('interactiveTask', {async: true}, function () {
   var cmds = [
-    'node' // Node conosle
+    'node' // Node console
   , 'vim' // Open Vim
   ];
   jake.exec(cmds, {interactive: true}, function () {

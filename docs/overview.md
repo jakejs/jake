@@ -923,10 +923,6 @@ options. After running `jake package`, you'll have the following in pkg/:
 PackageTask also creates a 'clobber' task that removes the pkg/
 directory.
 
-The [PackageTask API
-docs](http://mde.github.com/jake/doc/symbols/jake.PackageTask.html) include a
-lot more information, including different archiving options.
-
 ### Windows Specific Warning
 In a windows environment tar will fail unless you have manually added some form of
 tar compatible executable on your path, you can specify the `tarCommand` if needed 

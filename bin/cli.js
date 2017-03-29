@@ -18,7 +18,26 @@
 */
 
 // Load `jake` global
-require('../lib/jake');
+var fs = require('fs')
+  , path = require('path')
+  , existsSync = (typeof fs.existsSync === 'function') ? fs.existsSync : path.existsSync;
+
+// if local jake module found - require it instead
+for (var currentPath = process.cwd();
+     currentPath.length > 0;
+     currentPath = currentPath.slice(0, currentPath.lastIndexOf(path.sep)))
+{
+  var jakeModule = path.join(currentPath, 'node_modules', 'jake');
+  if (existsSync(jakeModule)) {
+    require(jakeModule);
+    break;
+  }
+}
+
+// if no local jake module, load the global one
+if (typeof jake === 'undefined') {
+  require('../lib/jake');
+}
 
 var args = process.argv.slice(2);
 

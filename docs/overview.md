@@ -944,6 +944,7 @@ directory.
  - `archiveContentDir` {String=null} Specifies the files and directories to include in the package-archive. If unset, this will default to the main package directory -- i.e., name + version.
 
 ### Windows-specific warning
+
 In a windows environment tar will fail unless you have manually added some form of
 tar compatible executable on your path, you can specify the `tarCommand` if needed 
 to use a different executable on the path to achieve the same result.

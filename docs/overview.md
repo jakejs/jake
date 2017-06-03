@@ -923,11 +923,27 @@ options. After running `jake package`, you'll have the following in pkg/:
 PackageTask also creates a 'clobber' task that removes the pkg/
 directory.
 
-The [PackageTask API
-docs](http://mde.github.com/jake/doc/symbols/jake.PackageTask.html) include a
-lot more information, including different archiving options.
+### PackageTask instance-property options
 
-### Windows Specific Warning
+ - `name` {String} The name of the project
+ - `version` {String} The project version-string
+ - `prereqs` {Array} Tasks to run before packaging
+ - `packageDir` {String='pkg'} The directory-name to use for packaging the software
+ - `packageFiles` {jake.FileList} The list of files and directories to include in the package-archive
+ - `needTar` {Boolean=false} If set to true, uses the `tar` utility to create a gzip .tgz archive of the package
+ - `needTarGz` {Boolean=false} If set to true, uses the `tar` utility to create a gzip .tar.gz archive of the package
+ - `needTarBz2` If set to true, uses the `tar` utility to create a bzip2 .bz2 archive of the package
+ - `needJar` {Boolean=false} If set to true, uses the `jar` utility to create a .jar archive of the package
+ - `needZip` {Boolean=false} If set to true, uses the `zip` utility to create a .zip archive of the package
+ - `manifestFile` {String=null} Can be set to point the `jar` utility at a manifest file to use in a .jar archive. If unset, one will be automatically created by the `jar` utility. This path should be relative to the root of the package directory (this.packageDir above, likely 'pkg')
+ - `tarCommand` {String='tar'} The shell-command to use for creating tar archives.
+ - `jarCommand` {String='jar'} The shell-command to use for creating jar archives.
+ - `zipCommand` {String='zip'} The shell-command to use for creating zip archives.
+ - `archiveNoBaseDir` {Boolean=false} Simple option for performing the archive on the contents of the directory instead of the directory itself
+ - `archiveChangeDir` {String=null} Equivalent to the '-C' command for the `tar` and `jar` commands. ("Change to this directory before adding files.")
+ - `archiveContentDir` {String=null} Specifies the files and directories to include in the package-archive. If unset, this will default to the main package directory -- i.e., name + version.
+
+### Windows-specific warning
 In a windows environment tar will fail unless you have manually added some form of
 tar compatible executable on your path, you can specify the `tarCommand` if needed 
 to use a different executable on the path to achieve the same result.

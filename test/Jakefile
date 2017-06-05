@@ -39,6 +39,17 @@ task('argsEnvVars', function () {
   console.log(JSON.stringify(res));
 });
 
+desc('Use app vars.');
+task('appVars', function () {
+  var res;
+  jake.program.setAppVars('foo', 'bar');
+  jake.program.setAppVars({baz : 'qux'});
+  res = {
+    appVars: jake.program.appVars
+  };
+  console.log(JSON.stringify(res));
+});
+
 namespace('foo', function () {
   desc('The foo:bar task.');
   task('bar', function () {

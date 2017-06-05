@@ -67,6 +67,16 @@ var tests = {
     });
   }
 
+, 'test using app vars': function (next) {
+    h.exec('../bin/cli.js appVars', function (out) {
+      var parsed = h.parse(out)
+        , appVars = parsed.appVars;
+      assert.equal(appVars.foo, 'bar');
+      assert.equal(appVars.baz, 'qux');
+      next();
+    });
+  }
+
 , 'test a simple prereq': function (next) {
     h.exec('../bin/cli.js foo:baz', function (out) {
       assert.equal('foo:bar task\nfoo:baz task', out);

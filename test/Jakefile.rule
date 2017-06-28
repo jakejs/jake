@@ -1,7 +1,7 @@
 var exec = require('child_process').exec
-	, fs = require('fs')
-	, util = require('util')
-	, utils = require('utilities');
+  , fs = require('fs')
+  , util = require('util')
+  , utils = require('utilities');
 
 
 task('default', ['tmp']);
@@ -13,57 +13,57 @@ directory('tmpbin');
 ////////////////////////////////////////////////////////////
 // Simple Suffix Rule
 file('tmp', ['tmp_init', 'tmp_dep1.o', 'tmp_dep2.o'], function (params) {
-		console.log('tmp task');
-		var data1 = fs.readFileSync('tmp_dep1.o');
-		var data2 = fs.readFileSync('tmp_dep2.o');
-		fs.writeFileSync('tmp', data1 + data2);
+    console.log('tmp task');
+    var data1 = fs.readFileSync('tmp_dep1.o');
+    var data2 = fs.readFileSync('tmp_dep2.o');
+    fs.writeFileSync('tmp', data1 + data2);
 });
 
 rule('.o', '.c', function() {
-	var cmd = util.format('cp %s %s', this.source, this.name);
-	console.log(cmd + ' task');
-	jake.exec([cmd], function () {
-		complete();
-	});
+  var cmd = util.format('cp %s %s', this.source, this.name);
+  console.log(cmd + ' task');
+  jake.exec([cmd], function () {
+    complete();
+  });
 }, { async : true });
 file('tmp_dep1.c', function () {
-	fs.writeFile('tmp_dep1.c', 'src_1', function (err) {
-		if (err) {
-			throw err;
-		}
-		console.log('tmp_dep1.c task');
-		complete();
-	});
+  fs.writeFile('tmp_dep1.c', 'src_1', function (err) {
+    if (err) {
+      throw err;
+    }
+    console.log('tmp_dep1.c task');
+    complete();
+  });
 }, {async: true});
 
 // note that tmp_dep2.o depends on tmp_dep2.c, which is a
 // static file.
 task('tmp_init', function () {
-	fs.writeFile('tmp_dep2.c', 'src_2', function (err) {
-		if (err) {
-			throw err;
-		}
-		console.log('tmp_dep2.c task');
-		complete();
-	});
+  fs.writeFile('tmp_dep2.c', 'src_2', function (err) {
+    if (err) {
+      throw err;
+    }
+    console.log('tmp_dep2.c task');
+    complete();
+  });
 }, {async: true});
 ////////////////////////////////////////////////////////////
 
 ////////////////////////////////////////////////////////////
 // Pattern Rule
 file('tmp_p', ['tmp_init', 'tmp_dep1.oo', 'tmp_dep2.oo'], function (params) {
-		console.log('tmp pattern task');
-		var data1 = fs.readFileSync('tmp_dep1.oo');
-		var data2 = fs.readFileSync('tmp_dep2.oo');
-		fs.writeFileSync('tmp_p', data1 + data2 + ' pattern');
+    console.log('tmp pattern task');
+    var data1 = fs.readFileSync('tmp_dep1.oo');
+    var data2 = fs.readFileSync('tmp_dep2.oo');
+    fs.writeFileSync('tmp_p', data1 + data2 + ' pattern');
 });
 
 rule('%.oo', '%.c', function() {
-	var cmd = util.format('cp %s %s', this.source, this.name);
-	console.log(cmd + ' task');
-	jake.exec([cmd], function () {
-		complete();
-	});
+  var cmd = util.format('cp %s %s', this.source, this.name);
+  console.log(cmd + ' task');
+  jake.exec([cmd], function () {
+    complete();
+  });
 }, { async : true });
 ////////////////////////////////////////////////////////////
 
@@ -71,45 +71,45 @@ rule('%.oo', '%.c', function() {
 // Pattern Rule with Folder
 // i.e.  rule('tmpbin/%.oo', 'tmpsrc/%.c', ...
 file('tmp_pf', [
-		'tmp_src_init'
-	, 'tmpbin'
-	, 'tmpbin/tmp_dep1.oo'
-	, 'tmpbin/tmp_dep2.oo' ], function (params) {
-		console.log('tmp pattern folder task');
-		var data1 = fs.readFileSync('tmpbin/tmp_dep1.oo');
-		var data2 = fs.readFileSync('tmpbin/tmp_dep2.oo');
-		fs.writeFileSync('tmp_pf', data1 + data2 + ' pattern folder');
+    'tmp_src_init'
+  , 'tmpbin'
+  , 'tmpbin/tmp_dep1.oo'
+  , 'tmpbin/tmp_dep2.oo' ], function (params) {
+    console.log('tmp pattern folder task');
+    var data1 = fs.readFileSync('tmpbin/tmp_dep1.oo');
+    var data2 = fs.readFileSync('tmpbin/tmp_dep2.oo');
+    fs.writeFileSync('tmp_pf', data1 + data2 + ' pattern folder');
 });
 
 rule('tmpbin/%.oo', 'tmpsrc/%.c', function() {
-	var cmd = util.format('cp %s %s', this.source, this.name);
-	console.log(cmd + ' task');
-	jake.exec([cmd], function () {
-		complete();
-	});
+  var cmd = util.format('cp %s %s', this.source, this.name);
+  console.log(cmd + ' task');
+  jake.exec([cmd], function () {
+    complete();
+  });
 }, { async : true });
 
 
 
 file('tmpsrc/tmp_dep2.c',['tmpsrc'], function () {
-	fs.writeFile('tmpsrc/tmp_dep2.c', 'src/src_2', function (err) {
-		if (err) {
-			throw err;
-		}
-		console.log('tmpsrc/tmp_dep2.c task');
-		complete();
-	});
+  fs.writeFile('tmpsrc/tmp_dep2.c', 'src/src_2', function (err) {
+    if (err) {
+      throw err;
+    }
+    console.log('tmpsrc/tmp_dep2.c task');
+    complete();
+  });
 }, {async: true});
 
 // Create static files in folder tmpsrc.
 task('tmp_src_init', ['tmpsrc'], function () {
-	fs.writeFile('tmpsrc/tmp_dep1.c', 'src/src_1', function (err) {
-		if (err) {
-			throw err;
-		}
-		console.log('tmpsrc/tmp_dep1.c task');
-		complete();
-	});
+  fs.writeFile('tmpsrc/tmp_dep1.c', 'src/src_1', function (err) {
+    if (err) {
+      throw err;
+    }
+    console.log('tmpsrc/tmp_dep1.c task');
+    complete();
+  });
 }, {async: true});
 ////////////////////////////////////////////////////////////
 
@@ -119,48 +119,47 @@ task('tmp_src_init', ['tmpsrc'], function () {
 ////////////////////////////////////////////////////////////
 // Multiple Source Rule tests
 task('tmp_ms', [
-		'tmpbin',
-		'tmpbin/bar123.glom',
-		'sourceFunction:tmpbin/foo123.glom' 
-		], function () { 
-		console.log('multiple source rules task');
-		var data1 = fs.readFileSync('tmpbin/foo123.glom');
-		var data2 = fs.readFileSync('tmpbin/bar123.glom');
-		fs.writeFileSync('tmp_ms', data1 + data2 + ' multiple source rules');
+    'tmpbin',
+    'tmpbin/bar123.glom',
+    'sourceFunction:tmpbin/foo123.glom' 
+    ], function () { 
+    console.log('multiple source rules task');
+    var data1 = fs.readFileSync('tmpbin/foo123.glom');
+    var data2 = fs.readFileSync('tmpbin/bar123.glom');
+    fs.writeFileSync('tmp_ms', data1 + data2 + ' multiple source rules');
 });
 
 +function(){
-	var srcFuncMulti = function (taskName) {
-		var list = [];
-		
-		list.push(taskName.replace('tmpbin', 'tmpsrc').replace(/\.[^.]+$/, '.1') );
-		list.push(taskName.replace('tmpbin', 'tmpsrc').replace(/\.[^.]+$/, '.2') );
-		list.push(taskName.replace('tmpbin', 'tmpsrc').replace(/\.[^.]+$/, '.3') );
+  var srcFuncMulti = function (taskName) {
+    var list = [];
+    
+    list.push(taskName.replace('tmpbin', 'tmpsrc').replace(/\.[^.]+$/, '.1') );
+    list.push(taskName.replace('tmpbin', 'tmpsrc').replace(/\.[^.]+$/, '.2') );
+    list.push(taskName.replace('tmpbin', 'tmpsrc').replace(/\.[^.]+$/, '.3') );
 
-		debugger;
-		return list;
-	};
+    return list;
+  };
 
-	rule(/.*\.glom$/, srcFuncMulti, function () {
-		var data = fs.readFileSync(this.source[0]);
-		data += fs.readFileSync(this.source[1]);
-		data += fs.readFileSync(this.source[2]);
-		fs.writeFileSync(this.name, data.toString());
-		console.log('created .glom');
-	});
+  rule(/.*\.glom$/, srcFuncMulti, function () {
+    var data = fs.readFileSync(this.source[0]);
+    data += fs.readFileSync(this.source[1]);
+    data += fs.readFileSync(this.source[2]);
+    fs.writeFileSync(this.name, data.toString());
+    console.log('created .glom');
+  });
 }();
 
 [1, 2, 3].forEach(function (key) {
-	var name = 'tmpsrc/bar123.' + key;
-	file(name, ['tmpsrc'], function () {
-		fs.writeFile(name, name+ "\n", function (err) {
-			if (err) {
-				throw err;
-			}
-			console.log(name + ' task');
-			complete();
-		});
-	}, {async: true});
+  var name = 'tmpsrc/bar123.' + key;
+  file(name, ['tmpsrc'], function () {
+    fs.writeFile(name, name+ "\n", function (err) {
+      if (err) {
+        throw err;
+      }
+      console.log(name + ' task');
+      complete();
+    });
+  }, {async: true});
 });
 
 ////////////////////////////////////////////////////////////
@@ -169,46 +168,46 @@ task('tmp_ms', [
 // -  rules belonging to different namespace.
 // -  rules with folder and pattern
 task('tmp_ns', [
-		'tmpbin'
-	, 'rule:init'
-	, 'tmpbin/tmp_dep2.oo'    // *** This relies on a rule defined before.
-	, 'rule:tmpbin/dep1.oo'
-	, 'rule:tmpbin/file2.oo' ], function () {
-		console.log('tmp pattern folder namespace task');
-		var data1 = fs.readFileSync('tmpbin/dep1.oo');
-		var data2 = fs.readFileSync('tmpbin/tmp_dep2.oo');
-		var data3 = fs.readFileSync('tmpbin/file2.oo');
-		fs.writeFileSync('tmp_ns', data1 + data2 + data3 + ' pattern folder namespace');
+    'tmpbin'
+  , 'rule:init'
+  , 'tmpbin/tmp_dep2.oo'    // *** This relies on a rule defined before.
+  , 'rule:tmpbin/dep1.oo'
+  , 'rule:tmpbin/file2.oo' ], function () {
+    console.log('tmp pattern folder namespace task');
+    var data1 = fs.readFileSync('tmpbin/dep1.oo');
+    var data2 = fs.readFileSync('tmpbin/tmp_dep2.oo');
+    var data3 = fs.readFileSync('tmpbin/file2.oo');
+    fs.writeFileSync('tmp_ns', data1 + data2 + data3 + ' pattern folder namespace');
 });
 
 namespace('rule', function() {
-	task('init', ['tmpsrc'], function () {
-		fs.writeFile('tmpsrc/file2.c', 'src/src_3', function (err) {
-			if (err) {
-				throw err;
-			}
-			console.log('tmpsrc/file2.c init task');
-			complete();
-		});
-	}, {async: true});
+  task('init', ['tmpsrc'], function () {
+    fs.writeFile('tmpsrc/file2.c', 'src/src_3', function (err) {
+      if (err) {
+        throw err;
+      }
+      console.log('tmpsrc/file2.c init task');
+      complete();
+    });
+  }, {async: true});
 
-	file('tmpsrc/dep1.c',['tmpsrc'], function () {
-		fs.writeFile('tmpsrc/dep1.c', 'src/src_1', function (err) {
-			if (err) {
-				throw err;
-			}
-			console.log('tmpsrc/dep1.c task');
-			complete();
-		});
-	}, {async: true});
+  file('tmpsrc/dep1.c',['tmpsrc'], function () {
+    fs.writeFile('tmpsrc/dep1.c', 'src/src_1', function (err) {
+      if (err) {
+        throw err;
+      }
+      console.log('tmpsrc/dep1.c task');
+      complete();
+    });
+  }, {async: true});
 
-	rule('tmpbin/%.oo', 'tmpsrc/%.c', function() {
-		var cmd = util.format('cp %s %s', this.source, this.name);
-		console.log(cmd + ' ns task');
-		jake.exec([cmd], function () {
-			complete();
-		});
-	}, { async : true });
+  rule('tmpbin/%.oo', 'tmpsrc/%.c', function() {
+    var cmd = util.format('cp %s %s', this.source, this.name);
+    console.log(cmd + ' ns task');
+    jake.exec([cmd], function () {
+      complete();
+    });
+  }, { async : true });
 });
 ////////////////////////////////////////////////////////////
 
@@ -217,117 +216,116 @@ namespace('rule', function() {
 // rule('tmpbin/%.pdf', 'tmpbin/%.dvi', function() { ...
 // rule('tmpbin/%.dvi', 'tmpsrc/%.tex', ['tmpbin'], function() { ...
 task('tmp_cr', [
-		'chainrule:init'
-	, 'chainrule:tmpbin/file1.pdf'
-	, 'chainrule:tmpbin/file2.pdf' ], function () {
-		console.log('tmp chainrule namespace task');
-		var data1 = fs.readFileSync('tmpbin/file1.pdf');
-		var data2 = fs.readFileSync('tmpbin/file2.pdf');
-		fs.writeFileSync('tmp_cr', data1 + data2 + ' chainrule namespace');
+    'chainrule:init'
+  , 'chainrule:tmpbin/file1.pdf'
+  , 'chainrule:tmpbin/file2.pdf' ], function () {
+    console.log('tmp chainrule namespace task');
+    var data1 = fs.readFileSync('tmpbin/file1.pdf');
+    var data2 = fs.readFileSync('tmpbin/file2.pdf');
+    fs.writeFileSync('tmp_cr', data1 + data2 + ' chainrule namespace');
 });
 
 namespace('chainrule', function() {
-	task('init', ['tmpsrc', 'tmpbin'], function () {
-		fs.writeFileSync('tmpsrc/file1.tex', 'tex1 ');
-		fs.writeFileSync('tmpsrc/file2.tex', 'tex2 ');
-		console.log('chainrule init task');
-	});
+  task('init', ['tmpsrc', 'tmpbin'], function () {
+    fs.writeFileSync('tmpsrc/file1.tex', 'tex1 ');
+    fs.writeFileSync('tmpsrc/file2.tex', 'tex2 ');
+    console.log('chainrule init task');
+  });
 
-	rule('tmpbin/%.pdf', 'tmpbin/%.dvi', function() {
-		var cmd = util.format('cp %s %s', this.source, this.name);
-		console.log(cmd + ' dvi->pdf task');
-		jake.exec([cmd], function () {
-			complete();
-		});
-	}, { async : true });
+  rule('tmpbin/%.pdf', 'tmpbin/%.dvi', function() {
+    var cmd = util.format('cp %s %s', this.source, this.name);
+    console.log(cmd + ' dvi->pdf task');
+    jake.exec([cmd], function () {
+      complete();
+    });
+  }, { async : true });
 
-	rule('tmpbin/%.dvi', 'tmpsrc/%.tex', ['tmpbin'], function() {
-		var cmd = util.format('cp %s %s', this.source, this.name);
-		console.log(cmd + ' tex->dvi task');
-		jake.exec([cmd], function () {
-			complete();
-		});
-	}, { async : true });
+  rule('tmpbin/%.dvi', 'tmpsrc/%.tex', ['tmpbin'], function() {
+    var cmd = util.format('cp %s %s', this.source, this.name);
+    console.log(cmd + ' tex->dvi task');
+    jake.exec([cmd], function () {
+      complete();
+    });
+  }, { async : true });
 });
 ////////////////////////////////////////////////////////////
 namespace('precedence', function () {
-	task('test', ['foo.html'], function () {
-		console.log('ran test');
-	});
+  task('test', ['foo.html'], function () {
+    console.log('ran test');
+  });
 
-	rule('.html', '.txt', function () {
-		console.log('created html');
-		var data = fs.readFileSync(this.source);
-		fs.writeFileSync(this.name, data.toString());
-	});
+  rule('.html', '.txt', function () {
+    console.log('created html');
+    var data = fs.readFileSync(this.source);
+    fs.writeFileSync(this.name, data.toString());
+  });
 });
 
 namespace('regexPattern', function () {
-	task('test', ['foo.html'], function () {
-		console.log('ran test');
-	});
+  task('test', ['foo.html'], function () {
+    console.log('ran test');
+  });
 
-	rule(/\.html$/, '.txt', function () {
-debugger;
-		console.log('created html');
-		var data = fs.readFileSync(this.source);
-		fs.writeFileSync(this.name, data.toString());
-	});
+  rule(/\.html$/, '.txt', function () {
+    console.log('created html');
+    var data = fs.readFileSync(this.source);
+    fs.writeFileSync(this.name, data.toString());
+  });
 });
 
 namespace('sourceFunction', function () {
 
-	var srcFunc = function (taskName) {
-		/* console.log(taskName.replace(/\.[^.]+$/, '.txt')); */
-		return taskName.replace(/\.[^.]+$/, '.txt');
-	};
+  var srcFunc = function (taskName) {
+    /* console.log(taskName.replace(/\.[^.]+$/, '.txt')); */
+    return taskName.replace(/\.[^.]+$/, '.txt');
+  };
 
-	task('test', ['foo.html'], function () {
-		console.log('ran test');
-	});
+  task('test', ['foo.html'], function () {
+    console.log('ran test');
+  });
 
-	rule('.html', srcFunc, function () {
-		console.log('created html');
-		var data = fs.readFileSync(this.source);
-		fs.writeFileSync(this.name, data.toString());
-	});
+  rule('.html', srcFunc, function () {
+    console.log('created html');
+    var data = fs.readFileSync(this.source);
+    fs.writeFileSync(this.name, data.toString());
+  });
 
-	var srcFuncMulti = function (taskName) {
-		var list = [];
+  var srcFuncMulti = function (taskName) {
+    var list = [];
 
-		list.push(taskName.replace('tmpbin', 'tmpsrc').replace(/\.[^.]+$/, '.1') );
-		list.push(taskName.replace('tmpbin', 'tmpsrc').replace(/\.[^.]+$/, '.2') );
-		list.push(taskName.replace('tmpbin', 'tmpsrc').replace(/\.[^.]+$/, '.3') );
+    list.push(taskName.replace('tmpbin', 'tmpsrc').replace(/\.[^.]+$/, '.1') );
+    list.push(taskName.replace('tmpbin', 'tmpsrc').replace(/\.[^.]+$/, '.2') );
+    list.push(taskName.replace('tmpbin', 'tmpsrc').replace(/\.[^.]+$/, '.3') );
 
-		return list;
-	};
+    return list;
+  };
 
-	// Testing multiple rule sources returned by a function:
+  // Testing multiple rule sources returned by a function:
 
-	rule(/.*\.glom$/, srcFuncMulti, function () {
-		var data = fs.readFileSync(this.source[0]);
-		data += fs.readFileSync(this.source[1]);
-		data += fs.readFileSync(this.source[2]);
-		fs.writeFileSync(this.name, data.toString());
-		console.log('created .glom');
-	});
+  rule(/.*\.glom$/, srcFuncMulti, function () {
+    var data = fs.readFileSync(this.source[0]);
+    data += fs.readFileSync(this.source[1]);
+    data += fs.readFileSync(this.source[2]);
+    fs.writeFileSync(this.name, data.toString());
+    console.log('created .glom');
+  });
 
-	[1, 2, 3].forEach(function (key) {
-		var name = 'tmpsrc/foo123.' + key;
-		file(name, ['tmpsrc'], function () {
-			fs.writeFile(name, name+ "\n", function (err) {
-				if (err) {
-					throw err;
-				}
-				console.log(name + ' task');
-			complete();
-		});
-	}, {async: true});
+  [1, 2, 3].forEach(function (key) {
+    var name = 'tmpsrc/foo123.' + key;
+    file(name, ['tmpsrc'], function () {
+      fs.writeFile(name, name+ "\n", function (err) {
+        if (err) {
+          throw err;
+        }
+        console.log(name + ' task');
+      complete();
+    });
+  }, {async: true});
 });
 
 });
 ////////////////////////////////////////////////////////////
 task('clean', function () {
-utils.file.rmRf('./foo');
-utils.file.rmRf('./tmp');
+  utils.file.rmRf('./foo');
+  utils.file.rmRf('./tmp');
 });

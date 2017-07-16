@@ -32,7 +32,8 @@ var helpers = new (function () {
     }
 
     cmd += ' --trace';
-    exec(cmd, function (err, stdout, stderr) {
+    var execOpts = opts.execOpts ? opts.execOpts : {};
+    exec(cmd, execOpts, function (err, stdout, stderr) {
       var out = helpers.trim(stdout);
       if (err) {
         if (opts.breakOnError === false) {

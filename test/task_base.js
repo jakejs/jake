@@ -1,5 +1,6 @@
 var assert = require('assert')
-  , h = require('./helpers');
+  , h = require('./helpers')
+  , utils = require('utilities');
 
 var tests = {
 
@@ -63,6 +64,42 @@ var tests = {
       assert.equal(args[1], 'bar');
       assert.equal(env.foo, 'bar');
       assert.equal(env.baz, 'qux');
+      next();
+    });
+  }
+
+, 'test single auto completion': function (next) {
+    var args = ['-f', './auto_complete_test_jakefile', 'd']
+      , opts = _getAutoCompleteOpts(args);
+    h.exec('../bin/auto_complete.js '+_getAutoCompleteExecArgs(args), opts, function (out) {
+      assert.equal('no-space default', out);
+      next();
+    });
+  }
+
+, 'test multiple auto completion': function (next) {
+    var args = ['-f', './auto_complete_test_jakefile', 'foo:ba']
+      , opts = _getAutoCompleteOpts(args);
+    h.exec('../bin/auto_complete.js '+_getAutoCompleteExecArgs(args), opts, function (out) {
+      assert.equal('yes-space foo:bar foo:baz', out);
+      next();
+    });
+  }
+
+, 'test file argument auto completion': function (next) {
+    var args = ['-f']
+      , opts = _getAutoCompleteOpts(args);
+    h.exec('../bin/auto_complete.js '+_getAutoCompleteExecArgs(args), opts, function (out) {
+      assert.equal('no-complete', out);
+      next();
+    });
+  }
+
+, 'test no completions auto completion': function (next) {
+    var args = ['-f', './auto_complete_test_jakefile', 'no-such-completion']
+      , opts = _getAutoCompleteOpts(args);
+    h.exec('../bin/auto_complete.js '+_getAutoCompleteExecArgs(args), opts, function (out) {
+      assert.equal('no-space', out);
       next();
     });
   }
@@ -160,6 +197,22 @@ var tests = {
   }
 
 };
+
+function _getAutoCompleteOpts(args) {
+  return {
+    execOpts: {
+      env: utils.object.merge({
+        COMP_LINE: 'node jake ' + args.join(' ')
+      }, process.env)
+    }
+  };
+}
+
+function _getAutoCompleteExecArgs(args) {
+  var nArgs = args.length;
+  return args[nArgs - 1]+' '+(nArgs > 1 ? args[nArgs - 2] : '');
+}
+
 
 module.exports = tests;
 

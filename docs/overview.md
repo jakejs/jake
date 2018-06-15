@@ -462,13 +462,13 @@ task('environment', {async: true}, function () {
   });
 });
 
-task("someTaskWithEnvViaPrereq", ["envrionment"], function () {
-  api = jake.Task["envrionment"].value;
+task("someTaskWithEnvViaPrereq", ["environment"], function () {
+  api = jake.Task["environment"].value;
   console.log(api);
 });
 
 task("someTaskWithEnvViaInvoke", {async: true}, function () {
-  var env = jake.Task["envrionment"];
+  var env = jake.Task["environment"];
   env.addListener('complete', function (api) {
     console.log(api);
     complete();

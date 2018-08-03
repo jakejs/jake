@@ -1,0 +1,11 @@
+var assert = require('assert')
+
+var tests = {
+
+  'test successfully runs': function () {
+    assert.ok(true);
+  }
+
+};
+
+module.exports = tests;

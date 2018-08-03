@@ -357,3 +357,10 @@ task('selfdepdyn', function() {
   task('selfdeppar', ['selfdeppar']);
   jake.Task['selfdeppar'].invoke();
 });
+
+namespace('test', function() {
+  testTask('test inside namespace', function() {
+    this.testName = 'task'
+    this.testFiles.include('namespaced_test_task');
+  });
+});

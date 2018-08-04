@@ -46,6 +46,12 @@ var tests = {
     });
   }
 
+, 'test testTask under namespace': function(next) {
+    h.exec('../bin/cli.js test:task', function(out) {
+      assert.equal('*** Running namespaced_test_task ***\ntest successfully runs\nAll tests ran successfully', out);
+      next();
+    });
+  }
 };
 
 module.exports = tests;

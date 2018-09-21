@@ -196,6 +196,13 @@ var tests = {
     });
   }
 
+, 'test large number of prereqs': function (next) {
+    h.exec('../bin/cli.js large:root', function (out) {
+      assert.equal(out, 'large:leaf\nlarge:root');
+      next();
+    });
+  }
+
 };
 
 function _getAutoCompleteOpts(args) {

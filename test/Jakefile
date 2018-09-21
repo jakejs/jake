@@ -364,3 +364,20 @@ namespace('test', function() {
     this.testFiles.include('namespaced_test_task');
   });
 });
+
+namespace("large", function() {
+  desc("Leaf task");
+  task("leaf", [], function() {
+    console.log("large:leaf");
+  });
+
+  var leaves = [];
+  for (var i = 0; i < 5000; i++) {
+    leaves.push("large:leaf");
+  }
+
+  desc("Task with a large number of prereqs");
+  task("root", leaves, {parallelLimit: 2}, function() {
+    console.log("large:root");
+  });
+});

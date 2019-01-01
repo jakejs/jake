@@ -93,7 +93,7 @@ var tests = {
     assert.equal('zoobie', res.opts.jakefile);
     assert.equal(true, res.opts.trace);
     assert.equal('bar', res.envVars.foo);
-    assert.equal(undefined, res.taskName);
+    assert.equal(undefined, res.taskNames[0]);
   }
 
 , 'test -f expects a value, -t does not (foo=bar is env-var, task-name follows)': function () {
@@ -104,26 +104,25 @@ var tests = {
     assert.equal('howdy', res.taskNames[0]);
   }
 
-, 'test -t does not expect a value, -f does (throw howdy away)': function () {
+, 'test -t does not expect a value, -f does (howdy is task-name)': function () {
     res = p.parse(z('-t howdy -f zoobie'));
     assert.equal(true, res.opts.trace);
     assert.equal('zoobie', res.opts.jakefile);
-    assert.equal(undefined, res.taskName);
-
+    assert.equal('howdy', res.taskNames[0]);
   }
 
-, 'test --trace does not expect a value, -f does (throw howdy away)': function () {
+, 'test --trace does not expect a value, -f does (howdy is task-name)': function () {
     res = p.parse(z('--trace howdy --jakefile zoobie'));
     assert.equal(true, res.opts.trace);
     assert.equal('zoobie', res.opts.jakefile);
-    assert.equal(undefined, res.taskName);
+    assert.equal('howdy', res.taskNames[0]);
   }
 
-, 'test --trace does not expect a value (equal), -f does (throw howdy away)': function () {
+, 'test --trace does not expect a value (equal), -f does (howdy is task-name)': function () {
     res = p.parse(z('--trace=howdy --jakefile=zoobie'));
     assert.equal(true, res.opts.trace);
     assert.equal('zoobie', res.opts.jakefile);
-    assert.equal(undefined, res.taskName);
+    assert.equal(undefined, res.taskNames[0]);
   }
 
 /*
@@ -147,4 +146,3 @@ var tests = {
 };
 
 module.exports = tests;
-

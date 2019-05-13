@@ -1,6 +1,16 @@
 var fs = require('fs')
   , path = require('path');
 
+desc('default');
+task('default', function () {
+  console.log('hello');
+});
+
+desc('ps');
+task('ps', function () {
+  jake.exec('ps');
+});
+
 testTask('Jake', function () {
   this.testFiles.include('test/*.js');
   this.testFiles.exclude('test/helpers.js');

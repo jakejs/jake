@@ -1,6 +1,7 @@
 var assert = require('assert')
   , h = require('./helpers')
-  , utils = require('../lib/utils');
+  , utils = require('../lib/utils')
+  , fs = require('fs');
 
 utils.mixin(utils, utils);
 
@@ -109,6 +110,36 @@ var tests = {
     ex.run();
   }
 
+  , 'test options use default values when no config file passed': function (next) {
+    var ex = utils.createExec("ls", function () { });
+
+    var expected = {
+      interactive: false,
+      printStdout: false,
+      printStderr: false,
+      breakOnError: true
+    };
+    assert.deepStrictEqual(ex._config, expected);
+    next();
+  },
+
+  'test options use default values when a config file exists': function (next) {
+    var configFilePath = "Jakeconfig.js";
+
+    fs.copyFileSync("__fixtures__/Jakeconfig.js", configFilePath);
+    var ex = utils.createExec("ls", function () { });
+    fs.unlinkSync(configFilePath);
+
+    var expected = {
+      interactive: true,
+      printStdout: true,
+      printStderr: true,
+      breakOnError: true
+    };
+    assert.deepStrictEqual(ex._config, expected);
+    next();
+
+  }
 };
 
 module.exports = tests;

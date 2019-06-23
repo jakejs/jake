@@ -11,6 +11,7 @@ var cleanUpAndNext = function (callback) {
   var tmpFiles = [
     'tmp'
   , 'tmp_ns'
+  , 'tmp_ms'
   , 'tmp_cr'
   , 'tmp_p'
   , 'tmp_pf'
@@ -137,6 +138,34 @@ var tests = {
       assert.equal( output.join('\n') , out);
       data = fs.readFileSync(process.cwd() + '/tmp_cr');
       assert.equal('tex1 tex2  chainrule namespace', data.toString());
+      cleanUpAndNext(next);
+    });
+  }
+
+, 'test rule w multiple source': function (next) {
+    h.exec( '../bin/cli.js  -f Jakefile.rule tmp_ms', function (out) {
+      debugger;
+      var output = [
+        "tmpsrc/bar123.1 task"
+      , "tmpsrc/bar123.2 task"
+      , "tmpsrc/bar123.3 task"
+      , "created .glom"
+      , "tmpsrc/foo123.1 task"
+      , "tmpsrc/foo123.2 task"
+      , "tmpsrc/foo123.3 task"
+      , "created .glom"
+      , "multiple source rules task" ];
+      var data;
+      assert.equal( output.join('\n') , out);
+      data = fs.readFileSync(process.cwd() + '/tmp_ms');
+      assert.equal([
+        'tmpsrc/foo123.1', 
+        'tmpsrc/foo123.2', 
+        'tmpsrc/foo123.3', 
+        'tmpsrc/bar123.1', 
+        'tmpsrc/bar123.2', 
+        'tmpsrc/bar123.3', 
+        ' multiple source rules'].join("\n"), data.toString());
       cleanUpAndNext(next);
     });
   }

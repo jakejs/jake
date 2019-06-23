@@ -9,6 +9,7 @@ task('default', ['tmp']);
 directory('tmpsrc');
 directory('tmpbin');
 
+
 ////////////////////////////////////////////////////////////
 // Simple Suffix Rule
 file('tmp', ['tmp_init', 'tmp_dep1.o', 'tmp_dep2.o'], function (params) {
@@ -112,6 +113,54 @@ task('tmp_src_init', ['tmpsrc'], function () {
 }, {async: true});
 ////////////////////////////////////////////////////////////
 
+//////////////////////////////////////////////////////
+// Rule having multiple sources
+
+////////////////////////////////////////////////////////////
+// Multiple Source Rule tests
+task('tmp_ms', [
+    'tmpbin',
+    'tmpbin/bar123.glom',
+    'sourceFunction:tmpbin/foo123.glom' 
+    ], function () { 
+    console.log('multiple source rules task');
+    var data1 = fs.readFileSync('tmpbin/foo123.glom');
+    var data2 = fs.readFileSync('tmpbin/bar123.glom');
+    fs.writeFileSync('tmp_ms', data1 + data2 + ' multiple source rules');
+});
+
++function(){
+  var srcFuncMulti = function (taskName) {
+    var list = [];
+    
+    list.push(taskName.replace('tmpbin', 'tmpsrc').replace(/\.[^.]+$/, '.1') );
+    list.push(taskName.replace('tmpbin', 'tmpsrc').replace(/\.[^.]+$/, '.2') );
+    list.push(taskName.replace('tmpbin', 'tmpsrc').replace(/\.[^.]+$/, '.3') );
+
+    return list;
+  };
+
+  rule(/.*\.glom$/, srcFuncMulti, function () {
+    var data = fs.readFileSync(this.source[0]);
+    data += fs.readFileSync(this.source[1]);
+    data += fs.readFileSync(this.source[2]);
+    fs.writeFileSync(this.name, data.toString());
+    console.log('created .glom');
+  });
+}();
+
+[1, 2, 3].forEach(function (key) {
+  var name = 'tmpsrc/bar123.' + key;
+  file(name, ['tmpsrc'], function () {
+    fs.writeFile(name, name+ "\n", function (err) {
+      if (err) {
+        throw err;
+      }
+      console.log(name + ' task');
+      complete();
+    });
+  }, {async: true});
+});
 
 ////////////////////////////////////////////////////////////
 // Namespace Test. This is a Mixed Test.
@@ -227,6 +276,7 @@ namespace('regexPattern', function () {
 namespace('sourceFunction', function () {
 
   var srcFunc = function (taskName) {
+    /* console.log(taskName.replace(/\.[^.]+$/, '.txt')); */
     return taskName.replace(/\.[^.]+$/, '.txt');
   };
 
@@ -239,8 +289,41 @@ namespace('sourceFunction', function () {
     var data = fs.readFileSync(this.source);
     fs.writeFileSync(this.name, data.toString());
   });
+
+  var srcFuncMulti = function (taskName) {
+    var list = [];
+
+    list.push(taskName.replace('tmpbin', 'tmpsrc').replace(/\.[^.]+$/, '.1') );
+    list.push(taskName.replace('tmpbin', 'tmpsrc').replace(/\.[^.]+$/, '.2') );
+    list.push(taskName.replace('tmpbin', 'tmpsrc').replace(/\.[^.]+$/, '.3') );
+
+    return list;
+  };
+
+  // Testing multiple rule sources returned by a function:
+
+  rule(/.*\.glom$/, srcFuncMulti, function () {
+    var data = fs.readFileSync(this.source[0]);
+    data += fs.readFileSync(this.source[1]);
+    data += fs.readFileSync(this.source[2]);
+    fs.writeFileSync(this.name, data.toString());
+    console.log('created .glom');
+  });
+
+  [1, 2, 3].forEach(function (key) {
+    var name = 'tmpsrc/foo123.' + key;
+    file(name, ['tmpsrc'], function () {
+      fs.writeFile(name, name+ "\n", function (err) {
+        if (err) {
+          throw err;
+        }
+        console.log(name + ' task');
+      complete();
+    });
+  }, {async: true});
 });
 
+});
 ////////////////////////////////////////////////////////////
 task('clean', function () {
   utils.file.rmRf('./foo');

@@ -1,5 +1,5 @@
-var assert = require('assert'),
-   h = require('./helpers');
+var assert = require('assert');
+   var h = require('./helpers');
 
 var tests = {
 

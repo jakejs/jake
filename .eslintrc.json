@@ -15,6 +15,7 @@
       "exceptions": {
         "ArrayExpression": true
       }
-    }]
+    }],
+    "one-var": ["error", "never"]
   }
 }

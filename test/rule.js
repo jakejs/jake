@@ -1,10 +1,10 @@
-var assert = require('assert'),
-   fs = require('fs'),
-   path = require('path'),
-   exec = require('child_process').exec,
-   h = require('./helpers'),
-   Matcher = require('../lib/rule').Matcher,
-   utils = require('utilities');
+var assert = require('assert');
+   var fs = require('fs');
+   var path = require('path');
+   var exec = require('child_process').exec;
+   var h = require('./helpers');
+   var Matcher = require('../lib/rule').Matcher;
+   var utils = require('utilities');
 
 var cleanUpAndNext = function (callback) {
   // Gotta add globbing to file utils rmRf

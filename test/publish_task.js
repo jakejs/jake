@@ -1,8 +1,8 @@
 
-var assert = require('assert'),
-   h = require('./helpers'),
-   fs = require('fs'),
-   utils = require('utilities');
+var assert = require('assert');
+   var h = require('./helpers');
+   var fs = require('fs');
+   var utils = require('utilities');
 
 var tests = {
 

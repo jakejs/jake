@@ -1,9 +1,9 @@
-var assert = require('assert'),
-   fs = require('fs'),
-   path = require('path'),
-   exec = require('child_process').exec,
-   h = require('./helpers'),
-   utils = require('utilities');
+var assert = require('assert');
+   var fs = require('fs');
+   var path = require('path');
+   var exec = require('child_process').exec;
+   var h = require('./helpers');
+   var utils = require('utilities');
 
 var cleanUpAndNext = function (callback) {
   utils.file.rmRf('./foo', {

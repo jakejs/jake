@@ -1,10 +1,10 @@
 // Load the jake global
 require('../lib/jake');
 
-var assert = require('assert'),
-   h = require('./helpers'),
-   api = require('../lib/api'),
-   Namespace = require('../lib/namespace').Namespace;
+var assert = require('assert');
+   var h = require('./helpers');
+   var api = require('../lib/api');
+   var Namespace = require('../lib/namespace').Namespace;
 
 var tests = {
   'before': function () {
@@ -16,9 +16,9 @@ var tests = {
   },
 
  'resolve namespace by relative name': function () {
-    var foo,
-       bar,
-       baz;
+    var foo;
+       var bar;
+       var baz;
 
     foo = namespace('foo', function () {
       bar = namespace('bar', function () {

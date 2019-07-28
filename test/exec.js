@@ -1,6 +1,6 @@
-var assert = require('assert'),
-   h = require('./helpers'),
-   utils = require('../lib/utils');
+var assert = require('assert');
+   var h = require('./helpers');
+   var utils = require('../lib/utils');
 
 utils.mixin(utils, utils);
 
@@ -14,14 +14,14 @@ var tests = {
   },
 
  'test basic exec': function (next) {
-    var ex = utils.createExec('ls', function () {}),
-       evts = { // Events should fire in this order
+    var ex = utils.createExec('ls', function () {});
+       var evts = { // Events should fire in this order
           cmdStart: [0, null],
          stdout: [1, null],
          cmdEnd: [2, null],
          end: [3, null]
-        },
-       incr = 0; // Increment with each event to check order
+        };
+       var incr = 0; // Increment with each event to check order
     assert.ok(ex instanceof utils.Exec);
 
     var addListenerAndIncrement = function (p) {
@@ -73,9 +73,9 @@ var tests = {
   },
 
  'test piping results into next command': function (next) {
-    var ex = utils.createExec('ls', function () {}),
-       data,
-       appended = false;
+    var ex = utils.createExec('ls', function () {});
+       var data;
+       var appended = false;
 
     ex.addListener('stdout', function (d) {
       data += h.trim(d.toString());

@@ -1,6 +1,6 @@
-var parseargs = require('../lib/parseargs'),
-   assert = require('assert'),
-   optsReg = [
+var parseargs = require('../lib/parseargs');
+   var assert = require('assert');
+   var optsReg = [
       { full: 'directory',
        abbr: 'C',
        preempts: false,
@@ -32,10 +32,10 @@ var parseargs = require('../lib/parseargs'),
        abbr: 'V',
        preempts: true
       }
-    ],
-   p = new parseargs.Parser(optsReg),
-   z = function (s) { return s.split(' '); },
-   res;
+    ];
+   var p = new parseargs.Parser(optsReg);
+   var z = function (s) { return s.split(' '); };
+   var res;
 
 var tests = {
 

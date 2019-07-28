@@ -3,14 +3,14 @@
     "node": true
   },
   "globals": {
-    "jake": "writable",
-    "task": "writable",
-    "namespace": "writable",
-    "desc": "writable",
-    "complete": "writable",
-    "file": "writable",
-    "directory": "writable",
-    "fail": "writable"
+    "jake": "readable",
+    "task": "readable",
+    "namespace": "readable",
+    "desc": "readable",
+    "complete": "readable",
+    "file": "readable",
+    "directory": "readable",
+    "fail": "readable"
   },
   "parserOptions": {
     "ecmaVersion": 2018,

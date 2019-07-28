@@ -1,11 +1,11 @@
 var exec = require('child_process').exec;
 
 var helpers = new (function () {
-  var _tests
-    , _names = []
-    , _name
-    , _callback
-    , _runner = function () {
+  var _tests,
+     _names = [],
+     _name,
+     _callback,
+     _runner = function () {
         if (!!(_name = _names.shift())) {
           console.log('Running ' + _name);
           _tests[_name]();
@@ -16,11 +16,11 @@ var helpers = new (function () {
       };
 
   this.exec = function () {
-    var args = Array.prototype.slice.call(arguments)
-      , arg
-      , cmd = args.shift()
-      , opts = {}
-      , callback;
+    var args = Array.prototype.slice.call(arguments),
+       arg,
+       cmd = args.shift(),
+       opts = {},
+       callback;
     // Optional opts/callback or callback/opts
     while ((arg = args.shift())) {
       if (typeof arg == 'function') {

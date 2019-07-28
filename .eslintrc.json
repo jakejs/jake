@@ -8,6 +8,13 @@
       "anonymous": "always",
       "named": "never",
       "asyncArrow": "always"
+    }],
+    "comma-style": ["error",
+    "last",
+    {
+      "exceptions": {
+        "ArrayExpression": true
+      }
     }]
   }
 }

@@ -1,20 +1,20 @@
 
-var assert = require('assert')
-  , h = require('./helpers')
-  , fs = require('fs')
-  , utils = require('utilities');
+var assert = require('assert'),
+   h = require('./helpers'),
+   fs = require('fs'),
+   utils = require('utilities');
 
 var tests = {
 
   'before': function () {
     process.chdir('./test');
-  }
+  },
 
-, 'after': function () {
+ 'after': function () {
     process.chdir('../');
-  }
+  },
 
-, 'test default task': function (next) {
+ 'test default task': function (next) {
     h.exec('../bin/cli.js  -f Jakefile.publish publish', function (out) {
       var expected = [
             'Fetched remote tags.'

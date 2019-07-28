@@ -1,24 +1,24 @@
 // Load the jake global
 require('../lib/jake');
 
-var assert = require('assert')
-  , h = require('./helpers')
-  , api = require('../lib/api')
-  , Namespace = require('../lib/namespace').Namespace;
+var assert = require('assert'),
+   h = require('./helpers'),
+   api = require('../lib/api'),
+   Namespace = require('../lib/namespace').Namespace;
 
 var tests = {
   'before': function () {
     process.chdir('./test');
-  }
+  },
 
-, 'after': function () {
+ 'after': function () {
     process.chdir('../');
-  }
+  },
 
-, 'resolve namespace by relative name': function () {
-    var foo
-      , bar
-      , baz;
+ 'resolve namespace by relative name': function () {
+    var foo,
+       bar,
+       baz;
 
     foo = namespace('foo', function () {
       bar = namespace('bar', function () {
@@ -37,16 +37,16 @@ var tests = {
         'baz -> "foo:bar:baz"');
     assert.ok(baz === baz.resolveNamespace('bar:baz'),
         'baz -> "bar:baz"');
-  }
+  },
 
-, 'test modifying a namespace by adding a new task': function (next) {
+ 'test modifying a namespace by adding a new task': function (next) {
     h.exec('../bin/cli.js one:two', function (out) {
       assert.equal('one:one\none:two', out);
       next();
     });
-  }
+  },
 
-, 'test testTask under namespace': function (next) {
+ 'test testTask under namespace': function (next) {
     h.exec('../bin/cli.js test:task', function (out) {
       assert.equal('*** Running namespaced_test_task ***\ntest successfully runs\nAll tests ran successfully', out);
       next();

@@ -1,10 +1,10 @@
-var assert = require('assert')
-  , fs = require('fs')
-  , path = require('path')
-  , exec = require('child_process').exec
-  , h = require('./helpers')
-  , Matcher = require('../lib/rule').Matcher
-  , utils = require('utilities');
+var assert = require('assert'),
+   fs = require('fs'),
+   path = require('path'),
+   exec = require('child_process').exec,
+   h = require('./helpers'),
+   Matcher = require('../lib/rule').Matcher,
+   utils = require('utilities');
 
 var cleanUpAndNext = function (callback) {
   // Gotta add globbing to file utils rmRf
@@ -38,11 +38,11 @@ var tests = {
   'before': function (next) {
     process.chdir('./test');
     cleanUpAndNext(next);
-  }
+  },
 
-, 'after': function () {
+ 'after': function () {
     process.chdir('../');
-  }
+  },
 
   //  - name   foo:bin/main.o
   //  - pattern    bin/%.o
@@ -52,12 +52,12 @@ var tests = {
   //    'dep' : 'foo:src/main.c',
   //    'file': 'src/main.c'
   //  };
-, 'test Matcher.getSource': function () {
+ 'test Matcher.getSource': function () {
     var src = Matcher.getSource('foo:bin/main.o', 'bin/%.o', 'src/%.c');
     assert.equal('foo:src/main.c', src);
-  }
+  },
 
-, 'test rule w/o pattern': function (next) {
+ 'test rule w/o pattern': function (next) {
     h.exec( '../bin/cli.js -f Jakefile.rule tmp', function (out) {
       var output = [
         "tmp_dep2.c task"
@@ -71,9 +71,9 @@ var tests = {
       assert.equal('src_1src_2', data.toString());
       cleanUpAndNext(next);
     });
-  }
+  },
 
-, 'test rule w pattern w/o folder w/o namespace': function (next) {
+ 'test rule w pattern w/o folder w/o namespace': function (next) {
     h.exec( '../bin/cli.js  -f Jakefile.rule tmp_p', function (out) {
       var output = [
         "tmp_dep2.c task"
@@ -87,9 +87,9 @@ var tests = {
       assert.equal('src_1src_2 pattern', data.toString());
       cleanUpAndNext(next);
     });
-  }
+  },
 
-, 'test rule w pattern w folder w/o namespace': function (next) {
+ 'test rule w pattern w folder w/o namespace': function (next) {
     h.exec( '../bin/cli.js  -f Jakefile.rule tmp_pf', function (out) {
       var output = [
         "tmpsrc/tmp_dep1.c task"
@@ -103,9 +103,9 @@ var tests = {
       assert.equal('src/src_1src/src_2 pattern folder', data.toString());
       cleanUpAndNext(next);
     });
-  }
+  },
 
-, 'test rule w pattern w folder w namespace': function (next) {
+ 'test rule w pattern w folder w namespace': function (next) {
     h.exec( '../bin/cli.js  -f Jakefile.rule tmp_ns', function (out) {
       var output = [
         "tmpsrc/file2.c init task"
@@ -121,10 +121,10 @@ var tests = {
       assert.equal('src/src_1src/src_2src/src_3 pattern folder namespace', data.toString());
       cleanUpAndNext(next);
     });
-  }
+  },
 
 
-, 'test rule w chain w pattern w folder w namespace': function (next) {
+ 'test rule w chain w pattern w folder w namespace': function (next) {
     h.exec( '../bin/cli.js  -f Jakefile.rule tmp_cr', function (out) {
       var output = [
         "chainrule init task"

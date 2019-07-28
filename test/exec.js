@@ -1,27 +1,27 @@
-var assert = require('assert')
-  , h = require('./helpers')
-  , utils = require('../lib/utils');
+var assert = require('assert'),
+   h = require('./helpers'),
+   utils = require('../lib/utils');
 
 utils.mixin(utils, utils);
 
 var tests = {
   'before': function () {
     process.chdir('./test');
-  }
+  },
 
-, 'after': function () {
+ 'after': function () {
     process.chdir('../');
-  }
+  },
 
-, 'test basic exec': function (next) {
-    var ex = utils.createExec('ls', function () {})
-      , evts = { // Events should fire in this order
-          cmdStart: [0, null]
-        , stdout: [1, null]
-        , cmdEnd: [2, null]
-        , end: [3, null]
-        }
-      , incr = 0; // Increment with each event to check order
+ 'test basic exec': function (next) {
+    var ex = utils.createExec('ls', function () {}),
+       evts = { // Events should fire in this order
+          cmdStart: [0, null],
+         stdout: [1, null],
+         cmdEnd: [2, null],
+         end: [3, null]
+        },
+       incr = 0; // Increment with each event to check order
     assert.ok(ex instanceof utils.Exec);
 
     var addListenerAndIncrement = function (p) {
@@ -43,39 +43,39 @@ var tests = {
       next();
     });
 
-  }
+  },
 
-, 'test an exec failure': function (next) {
+ 'test an exec failure': function (next) {
     var ex = utils.createExec('false', function () {});
     ex.addListener('error', function (msg, code) {
       assert.equal(1, code);
       next();
     });
     ex.run();
-  }
+  },
 
-, 'test exec stdout events': function (next) {
+ 'test exec stdout events': function (next) {
     var ex = utils.createExec('echo "foo"', function () {});
     ex.addListener('stdout', function (data) {
       assert.equal("foo", h.trim(data.toString()));
       next();
     });
     ex.run();
-  }
+  },
 
-, 'test exec stderr events': function (next) {
+ 'test exec stderr events': function (next) {
     var ex = utils.createExec('echo "foo" 1>&2', function () {});
     ex.addListener('stderr', function (data) {
       assert.equal("foo", h.trim(data.toString()));
       next();
     });
     ex.run();
-  }
+  },
 
-, 'test piping results into next command': function (next) {
-    var ex = utils.createExec('ls', function () {})
-      , data
-      , appended = false;
+ 'test piping results into next command': function (next) {
+    var ex = utils.createExec('ls', function () {}),
+       data,
+       appended = false;
 
     ex.addListener('stdout', function (d) {
       data += h.trim(d.toString());

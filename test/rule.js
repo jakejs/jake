@@ -64,9 +64,9 @@ var tests = {
       , "tmp_dep1.c task"
       , "cp tmp_dep1.c tmp_dep1.o task"
       , "cp tmp_dep2.c tmp_dep2.o task"
-      , "tmp task" ];
+      , "tmp task"];
       var data;
-      assert.equal( output.join('\n') , out);
+      assert.equal( output.join('\n'), out);
       data = fs.readFileSync(process.cwd() + '/tmp');
       assert.equal('src_1src_2', data.toString());
       cleanUpAndNext(next);
@@ -80,9 +80,9 @@ var tests = {
       , "tmp_dep1.c task"
       , "cp tmp_dep1.c tmp_dep1.oo task"
       , "cp tmp_dep2.c tmp_dep2.oo task"
-      , "tmp pattern task" ];
+      , "tmp pattern task"];
       var data;
-      assert.equal( output.join('\n') , out);
+      assert.equal( output.join('\n'), out);
       data = fs.readFileSync(process.cwd() + '/tmp_p');
       assert.equal('src_1src_2 pattern', data.toString());
       cleanUpAndNext(next);
@@ -96,9 +96,9 @@ var tests = {
       , "cp tmpsrc/tmp_dep1.c tmpbin/tmp_dep1.oo task"
       , "tmpsrc/tmp_dep2.c task"
       , "cp tmpsrc/tmp_dep2.c tmpbin/tmp_dep2.oo task"
-      , "tmp pattern folder task" ];
+      , "tmp pattern folder task"];
       var data;
-      assert.equal( output.join('\n') , out);
+      assert.equal( output.join('\n'), out);
       data = fs.readFileSync(process.cwd() + '/tmp_pf');
       assert.equal('src/src_1src/src_2 pattern folder', data.toString());
       cleanUpAndNext(next);
@@ -114,9 +114,9 @@ var tests = {
       , "tmpsrc/dep1.c task"
       , "cp tmpsrc/dep1.c tmpbin/dep1.oo ns task"
       , "cp tmpsrc/file2.c tmpbin/file2.oo ns task"
-      , "tmp pattern folder namespace task" ];
+      , "tmp pattern folder namespace task"];
       var data;
-      assert.equal( output.join('\n') , out);
+      assert.equal( output.join('\n'), out);
       data = fs.readFileSync(process.cwd() + '/tmp_ns');
       assert.equal('src/src_1src/src_2src/src_3 pattern folder namespace', data.toString());
       cleanUpAndNext(next);
@@ -132,9 +132,9 @@ var tests = {
       , "cp tmpbin/file1.dvi tmpbin/file1.pdf dvi->pdf task"
       , "cp tmpsrc/file2.tex tmpbin/file2.dvi tex->dvi task"
       , "cp tmpbin/file2.dvi tmpbin/file2.pdf dvi->pdf task"
-      , "tmp chainrule namespace task" ];
+      , "tmp chainrule namespace task"];
       var data;
-      assert.equal( output.join('\n') , out);
+      assert.equal( output.join('\n'), out);
       data = fs.readFileSync(process.cwd() + '/tmp_cr');
       assert.equal('tex1 tex2  chainrule namespace', data.toString());
       cleanUpAndNext(next);

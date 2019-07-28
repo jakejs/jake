@@ -1,21 +1,30 @@
 {
+  "env": {
+    "node": true
+  },
+  "globals": {
+    "jake": "writable",
+    "task": "writable",
+    "namespace": "writable",
+    "desc": "writable",
+    "complete": "writable",
+    "file": "writable",
+    "directory": "writable",
+    "fail": "writable"
+  },
   "parserOptions": {
     "ecmaVersion": 2018,
     "sourceType": "module"
   },
+  "extends": "eslint:recommended",
   "rules": {
+    "no-unused-vars": "off",
+    "no-empty": "off",
+    "no-useless-escape": "off",
     "space-before-function-paren": ["error", {
       "anonymous": "always",
       "named": "never",
       "asyncArrow": "always"
-    }],
-    "comma-style": ["error",
-    "last",
-    {
-      "exceptions": {
-        "ArrayExpression": true
-      }
-    }],
-    "one-var": ["error", "never"]
+    }]
   }
 }

@@ -42,7 +42,7 @@ var tests = {
     });
   },
  'test failing in parallel prerequisites': function (next) {
-    h.exec('../bin/cli.js parallel:Cfail', {breakOnError:false},function (out) {
+    h.exec('../bin/cli.js parallel:Cfail', {breakOnError:false}, function (out) {
       assert.equal(1, out.code);
       next();
     });

@@ -6,7 +6,7 @@ var helpers = new (function () {
      var _name;
      var _callback;
      var _runner = function () {
-        if (!!(_name = _names.shift())) {
+        if ((_name = _names.shift())) {
           console.log('Running ' + _name);
           _tests[_name]();
         }

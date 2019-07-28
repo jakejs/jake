@@ -3,8 +3,6 @@ require('../lib/jake');
 
 var assert = require('assert');
    var h = require('./helpers');
-   var api = require('../lib/api');
-   var Namespace = require('../lib/namespace').Namespace;
 
 var tests = {
   'before': function () {
@@ -48,6 +46,9 @@ var tests = {
 
  'test testTask under namespace': function (next) {
     h.exec('../bin/cli.js test:task', function (out) {
+      console.log('>>>>>>>>>>>>>>');
+      console.log(out);
+      console.log('>>>>>>>>>>>>>>');
       assert.equal('*** Running namespaced_test_task ***\ntest successfully runs\nAll tests ran successfully', out);
       next();
     });

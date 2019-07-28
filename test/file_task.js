@@ -1,7 +1,5 @@
 var assert = require('assert');
    var fs = require('fs');
-   var path = require('path');
-   var exec = require('child_process').exec;
    var h = require('./helpers');
    var utils = require('utilities');
 

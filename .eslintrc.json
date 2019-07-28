@@ -18,7 +18,7 @@
   },
   "extends": "eslint:recommended",
   "rules": {
-    "no-unused-vars": "off",
+    "no-unused-vars": ["error", { "args": "none" }],
     "no-empty": "off",
     "no-useless-escape": "off",
     "space-before-function-paren": ["error", {

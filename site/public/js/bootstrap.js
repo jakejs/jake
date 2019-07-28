@@ -20,7 +20,7 @@
 
 !function ($) {
 
-  "use strict"; // jshint ;_;
+  "use strict";
 
 
   /* CSS TRANSITION SUPPORT (http://www.modernizr.com/)
@@ -79,7 +79,7 @@
 
 !function ($) {
 
-  "use strict"; // jshint ;_;
+  "use strict";
 
 
  /* ALERT CLASS DEFINITION
@@ -166,7 +166,7 @@
 
 !function ($) {
 
-  "use strict"; // jshint ;_;
+  "use strict";
 
 
  /* BUTTON PUBLIC CLASS DEFINITION
@@ -259,7 +259,7 @@
 
 !function ($) {
 
-  "use strict"; // jshint ;_;
+  "use strict";
 
 
  /* CAROUSEL CLASS DEFINITION
@@ -434,7 +434,7 @@
 
 !function ($) {
 
-  "use strict"; // jshint ;_;
+  "use strict";
 
 
  /* COLLAPSE PUBLIC CLASS DEFINITION
@@ -589,7 +589,7 @@
 
 !function ($) {
 
-  "use strict"; // jshint ;_;
+  "use strict";
 
 
  /* DROPDOWN CLASS DEFINITION
@@ -736,7 +736,7 @@
 
 !function ($) {
 
-  "use strict"; // jshint ;_;
+  "use strict";
 
 
  /* MODAL CLASS DEFINITION
@@ -971,7 +971,7 @@
 
 !function ($) {
 
-  "use strict"; // jshint ;_;
+  "use strict";
 
 
  /* TOOLTIP PUBLIC CLASS DEFINITION
@@ -1245,7 +1245,7 @@
 
 !function ($) {
 
-  "use strict"; // jshint ;_;
+  "use strict";
 
 
  /* POPOVER PUBLIC CLASS DEFINITION
@@ -1347,7 +1347,7 @@
 
 !function ($) {
 
-  "use strict"; // jshint ;_;
+  "use strict";
 
 
  /* SCROLLSPY CLASS DEFINITION
@@ -1497,7 +1497,7 @@
 
 !function ($) {
 
-  "use strict"; // jshint ;_;
+  "use strict";
 
 
  /* TAB CLASS DEFINITION
@@ -1629,7 +1629,7 @@
 
 !function($){
 
-  "use strict"; // jshint ;_;
+  "use strict";
 
 
  /* TYPEAHEAD PUBLIC CLASS DEFINITION
@@ -1939,7 +1939,7 @@
 
 !function ($) {
 
-  "use strict"; // jshint ;_;
+  "use strict";
 
 
  /* AFFIX CLASS DEFINITION

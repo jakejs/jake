@@ -4,6 +4,7 @@ node_js:
   - "7"
   - "8"
   - "10"
+  - "12"
 before_install:
   - npm update -g npm
 script:

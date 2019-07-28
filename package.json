@@ -15,7 +15,10 @@
   },
   "main": "./lib/jake.js",
   "scripts": {
-    "test": "./bin/cli.js test"
+    "lint": "eslint --format codeframe \"lib/**/*.js\" \"test/**/*.js\"",
+    "prettier": "prettier --write \"{lib,test}/**/*.{js,ts}\"",
+    "test": "./bin/cli.js test",
+    "test:ci": "npm run lint && ./bin/cli.js test --trace"
   },
   "repository": {
     "type": "git",
@@ -30,6 +33,10 @@
     "async": "0.9.x"
   },
   "devDependencies": {
+    "eslint": "5.16.0",
+    "eslint-config-prettier": "^6.0.0",
+    "eslint-plugin-prettier": "^3.1.0",
+    "prettier": "^1.18.2",
     "q": "0.9.x"
   },
   "engines": {

@@ -7,11 +7,11 @@ var assert = require('assert')
   , Namespace = require('../lib/namespace').Namespace;
 
 var tests = {
-  'before': function() {
+  'before': function () {
     process.chdir('./test');
   }
 
-, 'after': function() {
+, 'after': function () {
     process.chdir('../');
   }
 
@@ -39,15 +39,15 @@ var tests = {
         'baz -> "bar:baz"');
   }
 
-, 'test modifying a namespace by adding a new task': function(next) {
-    h.exec('../bin/cli.js one:two', function(out) {
+, 'test modifying a namespace by adding a new task': function (next) {
+    h.exec('../bin/cli.js one:two', function (out) {
       assert.equal('one:one\none:two', out);
       next();
     });
   }
 
-, 'test testTask under namespace': function(next) {
-    h.exec('../bin/cli.js test:task', function(out) {
+, 'test testTask under namespace': function (next) {
+    h.exec('../bin/cli.js test:task', function (out) {
       assert.equal('*** Running namespaced_test_task ***\ntest successfully runs\nAll tests ran successfully', out);
       next();
     });

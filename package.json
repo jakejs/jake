@@ -16,7 +16,7 @@
   "main": "./lib/jake.js",
   "scripts": {
     "lint": "eslint --format codeframe \"lib/**/*.js\" \"test/**/*.js\"",
-    "prettier": "prettier --write \"{lib,test}/**/*.{js,ts}\"",
+    "lint:fix": "eslint --fix \"lib/**/*.js\" \"test/**/*.js\"",
     "test": "./bin/cli.js test",
     "test:ci": "npm run lint && ./bin/cli.js test --trace"
   },
@@ -27,14 +27,14 @@
   "preferGlobal": true,
   "dependencies": {
     "filelist": "0.0.x",
-    "minimatch": "3.x",
-    "chalk": "0.4.x",
+    "minimatch": "^3.0.4",
+    "chalk": "^2.4.2",
     "utilities": "1.0.x",
     "async": "0.9.x"
   },
   "devDependencies": {
-    "eslint": "5.16.0",
-    "q": "0.9.x"
+    "eslint": "^6.2.2",
+    "q": "^1.5.1"
   },
   "engines": {
     "node": "*"

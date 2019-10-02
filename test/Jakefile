@@ -366,18 +366,33 @@ namespace('test', function() {
 });
 
 namespace("large", function() {
-  desc("Leaf task");
-  task("leaf", [], function() {
+  task("leaf", function() {
     console.log("large:leaf");
   });
 
-  var leaves = [];
-  for (var i = 0; i < 5000; i++) {
-    leaves.push("large:leaf");
+  const same = [];
+  for (let i = 0; i < 2000; i++) {
+    same.push("leaf");
   }
 
-  desc("Task with a large number of prereqs");
-  task("root", leaves, {parallelLimit: 2}, function() {
-    console.log("large:root");
+  desc("Task with a large number of same prereqs");
+  task("same", same, { parallelLimit: 2 }, function () {
+    console.log("large:same");
   });
+
+  const different = [];
+  for (let i = 0; i < 2000; i++) {
+    const name = "leaf-" + i;
+    task(name, function () {
+      if (name === "leaf-12" || name === "leaf-123") {
+        console.log(name);
+      }
+    });
+    different.push(name);
+  }
+
+  desc("Task with a large number of different prereqs");
+  task("different", different, { parallelLimit: 2 } , function () {
+    console.log("large:different")
+  })
 });

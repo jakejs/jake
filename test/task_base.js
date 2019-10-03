@@ -196,13 +196,19 @@ var tests = {
     });
   },
 
- 'test large number of prereqs': function (next) {
-    h.exec('../bin/cli.js large:root', function (out) {
-      assert.equal(out, 'large:leaf\nlarge:root');
+ 'test large number of same prereqs': function (next) {
+    h.exec('../bin/cli.js large:same', function (out) {
+      assert.equal(out, 'large:leaf\nlarge:same');
       next();
     });
-  }
+  },
 
+  'test large number of different prereqs': function (next) {
+    h.exec('../bin/cli.js large:different', function (out) {
+      assert.equal(out, 'leaf-12\nleaf-123\nlarge:different');
+      next();
+    });
+  },
 };
 
 function _getAutoCompleteOpts(args) {

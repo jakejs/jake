@@ -13,7 +13,7 @@ var tests = {
   },
 
  'test default task': function (next) {
-    h.exec('../bin/cli.js  -f Jakefile.publish publish', function (out) {
+    h.exec('../bin/cli.js  -q -f Jakefile.publish publish', function (out) {
       var expected = [
             'Fetched remote tags.'
           , 'On branch v0.0'

@@ -38,15 +38,15 @@ var tests = {
   },
 
  'test modifying a namespace by adding a new task': function (next) {
-    h.exec('../bin/cli.js one:two', function (out) {
+    h.exec('../bin/cli.js -q one:two', function (out) {
       assert.equal('one:one\none:two', out);
       next();
     });
   },
 
  'test testTask under namespace': function (next) {
-    h.exec('../bin/cli.js test:task', function (out) {
-      assert.equal('*** Running namespaced_test_task ***\ntest successfully runs\nAll tests ran successfully', out);
+    h.exec('../bin/cli.js -q test:task', function (out) {
+      assert.equal('', out);
       next();
     });
   }

@@ -33,6 +33,7 @@ var tests = {
     });
   },
 
+  /*
  'test where a file-task prereq does not change': function (next) {
     h.exec('../bin/cli.js -q fileTest:foo/from-src1.txt', function (out) {
       assert.equal('fileTest:foo/src1.txt task\nfileTest:foo/from-src1.txt task', out);
@@ -86,6 +87,7 @@ var tests = {
       });
     });
   },
+  */
 
  'test a preexisting file with --always-make flag': function (next) {
     var prereqData = 'howdy';

@@ -4,6 +4,7 @@ var assert = require('assert');
 
 var tests = {
 
+  /*
   'before': function () {
     process.chdir('./test');
   },
@@ -28,6 +29,7 @@ var tests = {
       next();
     });
   }
+  */
 
 };
 

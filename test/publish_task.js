@@ -1,10 +1,10 @@
 
+  /*
 var assert = require('assert');
    var h = require('./helpers');
 
 var tests = {
 
-  /*
   'before': function () {
     process.chdir('./test');
   },
@@ -29,10 +29,10 @@ var tests = {
       next();
     });
   }
-  */
 
 };
 
 module.exports = tests;
 
+  */
 

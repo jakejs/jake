@@ -67,7 +67,9 @@ namespace('foo', function () {
     var task = jake.Task['foo:bar'];
     // Do args pass-through
     task.invoke.apply(task, arguments);
-    console.log('foo:frang task');
+    task.on('complete', () => {
+      console.log('foo:frang task');
+    });
   });
 
   desc('The foo:frang task, `executes` foo:bar with passed args as a prerequisite.');
@@ -75,7 +77,9 @@ namespace('foo', function () {
     var task = jake.Task['foo:bar'];
     // Do args pass-through
     task.execute.apply(task, arguments);
-    console.log('foo:zerb task');
+    task.on('complete', () => {
+      console.log('foo:zerb task');
+    });
   });
 
   desc('The foo:zoobie task, has no prerequisites.');

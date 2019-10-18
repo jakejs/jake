@@ -1,5 +1,4 @@
 
-  /*
 var assert = require('assert');
    var h = require('./helpers');
 
@@ -21,7 +20,6 @@ var tests = {
           , 'Bumped version number to v0.0.2.'
           , 'Created package for zerb v0.0.2'
           , 'Publishing zerb v0.0.2'
-          , './pkg/zerb-v0.0.2.tar.gz'
           , 'BOOM! Published.'
           , 'Cleaned up package'
           ].join('\n');
@@ -33,6 +31,4 @@ var tests = {
 };
 
 module.exports = tests;
-
-  */
 

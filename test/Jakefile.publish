@@ -20,6 +20,8 @@ publishTask('zerb', function () {
   };
 });
 
+jake.setTaskTimeout(5000);
+
 jake.Task['publish'].on('complete', function () {
   utils.file.rmRf('tmp_publish', {silent: true});
   utils.file.rmRf('package.json', {silent: true});

@@ -20,6 +20,7 @@ var tests = {
           , 'Bumped version number to v0.0.2.'
           , 'Created package for zerb v0.0.2'
           , 'Publishing zerb v0.0.2'
+          , './pkg/zerb-v0.0.2.tar.gz'
           , 'BOOM! Published.'
           , 'Cleaned up package'
           ].join('\n');

@@ -17,8 +17,14 @@
  *
 */
 
-// Load `jake` global
-require('../lib/jake');
+// Try to load a local jake
+try {
+  require(`${ process.cwd() }/node_modules/jake`);
+}
+// If that fails, likely running globally
+catch(e) {
+  require('../lib/jake');
+}
 
 var args = process.argv.slice(2);
 

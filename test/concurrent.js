@@ -11,38 +11,38 @@ var tests = {
     process.chdir('../');
   },
 
- 'test simple parallel prerequisites 1': function (next) {
-    h.exec('../bin/cli.js -q parallel:simple1', function (out) {
+ 'test simple concurrent prerequisites 1': function (next) {
+    h.exec('../bin/cli.js -q concurrent:simple1', function (out) {
       assert.equal('Started A\nStarted B\nFinished B\nFinished A', out);
       next();
     });
   },
- 'test simple parallel prerequisites 2': function (next) {
-    h.exec('../bin/cli.js -q parallel:simple2', function (out) {
+ 'test simple concurrent prerequisites 2': function (next) {
+    h.exec('../bin/cli.js -q concurrent:simple2', function (out) {
       assert.equal('Started C\nStarted D\nFinished C\nFinished D', out);
       next();
     });
   },
- 'test sequential parallel prerequisites': function (next) {
-    h.exec('../bin/cli.js -q parallel:seqparallel', function (out) {
+ 'test sequential concurrent prerequisites': function (next) {
+    h.exec('../bin/cli.js -q concurrent:seqconcurrent', function (out) {
       assert.equal('Started A\nStarted B\nFinished B\nFinished A\nStarted C\nStarted D\nFinished C\nFinished D', out);
       next();
     });
   },
- 'test parallel parallel prerequisites': function (next) {
-    h.exec('../bin/cli.js -q parallel:parallelparallel', function (out) {
+ 'test concurrent concurrent prerequisites': function (next) {
+    h.exec('../bin/cli.js -q concurrent:concurrentconcurrent', function (out) {
       assert.equal('Started A\nStarted B\nStarted C\nStarted D\nFinished B\nFinished C\nFinished A\nFinished D', out);
       next();
     });
   },
- 'test parallel prerequisites with subdependency': function (next) {
-    h.exec('../bin/cli.js -q parallel:subdep', function (out) {
+ 'test concurrent prerequisites with subdependency': function (next) {
+    h.exec('../bin/cli.js -q concurrent:subdep', function (out) {
       assert.equal('Started A\nFinished A\nStarted Ba\nFinished Ba', out);
       next();
     });
   },
- 'test failing in parallel prerequisites': function (next) {
-    h.exec('../bin/cli.js -q parallel:Cfail', {breakOnError:false}, function (out) {
+ 'test failing in concurrent prerequisites': function (next) {
+    h.exec('../bin/cli.js -q concurrent:Cfail', {breakOnError:false}, function (out) {
       assert.equal(1, out.code);
       next();
     });

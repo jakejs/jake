@@ -261,7 +261,7 @@ namespace('one', function() {
 });
 
 
-namespace('parallel', function() {
+namespace('concurrent', function() {
   task("A", {async: true}, function() {
     console.log("Started A");
     var task = this;
@@ -310,37 +310,37 @@ namespace('parallel', function() {
       throw new Error("I failed");
     },50);
   });
-  task("simple1", ["A","B"], {async: true, parallelLimit: 2}, function() {
+  task("simple1", ["A","B"], {async: true, concurrency: 2}, function() {
     var task = this;
     setTimeout(function() {
       task.complete();
     },50);
   });
-  task("simple2", ["C","D"], {async: true, parallelLimit: 2}, function() {
+  task("simple2", ["C","D"], {async: true, concurrency: 2}, function() {
     var task = this;
     setTimeout(function() {
       task.complete();
     },50);
   });
-  task("seqparallel", ["simple1","simple2"], {async: true}, function() {
+  task("seqconcurrent", ["simple1","simple2"], {async: true}, function() {
     var task = this;
     setTimeout(function() {
       task.complete();
     },50);
   });
-  task("parallelparallel", ["simple1","simple2"], {async: true, parallelLimit: 2}, function() {
+  task("concurrentconcurrent", ["simple1","simple2"], {async: true, concurrency: 2}, function() {
     var task = this;
     setTimeout(function() {
       task.complete();
     },50);
   });
-  task("subdep", ["A","Ba"], {async: true, parallelLimit: 2}, function() {
+  task("subdep", ["A","Ba"], {async: true, concurrency: 2}, function() {
     var task = this;
     setTimeout(function() {
       task.complete();
     },50);
   });
-  task("fail", ["A", "B", "Afail"], {async: true, parallelLimit: 3}, function() {
+  task("fail", ["A", "B", "Afail"], {async: true, concurrency: 3}, function() {
     var task = this;
     setTimeout(function() {
       task.complete();
@@ -355,7 +355,7 @@ task('selfdepconst', [], function() {
   });
 });
 task('selfdepdyn', function() {
-  task('selfdeppar', [], {parallelLimit: 2}, function() {
+  task('selfdeppar', [], {concurrency: 2}, function() {
     console.log("I will depend on myself and will fail at runtime");
   });
   task('selfdeppar', ['selfdeppar']);
@@ -380,7 +380,7 @@ namespace("large", function() {
   }
 
   desc("Task with a large number of same prereqs");
-  task("same", same, { parallelLimit: 2 }, function () {
+  task("same", same, { concurrency: 2 }, function () {
     console.log("large:same");
   });
 
@@ -396,7 +396,7 @@ namespace("large", function() {
   }
 
   desc("Task with a large number of different prereqs");
-  task("different", different, { parallelLimit: 2 } , function () {
+  task("different", different, { concurrency: 2 } , function () {
     console.log("large:different")
   })
 });

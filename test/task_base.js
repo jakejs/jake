@@ -1,8 +1,8 @@
-var assert = require('assert');
-var h = require('./helpers');
-var utils = require('utilities');
+let assert = require('assert');
+let h = require('./helpers');
+let utils = require('utilities');
 
-var tests = {
+let tests = {
 
   'before': function () {
     process.chdir('./test');
@@ -37,8 +37,8 @@ var tests = {
 
   'test passing args to a task': function (next) {
     h.exec('../bin/cli.js -q argsEnvVars[foo,bar]', function (out) {
-      var parsed = h.parse(out);
-      var args = parsed.args;
+      let parsed = h.parse(out);
+      let args = parsed.args;
       assert.equal(args[0], 'foo');
       assert.equal(args[1], 'bar');
       next();
@@ -47,8 +47,8 @@ var tests = {
 
   'test a task with environment vars': function (next) {
     h.exec('../bin/cli.js -q argsEnvVars foo=bar baz=qux', function (out) {
-      var parsed = h.parse(out);
-      var env = parsed.env;
+      let parsed = h.parse(out);
+      let env = parsed.env;
       assert.equal(env.foo, 'bar');
       assert.equal(env.baz, 'qux');
       next();
@@ -57,9 +57,9 @@ var tests = {
 
   'test passing args and using environment vars': function (next) {
     h.exec('../bin/cli.js -q argsEnvVars[foo,bar] foo=bar baz=qux', function (out) {
-      var parsed = h.parse(out);
-      var args = parsed.args;
-      var env = parsed.env;
+      let parsed = h.parse(out);
+      let args = parsed.args;
+      let env = parsed.env;
       assert.equal(args[0], 'foo');
       assert.equal(args[1], 'bar');
       assert.equal(env.foo, 'bar');
@@ -69,8 +69,8 @@ var tests = {
   },
 
   'test single auto completion': function (next) {
-    var args = ['-f', './auto_complete_test_jakefile', 'd'];
-    var opts = _getAutoCompleteOpts(args);
+    let args = ['-f', './auto_complete_test_jakefile', 'd'];
+    let opts = _getAutoCompleteOpts(args);
     h.exec('../bin/auto_complete.js '+_getAutoCompleteExecArgs(args), opts, function (out) {
       assert.equal('no-space default', out);
       next();
@@ -78,8 +78,8 @@ var tests = {
   },
 
   'test multiple auto completion': function (next) {
-    var args = ['-f', './auto_complete_test_jakefile', 'foo:ba'];
-    var opts = _getAutoCompleteOpts(args);
+    let args = ['-f', './auto_complete_test_jakefile', 'foo:ba'];
+    let opts = _getAutoCompleteOpts(args);
     h.exec('../bin/auto_complete.js '+_getAutoCompleteExecArgs(args), opts, function (out) {
       assert.equal('yes-space foo:bar foo:baz', out);
       next();
@@ -87,8 +87,8 @@ var tests = {
   },
 
   'test file argument auto completion': function (next) {
-    var args = ['-f'];
-    var opts = _getAutoCompleteOpts(args);
+    let args = ['-f'];
+    let opts = _getAutoCompleteOpts(args);
     h.exec('../bin/auto_complete.js '+_getAutoCompleteExecArgs(args), opts, function (out) {
       assert.equal('no-complete', out);
       next();
@@ -96,8 +96,8 @@ var tests = {
   },
 
   'test no completions auto completion': function (next) {
-    var args = ['-f', './auto_complete_test_jakefile', 'no-such-completion'];
-    var opts = _getAutoCompleteOpts(args);
+    let args = ['-f', './auto_complete_test_jakefile', 'no-such-completion'];
+    let opts = _getAutoCompleteOpts(args);
     h.exec('../bin/auto_complete.js '+_getAutoCompleteExecArgs(args), opts, function (out) {
       assert.equal('no-space', out);
       next();
@@ -222,7 +222,7 @@ function _getAutoCompleteOpts(args) {
 }
 
 function _getAutoCompleteExecArgs(args) {
-  var nArgs = args.length;
+  let nArgs = args.length;
   return args[nArgs - 1]+' '+(nArgs > 1 ? args[nArgs - 2] : '');
 }
 

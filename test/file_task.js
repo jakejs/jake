@@ -1,7 +1,7 @@
 var assert = require('assert');
-   var fs = require('fs');
-   var h = require('./helpers');
-   var utils = require('utilities');
+var fs = require('fs');
+var h = require('./helpers');
+var utils = require('utilities');
 
 var cleanUpAndNext = function (callback) {
   utils.file.rmRf('./foo', {
@@ -17,11 +17,11 @@ var tests = {
     cleanUpAndNext(next);
   },
 
- 'after': function () {
+  'after': function () {
     process.chdir('../');
   },
 
- 'test concating two files': function (next) {
+  'test concating two files': function (next) {
     h.exec('../bin/cli.js -q fileTest:foo/concat.txt', function (out) {
       var data;
       assert.equal('fileTest:foo/src1.txt task\ndefault task\nfileTest:foo/src2.txt task\n' +
@@ -89,7 +89,7 @@ var tests = {
   },
   */
 
- 'test a preexisting file with --always-make flag': function (next) {
+  'test a preexisting file with --always-make flag': function (next) {
     var prereqData = 'howdy';
     utils.file.mkdirP('foo');
     fs.writeFileSync('foo/prereq.txt', prereqData);
@@ -105,7 +105,7 @@ var tests = {
     });
   },
 
- 'test nested directory-task': function (next) {
+  'test nested directory-task': function (next) {
     h.exec('../bin/cli.js -q fileTest:foo/bar/baz/bamf.txt', function (out) {
       var data = fs.readFileSync(process.cwd() + '/foo/bar/baz/bamf.txt');
       assert.equal('w00t', data);

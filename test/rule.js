@@ -1,27 +1,27 @@
 var assert = require('assert');
-   var fs = require('fs');
-   var h = require('./helpers');
-   var Matcher = require('../lib/rule').Matcher;
-   var utils = require('utilities');
+var fs = require('fs');
+var h = require('./helpers');
+var Matcher = require('../lib/rule').Matcher;
+var utils = require('utilities');
 
 var cleanUpAndNext = function (callback) {
   // Gotta add globbing to file utils rmRf
   var tmpFiles = [
     'tmp'
-  , 'tmp_ns'
-  , 'tmp_cr'
-  , 'tmp_p'
-  , 'tmp_pf'
-  , 'tmpbin'
-  , 'tmpsrc'
-  , 'tmp_dep1.c'
-  , 'tmp_dep1.o'
-  , 'tmp_dep1.oo'
-  , 'tmp_dep2.c'
-  , 'tmp_dep2.o'
-  , 'tmp_dep2.oo'
-  , 'foo'
-  , 'foo.html'
+    , 'tmp_ns'
+    , 'tmp_cr'
+    , 'tmp_p'
+    , 'tmp_pf'
+    , 'tmpbin'
+    , 'tmpsrc'
+    , 'tmp_dep1.c'
+    , 'tmp_dep1.o'
+    , 'tmp_dep1.oo'
+    , 'tmp_dep2.c'
+    , 'tmp_dep2.o'
+    , 'tmp_dep2.oo'
+    , 'foo'
+    , 'foo.html'
   ];
   tmpFiles.forEach(function (f) {
     utils.file.rmRf(f, {
@@ -38,7 +38,7 @@ var tests = {
     cleanUpAndNext(next);
   },
 
- 'after': function () {
+  'after': function () {
     process.chdir('../');
   },
 
@@ -50,19 +50,19 @@ var tests = {
   //    'dep' : 'foo:src/main.c',
   //    'file': 'src/main.c'
   //  };
- 'test Matcher.getSource': function () {
+  'test Matcher.getSource': function () {
     var src = Matcher.getSource('foo:bin/main.o', 'bin/%.o', 'src/%.c');
     assert.equal('foo:src/main.c', src);
   },
 
- 'test rule w/o pattern': function (next) {
+  'test rule w/o pattern': function (next) {
     h.exec( '../bin/cli.js -q -f Jakefile.rule tmp', function (out) {
       var output = [
         "tmp_dep2.c task"
-      , "tmp_dep1.c task"
-      , "cp tmp_dep1.c tmp_dep1.o task"
-      , "cp tmp_dep2.c tmp_dep2.o task"
-      , "tmp task"];
+        , "tmp_dep1.c task"
+        , "cp tmp_dep1.c tmp_dep1.o task"
+        , "cp tmp_dep2.c tmp_dep2.o task"
+        , "tmp task"];
       var data;
       assert.equal( output.join('\n'), out);
       data = fs.readFileSync(process.cwd() + '/tmp');
@@ -71,14 +71,14 @@ var tests = {
     });
   },
 
- 'test rule w pattern w/o folder w/o namespace': function (next) {
+  'test rule w pattern w/o folder w/o namespace': function (next) {
     h.exec( '../bin/cli.js  -q -f Jakefile.rule tmp_p', function (out) {
       var output = [
         "tmp_dep2.c task"
-      , "tmp_dep1.c task"
-      , "cp tmp_dep1.c tmp_dep1.oo task"
-      , "cp tmp_dep2.c tmp_dep2.oo task"
-      , "tmp pattern task"];
+        , "tmp_dep1.c task"
+        , "cp tmp_dep1.c tmp_dep1.oo task"
+        , "cp tmp_dep2.c tmp_dep2.oo task"
+        , "tmp pattern task"];
       var data;
       assert.equal( output.join('\n'), out);
       data = fs.readFileSync(process.cwd() + '/tmp_p');
@@ -87,14 +87,14 @@ var tests = {
     });
   },
 
- 'test rule w pattern w folder w/o namespace': function (next) {
+  'test rule w pattern w folder w/o namespace': function (next) {
     h.exec( '../bin/cli.js  -q -f Jakefile.rule tmp_pf', function (out) {
       var output = [
         "tmpsrc/tmp_dep1.c task"
-      , "cp tmpsrc/tmp_dep1.c tmpbin/tmp_dep1.oo task"
-      , "tmpsrc/tmp_dep2.c task"
-      , "cp tmpsrc/tmp_dep2.c tmpbin/tmp_dep2.oo task"
-      , "tmp pattern folder task"];
+        , "cp tmpsrc/tmp_dep1.c tmpbin/tmp_dep1.oo task"
+        , "tmpsrc/tmp_dep2.c task"
+        , "cp tmpsrc/tmp_dep2.c tmpbin/tmp_dep2.oo task"
+        , "tmp pattern folder task"];
       var data;
       assert.equal( output.join('\n'), out);
       data = fs.readFileSync(process.cwd() + '/tmp_pf');
@@ -103,16 +103,16 @@ var tests = {
     });
   },
 
- 'test rule w pattern w folder w namespace': function (next) {
+  'test rule w pattern w folder w namespace': function (next) {
     h.exec( '../bin/cli.js -q  -f Jakefile.rule tmp_ns', function (out) {
       var output = [
         "tmpsrc/file2.c init task"
-      , "tmpsrc/tmp_dep2.c task"
-      , "cp tmpsrc/tmp_dep2.c tmpbin/tmp_dep2.oo task"
-      , "tmpsrc/dep1.c task"
-      , "cp tmpsrc/dep1.c tmpbin/dep1.oo ns task"
-      , "cp tmpsrc/file2.c tmpbin/file2.oo ns task"
-      , "tmp pattern folder namespace task"];
+        , "tmpsrc/tmp_dep2.c task"
+        , "cp tmpsrc/tmp_dep2.c tmpbin/tmp_dep2.oo task"
+        , "tmpsrc/dep1.c task"
+        , "cp tmpsrc/dep1.c tmpbin/dep1.oo ns task"
+        , "cp tmpsrc/file2.c tmpbin/file2.oo ns task"
+        , "tmp pattern folder namespace task"];
       var data;
       assert.equal( output.join('\n'), out);
       data = fs.readFileSync(process.cwd() + '/tmp_ns');
@@ -122,15 +122,15 @@ var tests = {
   },
 
 
- 'test rule w chain w pattern w folder w namespace': function (next) {
+  'test rule w chain w pattern w folder w namespace': function (next) {
     h.exec( '../bin/cli.js -q  -f Jakefile.rule tmp_cr', function (out) {
       var output = [
         "chainrule init task"
-      , "cp tmpsrc/file1.tex tmpbin/file1.dvi tex->dvi task"
-      , "cp tmpbin/file1.dvi tmpbin/file1.pdf dvi->pdf task"
-      , "cp tmpsrc/file2.tex tmpbin/file2.dvi tex->dvi task"
-      , "cp tmpbin/file2.dvi tmpbin/file2.pdf dvi->pdf task"
-      , "tmp chainrule namespace task"];
+        , "cp tmpsrc/file1.tex tmpbin/file1.dvi tex->dvi task"
+        , "cp tmpbin/file1.dvi tmpbin/file1.pdf dvi->pdf task"
+        , "cp tmpsrc/file2.tex tmpbin/file2.dvi tex->dvi task"
+        , "cp tmpbin/file2.dvi tmpbin/file2.pdf dvi->pdf task"
+        , "tmp chainrule namespace task"];
       var data;
       assert.equal( output.join('\n'), out);
       data = fs.readFileSync(process.cwd() + '/tmp_cr');
@@ -147,11 +147,11 @@ var tests = {
     utils.file.rmRf('foo.txt', {silent: true});
     utils.file.rmRf('foo.html', {silent: true});
     h.exec('../bin/cli.js -f Jakefile.rule ' + key + ':test', {breakOnError: false},
-        function (out) {
+      function (out) {
       // foo.txt prereq doesn't exist yet
-      assert.ok(out.toString().indexOf('Unknown task "foo.html"') > -1);
-      next();
-    });
+        assert.ok(out.toString().indexOf('Unknown task "foo.html"') > -1);
+        next();
+      });
   };
 
   tests['test rule with source file now created (' + key  + ')'] = function (next) {
@@ -160,7 +160,7 @@ var tests = {
       // Should run prereq and test task
       var output = [
         'created html'
-      , 'ran test'
+        , 'ran test'
       ];
       assert.equal(output.join('\n'), out);
       next();
@@ -177,7 +177,7 @@ var tests = {
           // Should again run both prereq and test task
           var output = [
             'created html'
-          , 'ran test'
+            , 'ran test'
           ];
           assert.equal(output.join('\n'), out);
           //next();

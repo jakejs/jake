@@ -2,25 +2,25 @@ var exec = require('child_process').exec;
 
 var helpers = new (function () {
   var _tests;
-     var _names = [];
-     var _name;
-     var _callback;
-     var _runner = function () {
-        if ((_name = _names.shift())) {
-          console.log('Running ' + _name);
-          _tests[_name]();
-        }
-        else {
-          _callback();
-        }
-      };
+  var _names = [];
+  var _name;
+  var _callback;
+  var _runner = function () {
+    if ((_name = _names.shift())) {
+      console.log('Running ' + _name);
+      _tests[_name]();
+    }
+    else {
+      _callback();
+    }
+  };
 
   this.exec = function () {
     var args = Array.prototype.slice.call(arguments);
-       var arg;
-       var cmd = args.shift();
-       var opts = {};
-       var callback;
+    var arg;
+    var cmd = args.shift();
+    var opts = {};
+    var callback;
     // Optional opts/callback or callback/opts
     while ((arg = args.shift())) {
       if (typeof arg == 'function') {

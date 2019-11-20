@@ -1,35 +1,30 @@
+let assert = require('assert');
+let exec = require('child_process').execSync;
 
-var assert = require('assert');
-var h = require('./helpers');
+suite('publishTask', function () {
 
-var tests = {
-
-  'before': function () {
+  setup(function () {
     process.chdir('./test');
-  },
+  });
 
-  'after': function () {
+  teardown(function () {
     process.chdir('../');
-  },
+  });
 
-  'test default task': function (next) {
-    h.exec('../bin/cli.js  -q -f Jakefile.publish publish', function (out) {
-      var expected = [
-        'Fetched remote tags.'
-        , 'On branch v0.0'
-        , 'Bumped version number to v0.0.2.'
-        , 'Created package for zerb v0.0.2'
-        , 'Publishing zerb v0.0.2'
-        , './pkg/zerb-v0.0.2.tar.gz'
-        , 'BOOM! Published.'
-        , 'Cleaned up package'
-      ].join('\n');
-      assert.equal(expected, out);
-      next();
-    });
-  }
+  test('default task', function () {
+    let out = exec('../bin/cli.js  -q -f Jakefile.publish publish').toString().trim();
+    let expected = [
+      'Fetched remote tags.'
+      , 'On branch v0.0'
+      , 'Bumped version number to v0.0.2.'
+      , 'Created package for zerb v0.0.2'
+      , 'Publishing zerb v0.0.2'
+      , './pkg/zerb-v0.0.2.tar.gz'
+      , 'BOOM! Published.'
+      , 'Cleaned up package'
+    ].join('\n');
+    assert.equal(expected, out);
+  });
 
-};
-
-module.exports = tests;
+});
 

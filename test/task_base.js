@@ -20,6 +20,8 @@ function _getAutoCompleteExecArgs(args) {
 
 suite('taskBase', function () {
 
+  this.timeout(4000);
+
   setup(function () {
     process.chdir('./test');
   });
@@ -29,7 +31,6 @@ suite('taskBase', function () {
   });
 
   test('default task', function () {
-    this.timeout(4000);
     let out;
     out = exec('../bin/cli.js -q').toString().trim();
     assert.equal('default task', out);
@@ -98,75 +99,63 @@ suite('taskBase', function () {
     assert.equal('foo:bar[zxcv,uiop] task\nfoo:zerb task', out);
   });
 
-  test('prereq execution-order', function (next) {
-    h.exec('../bin/cli.js -q hoge:fuga', function (out) {
-      assert.equal('hoge:hoge task\nhoge:piyo task\nhoge:fuga task', out);
-      next();
-    });
+  test('prereq execution-order', function () {
+    let out = exec('../bin/cli.js -q hoge:fuga').toString().trim();
+    assert.equal('hoge:hoge task\nhoge:piyo task\nhoge:fuga task', out);
   });
 
-  test('basic async task', function (next) {
-    h.exec('../bin/cli.js -q bar:bar', function (out) {
-      assert.equal('bar:foo task\nbar:bar task', out);
-      next();
-    });
+  test('basic async task', function () {
+    let out = exec('../bin/cli.js -q bar:bar').toString().trim();
+    assert.equal('bar:foo task\nbar:bar task', out);
   });
 
-  test('promise async task', function (next) {
-    h.exec('node ../bin/cli.js -q bar:dependOnpromise', function (out) {
-      assert.equal('bar:promise task\nbar:dependOnpromise task saw value 123654', out);
-      next();
-    });
+  test('promise async task', function () {
+    let out = exec('node ../bin/cli.js -q bar:dependOnpromise').toString().trim();
+    assert.equal('bar:promise task\nbar:dependOnpromise task saw value 123654', out);
   });
 
-  test('failing promise async task', function (next) {
-    h.exec('node ../bin/cli.js -q bar:brokenPromise', {breakOnError:false}, function (out) {
-      assert.equal(1, out.code);
-      next();
-    });
+  test('failing promise async task', function () {
+    try {
+      let out = exec('node ../bin/cli.js -q bar:brokenPromise');
+    }
+    catch(e) {
+      assert(e.message.indexOf('Command failed') > -1);
+    }
   });
 
-  test('that current-prereq index gets reset', function (next) {
-    h.exec('../bin/cli.js -q hoge:kira', function (out) {
-      assert.equal('hoge:hoge task\nhoge:piyo task\nhoge:fuga task\n' +
-          'hoge:charan task\nhoge:gero task\nhoge:kira task', out);
-      next();
-    });
+  test('that current-prereq index gets reset', function () {
+    let out = exec('../bin/cli.js -q hoge:kira').toString().trim();
+    assert.equal('hoge:hoge task\nhoge:piyo task\nhoge:fuga task\n' +
+        'hoge:charan task\nhoge:gero task\nhoge:kira task', out);
   });
 
-  test('modifying a task by adding prereq during execution', function (next) {
-    h.exec('../bin/cli.js -q voom', function (out) {
-      assert.equal(2, out);
-      next();
-    });
+  test('modifying a task by adding prereq during execution', function () {
+    let out = exec('../bin/cli.js -q voom').toString().trim();
+    assert.equal(2, out);
   });
 
-  test('listening for task error-event', function (next) {
-    h.exec('../bin/cli.js -q vronk:groo', function (out) {
-      assert.equal('OMFGZONG', out);
-      next();
-    });
+  test('listening for task error-event', function () {
+    try {
+      let out = exec('../bin/cli.js -q vronk:groo').toString().trim();
+    }
+    catch(e) {
+      assert(e.message.indexOf('OMFGZONG') > -1);
+    }
   });
 
-  test('listening for jake error-event', function (next) {
-    h.exec('../bin/cli.js -q throwy', function (out) {
-      assert.equal(out, 'Emitted: Error: I am bad');
-      next();
-    });
+  test('listening for jake error-event', function () {
+      let out = exec('../bin/cli.js -q throwy').toString().trim();
+      assert(out.indexOf('Emitted\nError: I am bad') > -1);
   });
 
-  test('large number of same prereqs', function (next) {
-    h.exec('../bin/cli.js -q large:same', function (out) {
-      assert.equal(out, 'large:leaf\nlarge:same');
-      next();
-    });
+  test('large number of same prereqs', function () {
+    let out = exec('../bin/cli.js -q large:same').toString().trim();
+    assert.equal(out, 'large:leaf\nlarge:same');
   });
 
-  test('large number of different prereqs', function (next) {
-    h.exec('../bin/cli.js -q large:different', function (out) {
-      assert.equal(out, 'leaf-12\nleaf-123\nlarge:different');
-      next();
-    });
+  test('large number of different prereqs', function () {
+    let out = exec('../bin/cli.js -q large:different').toString().trim();
+    assert.equal(out, 'leaf-12\nleaf-123\nlarge:different');
   });
 
 });

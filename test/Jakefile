@@ -16,8 +16,8 @@ task('noActionNoPrereqs');
 desc('Task that throws');
 task('throwy', function () {
   var errorListener = function (err) {
-    process.stderr.write('Emitted: ');
-    process.stderr.write(err.toString());
+    console.log('Emitted');
+    console.log(err.toString());
 
     jake.removeListener('error', errorListener);
   };

@@ -1,27 +1,39 @@
-var assert = require('assert');
-var h = require('./helpers');
+let assert = require('assert');
+let exec = require('child_process').execSync;
 
-var tests = {
+suite('selfDep', function () {
 
-  'before': function () {
+  let origStderrWrite;
+
+  setup(function () {
+    origStderrWrite = process.stderr.write;
+    process.stderr.write = function () {};
     process.chdir('./test');
-  },
+  });
 
-  'after': function () {
+  teardown(function () {
+    process.stderr.write = origStderrWrite;
     process.chdir('../');
-  },
-  'test selfdepconst': function (next) {
-    h.exec('../bin/cli.js selfdepconst', {breakOnError:false}, function (out) {
-      assert.equal(1, out.code);
-      next();
-    });
-  },
-  'test selfdepdyn': function (next) {
-    h.exec('../bin/cli.js selfdepdyn', {breakOnError:false}, function (out) {
-      assert.equal(1, out.code);
-      next();
-    });
-  }
-}
-module.exports = tests;
+  });
+
+  test('self dep const', function () {
+    try {
+      let out = exec('../bin/cli.js selfdepconst');
+    }
+    catch(e) {
+      assert(e.message.indexOf('dependency of itself') > -1)
+    }
+  });
+
+  test('self dep dyn', function () {
+    try {
+      let out = exec('../bin/cli.js selfdepdyn');
+    }
+    catch(e) {
+      assert(e.message.indexOf('dependency of itself') > -1)
+    }
+  });
+
+});
+
 

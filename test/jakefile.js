@@ -362,13 +362,6 @@ task('selfdepdyn', function() {
   jake.Task['selfdeppar'].invoke();
 });
 
-namespace('test', function() {
-  testTask('test inside namespace', function() {
-    this.testName = 'task'
-    this.testFiles.include('namespaced_test_task');
-  });
-});
-
 namespace("large", function() {
   task("leaf", function() {
     console.log("large:leaf");

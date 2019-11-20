@@ -1,5 +1,6 @@
 let assert = require('assert');
 let h = require('./helpers');
+let exec = require('child_process').execSync;
 let utils = require('utilities');
 
 function _getAutoCompleteOpts(args) {
@@ -27,132 +28,74 @@ suite('taskBase', function () {
     process.chdir('../');
   });
 
-  test('default task', function (next) {
+  test('default task', function () {
     this.timeout(4000);
-    h.exec('../bin/cli.js -q', function (out) {
-      assert.equal('default task', out);
-      h.exec('../bin/cli.js -q default', function (out) {
-        assert.equal('default task', out);
-        next();
-      });
-    });
+    let out;
+    out = exec('../bin/cli.js -q').toString().trim();
+    assert.equal('default task', out);
+    out = exec('../bin/cli.js -q default').toString().trim();
+    assert.equal('default task', out);
   });
 
-  test('task with no action', function (next) {
-    h.exec('../bin/cli.js -q noAction', function (out) {
-      assert.equal('default task', out);
-      next();
-    });
+  test('task with no action', function () {
+    let out = exec('../bin/cli.js -q noAction').toString().trim();
+    assert.equal('default task', out);
   });
 
-  test('a task with no action and no prereqs', function (next) {
-    h.exec('../bin/cli.js noActionNoPrereqs', function () {
-      next();
-    });
+  test('a task with no action and no prereqs', function () {
+    exec('../bin/cli.js noActionNoPrereqs');
   });
 
-  test('passing args to a task', function (next) {
-    h.exec('../bin/cli.js -q argsEnvVars[foo,bar]', function (out) {
-      let parsed = h.parse(out);
-      let args = parsed.args;
-      assert.equal(args[0], 'foo');
-      assert.equal(args[1], 'bar');
-      next();
-    });
+  test('passing args to a task', function () {
+    let out = exec('../bin/cli.js -q argsEnvVars[foo,bar]').toString().trim();
+    let parsed = h.parse(out);
+    let args = parsed.args;
+    assert.equal(args[0], 'foo');
+    assert.equal(args[1], 'bar');
   });
 
-  test('a task with environment vars', function (next) {
-    h.exec('../bin/cli.js -q argsEnvVars foo=bar baz=qux', function (out) {
-      let parsed = h.parse(out);
-      let env = parsed.env;
-      assert.equal(env.foo, 'bar');
-      assert.equal(env.baz, 'qux');
-      next();
-    });
+  test('a task with environment vars', function () {
+    let out = exec('../bin/cli.js -q argsEnvVars foo=bar baz=qux').toString().trim();
+    let parsed = h.parse(out);
+    let env = parsed.env;
+    assert.equal(env.foo, 'bar');
+    assert.equal(env.baz, 'qux');
   });
 
-  test('passing args and using environment vars', function (next) {
-    h.exec('../bin/cli.js -q argsEnvVars[foo,bar] foo=bar baz=qux', function (out) {
-      let parsed = h.parse(out);
-      let args = parsed.args;
-      let env = parsed.env;
-      assert.equal(args[0], 'foo');
-      assert.equal(args[1], 'bar');
-      assert.equal(env.foo, 'bar');
-      assert.equal(env.baz, 'qux');
-      next();
-    });
+  test('passing args and using environment vars', function () {
+    let out = exec('../bin/cli.js -q argsEnvVars[foo,bar] foo=bar baz=qux').toString().trim();
+    let parsed = h.parse(out);
+    let args = parsed.args;
+    let env = parsed.env;
+    assert.equal(args[0], 'foo');
+    assert.equal(args[1], 'bar');
+    assert.equal(env.foo, 'bar');
+    assert.equal(env.baz, 'qux');
   });
 
-  test('single auto completion', function (next) {
-    let args = ['-f', './auto_complete_test_jakefile', 'd'];
-    let opts = _getAutoCompleteOpts(args);
-    h.exec('../bin/auto_complete.js '+_getAutoCompleteExecArgs(args), opts, function (out) {
-      assert.equal('no-space default', out);
-      next();
-    });
+  test('a simple prereq', function () {
+    let out = exec('../bin/cli.js -q foo:baz').toString().trim();
+    assert.equal('foo:bar task\nfoo:baz task', out);
   });
 
-  test('multiple auto completion', function (next) {
-    let args = ['-f', './auto_complete_test_jakefile', 'foo:ba'];
-    let opts = _getAutoCompleteOpts(args);
-    h.exec('../bin/auto_complete.js '+_getAutoCompleteExecArgs(args), opts, function (out) {
-      assert.equal('yes-space foo:bar foo:baz', out);
-      next();
-    });
+  test('a duplicate prereq only runs once', function () {
+    let out = exec('../bin/cli.js -q foo:asdf').toString().trim();
+    assert.equal('foo:bar task\nfoo:baz task\nfoo:asdf task', out);
   });
 
-  test('file argument auto completion', function (next) {
-    let args = ['-f'];
-    let opts = _getAutoCompleteOpts(args);
-    h.exec('../bin/auto_complete.js '+_getAutoCompleteExecArgs(args), opts, function (out) {
-      assert.equal('no-complete', out);
-      next();
-    });
+  test('a prereq with command-line args', function () {
+    let out = exec('../bin/cli.js -q foo:qux').toString().trim();
+    assert.equal('foo:bar[asdf,qwer] task\nfoo:qux task', out);
   });
 
-  test('no completions auto completion', function (next) {
-    let args = ['-f', './auto_complete_test_jakefile', 'no-such-completion'];
-    let opts = _getAutoCompleteOpts(args);
-    h.exec('../bin/auto_complete.js '+_getAutoCompleteExecArgs(args), opts, function (out) {
-      assert.equal('no-space', out);
-      next();
-    });
+  test('a prereq with args via invoke', function () {
+    let out = exec('../bin/cli.js -q foo:frang[zxcv,uiop]').toString().trim();
+    assert.equal('foo:bar[zxcv,uiop] task\nfoo:frang task', out);
   });
 
-  test('a simple prereq', function (next) {
-    h.exec('../bin/cli.js -q foo:baz', function (out) {
-      assert.equal('foo:bar task\nfoo:baz task', out);
-      next();
-    });
-  });
-
-  test('a duplicate prereq only runs once', function (next) {
-    h.exec('../bin/cli.js -q foo:asdf', function (out) {
-      assert.equal('foo:bar task\nfoo:baz task\nfoo:asdf task', out);
-      next();
-    });
-  });
-
-  test('a prereq with command-line args', function (next) {
-    h.exec('../bin/cli.js -q foo:qux', function (out) {
-      assert.equal('foo:bar[asdf,qwer] task\nfoo:qux task', out);
-      next();
-    });
-  });
-
-  test('a prereq with args via invoke', function (next) {
-    h.exec('../bin/cli.js -q foo:frang[zxcv,uiop]', function (out) {
-      assert.equal('foo:bar[zxcv,uiop] task\nfoo:frang task', out);
-      next();
-    });
-  });
-
-  test('a prereq with args via execute', function (next) {
-    h.exec('../bin/cli.js -q foo:zerb[zxcv,uiop]', function (out) {
-      assert.equal('foo:bar[zxcv,uiop] task\nfoo:zerb task', out);
-      next();
-    });
+  test('a prereq with args via execute', function () {
+    let out = exec('../bin/cli.js -q foo:zerb[zxcv,uiop]').toString().trim();
+    assert.equal('foo:bar[zxcv,uiop] task\nfoo:zerb task', out);
   });
 
   test('prereq execution-order', function (next) {

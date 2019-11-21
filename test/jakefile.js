@@ -179,16 +179,20 @@ namespace('fileTest', function () {
     fs.writeFileSync('foo/concat.txt', data1 + data2);
   });
 
-  desc('File task, async creation with child_process.exec');
+  desc('File task, async creation with writeFile');
   file('foo/src1.txt', function () {
-    fs.writeFile('foo/src1.txt', 'src1', function (err) {
-      if (err) {
-        throw err;
-      }
-      console.log('fileTest:foo/src1.txt task');
-      complete();
+    return new Promise(function (resolve, reject) {
+      fs.writeFile('foo/src1.txt', 'src1', function (err) {
+        if (err) {
+          reject(err);
+        }
+        else {
+          console.log('fileTest:foo/src1.txt task');
+          resolve();
+        }
+      });
     });
-  }, {async: true});
+  });
 
   desc('File task, sync creation with writeFileSync');
   file('foo/src2.txt', ['default'], function () {
@@ -198,10 +202,10 @@ namespace('fileTest', function () {
 
   desc('File task, do not run unless the prereq file changes');
   file('foo/from-src1.txt', ['fileTest:foo', 'fileTest:foo/src1.txt'], function () {
-    var data = fs.readFileSync('foo/src1.txt');
+    var data = fs.readFileSync('foo/src1.txt').toString();
     fs.writeFileSync('foo/from-src1.txt', data);
     console.log('fileTest:foo/from-src1.txt task');
-  }, {async: true});
+  });
 
   desc('File task, run if the prereq file changes');
   task('touch-prereq', function() {

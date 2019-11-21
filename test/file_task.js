@@ -30,18 +30,15 @@ suite('fileTask', function () {
     cleanUp();
   });
 
-  /*
- 'test where a file-task prereq does not change': function (next) {
-    h.exec('../bin/cli.js -q fileTest:foo/from-src1.txt', function (out) {
-      assert.equal('fileTest:foo/src1.txt task\nfileTest:foo/from-src1.txt task', out);
-      h.exec('../bin/cli.js -q fileTest:foo/from-src1.txt', function (out) {
-        // Second time should be a no-op
-        assert.equal('', out);
-        next(); // Don't clean up
-      });
-    });
-  },
+ test('a file-task prereq does not change', function () {
+    let out;
+    out = exec('../bin/cli.js -q fileTest:foo/from-src1.txt').toString().trim();
+    assert.equal('fileTest:foo/src1.txt task\nfileTest:foo/from-src1.txt task', out);
+    out = exec('../bin/cli.js -q fileTest:foo/from-src1.txt').toString().trim();
+    assert.equal('', out);
+  });
 
+  /*
  'file-task where prereq file is modified': function (next) {
     setTimeout(function () {
       fs.writeFile('./foo/src1.txt', '', function (err, data) {

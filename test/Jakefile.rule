@@ -1,7 +1,7 @@
-var exec = require('child_process').exec
-  , fs = require('fs')
-  , util = require('util')
-  , utils = require('utilities');
+var exec = require('child_process').execSync;
+fs = require('fs');
+util = require('util');
+utils = require('utilities');
 
 
 task('default', ['tmp']);
@@ -21,31 +21,20 @@ file('tmp', ['tmp_init', 'tmp_dep1.o', 'tmp_dep2.o'], function (params) {
 rule('.o', '.c', function() {
   var cmd = util.format('cp %s %s', this.source, this.name);
   console.log(cmd + ' task');
-  jake.exec([cmd], function () {
-    complete();
-  });
-}, { async : true });
+  exec(cmd);
+});
+
 file('tmp_dep1.c', function () {
-  fs.writeFile('tmp_dep1.c', 'src_1', function (err) {
-    if (err) {
-      throw err;
-    }
-    console.log('tmp_dep1.c task');
-    complete();
-  });
-}, {async: true});
+  fs.writeFileSync('tmp_dep1.c', 'src_1');
+  console.log('tmp_dep1.c task');
+});
 
 // note that tmp_dep2.o depends on tmp_dep2.c, which is a
 // static file.
 task('tmp_init', function () {
-  fs.writeFile('tmp_dep2.c', 'src_2', function (err) {
-    if (err) {
-      throw err;
-    }
-    console.log('tmp_dep2.c task');
-    complete();
-  });
-}, {async: true});
+  fs.writeFileSync('tmp_dep2.c', 'src_2');
+  console.log('tmp_dep2.c task');
+});
 ////////////////////////////////////////////////////////////
 
 ////////////////////////////////////////////////////////////
@@ -60,10 +49,8 @@ file('tmp_p', ['tmp_init', 'tmp_dep1.oo', 'tmp_dep2.oo'], function (params) {
 rule('%.oo', '%.c', function() {
   var cmd = util.format('cp %s %s', this.source, this.name);
   console.log(cmd + ' task');
-  jake.exec([cmd], function () {
-    complete();
-  });
-}, { async : true });
+  exec(cmd);
+});
 ////////////////////////////////////////////////////////////
 
 ////////////////////////////////////////////////////////////
@@ -83,33 +70,19 @@ file('tmp_pf', [
 rule('tmpbin/%.oo', 'tmpsrc/%.c', function() {
   var cmd = util.format('cp %s %s', this.source, this.name);
   console.log(cmd + ' task');
-  jake.exec([cmd], function () {
-    complete();
-  });
-}, { async : true });
-
-
+  exec(cmd);
+});
 
 file('tmpsrc/tmp_dep2.c',['tmpsrc'], function () {
-  fs.writeFile('tmpsrc/tmp_dep2.c', 'src/src_2', function (err) {
-    if (err) {
-      throw err;
-    }
-    console.log('tmpsrc/tmp_dep2.c task');
-    complete();
-  });
-}, {async: true});
+  fs.writeFileSync('tmpsrc/tmp_dep2.c', 'src/src_2');
+  console.log('tmpsrc/tmp_dep2.c task');
+});
 
 // Create static files in folder tmpsrc.
 task('tmp_src_init', ['tmpsrc'], function () {
-  fs.writeFile('tmpsrc/tmp_dep1.c', 'src/src_1', function (err) {
-    if (err) {
-      throw err;
-    }
-    console.log('tmpsrc/tmp_dep1.c task');
-    complete();
-  });
-}, {async: true});
+  fs.writeFileSync('tmpsrc/tmp_dep1.c', 'src/src_1');
+  console.log('tmpsrc/tmp_dep1.c task');
+});
 ////////////////////////////////////////////////////////////
 
 
@@ -133,32 +106,20 @@ task('tmp_ns', [
 
 namespace('rule', function() {
   task('init', ['tmpsrc'], function () {
-    fs.writeFile('tmpsrc/file2.c', 'src/src_3', function (err) {
-      if (err) {
-        throw err;
-      }
-      console.log('tmpsrc/file2.c init task');
-      complete();
-    });
-  }, {async: true});
+    fs.writeFileSync('tmpsrc/file2.c', 'src/src_3');
+    console.log('tmpsrc/file2.c init task');
+  });
 
   file('tmpsrc/dep1.c',['tmpsrc'], function () {
-    fs.writeFile('tmpsrc/dep1.c', 'src/src_1', function (err) {
-      if (err) {
-        throw err;
-      }
-      console.log('tmpsrc/dep1.c task');
-      complete();
-    });
+    fs.writeFileSync('tmpsrc/dep1.c', 'src/src_1');
+    console.log('tmpsrc/dep1.c task');
   }, {async: true});
 
   rule('tmpbin/%.oo', 'tmpsrc/%.c', function() {
     var cmd = util.format('cp %s %s', this.source, this.name);
     console.log(cmd + ' ns task');
-    jake.exec([cmd], function () {
-      complete();
-    });
-  }, { async : true });
+    exec(cmd);
+  });
 });
 ////////////////////////////////////////////////////////////
 
@@ -186,18 +147,14 @@ namespace('chainrule', function() {
   rule('tmpbin/%.pdf', 'tmpbin/%.dvi', function() {
     var cmd = util.format('cp %s %s', this.source, this.name);
     console.log(cmd + ' dvi->pdf task');
-    jake.exec([cmd], function () {
-      complete();
-    });
-  }, { async : true });
+    exec(cmd);
+  });
 
   rule('tmpbin/%.dvi', 'tmpsrc/%.tex', ['tmpbin'], function() {
     var cmd = util.format('cp %s %s', this.source, this.name);
     console.log(cmd + ' tex->dvi task');
-    jake.exec([cmd], function () {
-      complete();
-    });
-  }, { async : true });
+    exec(cmd);
+  });
 });
 ////////////////////////////////////////////////////////////
 namespace('precedence', function () {

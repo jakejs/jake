@@ -33,7 +33,7 @@ var tests = {
     });
   },
 
- 'test where a file-task prereq does not change': function (next) {
+  'test where a file-task prereq does not change': function (next) {
     h.exec('../bin/cli.js -q fileTest:foo/from-src1.txt', function (out) {
       assert.equal('fileTest:foo/src1.txt task\nfileTest:foo/from-src1.txt task', out);
       h.exec('../bin/cli.js -q fileTest:foo/from-src1.txt', function (out) {
@@ -44,7 +44,7 @@ var tests = {
     });
   },
 
- 'file-task where prereq file is modified': function (next) {
+  'file-task where prereq file is modified': function (next) {
     setTimeout(function () {
       fs.writeFile('./foo/src1.txt', '', function (err, data) {
         if (err) {
@@ -58,7 +58,7 @@ var tests = {
     }, 1000); // Wait to do the mod to ensure mod-time is different
   },
 
- 'test where a file-task prereq does not change with --always-make': function (next) {
+  'test where a file-task prereq does not change with --always-make': function (next) {
     h.exec('../bin/cli.js -q fileTest:foo/from-src1.txt', function (out) {
       assert.equal('fileTest:foo/src1.txt task\nfileTest:foo/from-src1.txt task',
         out);
@@ -70,7 +70,7 @@ var tests = {
     });
   },
 
- 'test a preexisting file': function (next) {
+  'test a preexisting file': function (next) {
     var prereqData = 'howdy';
     utils.file.mkdirP('foo');
     fs.writeFileSync('foo/prereq.txt', prereqData);

@@ -172,7 +172,7 @@ namespace('fileTest', function () {
   directory('foo');
 
   desc('File task, concatenating two files together');
-  file({'foo/concat.txt': ['fileTest:foo', 'fileTest:foo/src1.txt', 'fileTest:foo/src2.txt']}, function () {
+  file('foo/concat.txt', ['fileTest:foo', 'fileTest:foo/src1.txt', 'fileTest:foo/src2.txt'], function () {
     console.log('fileTest:foo/concat.txt task');
     var data1 = fs.readFileSync('foo/src1.txt');
     var data2 = fs.readFileSync('foo/src2.txt');

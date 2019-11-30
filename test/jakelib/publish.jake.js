@@ -1,5 +1,6 @@
-var fs = require('fs')
-  , utils = require('utilities');
+let fs = require('fs');
+let utils = require('utilities');
+let publishTask = require('../../lib/jake').publishTask;
 
 fs.writeFileSync('package.json', '{"version": "0.0.1"}');
 utils.file.mkdirP('tmp_publish');

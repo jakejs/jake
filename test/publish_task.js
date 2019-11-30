@@ -12,7 +12,7 @@ suite('publishTask', function () {
   });
 
   test('default task', function () {
-    let out = exec('../bin/cli.js  -q -f jakefile.publish.js publish').toString().trim();
+    let out = exec('../bin/cli.js  -q publish').toString().trim();
     let expected = [
       'Fetched remote tags.'
       , 'On branch v0.0'

@@ -20,7 +20,7 @@ suite('selfDep', function () {
 
   test('self dep const', function () {
     try {
-      let out = exec('../bin/cli.js selfdepconst');
+      exec('../bin/cli.js selfdepconst');
     }
     catch(e) {
       assert(e.message.indexOf('dependency of itself') > -1)
@@ -29,7 +29,7 @@ suite('selfDep', function () {
 
   test('self dep dyn', function () {
     try {
-      let out = exec('../bin/cli.js selfdepdyn');
+      exec('../bin/cli.js selfdepdyn');
     }
     catch(e) {
       assert(e.message.indexOf('dependency of itself') > -1)

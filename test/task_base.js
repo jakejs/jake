@@ -1,22 +1,6 @@
 let assert = require('assert');
 let h = require('./helpers');
 let exec = require('child_process').execSync;
-let utils = require('utilities');
-
-function _getAutoCompleteOpts(args) {
-  return {
-    execOpts: {
-      env: utils.object.merge({
-        COMP_LINE: 'node jake ' + args.join(' ')
-      }, process.env)
-    }
-  };
-}
-
-function _getAutoCompleteExecArgs(args) {
-  let nArgs = args.length;
-  return args[nArgs - 1]+' '+(nArgs > 1 ? args[nArgs - 2] : '');
-}
 
 suite('taskBase', function () {
 
@@ -33,14 +17,14 @@ suite('taskBase', function () {
   test('default task', function () {
     let out;
     out = exec('../bin/cli.js -q').toString().trim();
-    assert.equal('default task', out);
+    assert.equal(out, 'default task');
     out = exec('../bin/cli.js -q default').toString().trim();
-    assert.equal('default task', out);
+    assert.equal(out, 'default task');
   });
 
   test('task with no action', function () {
     let out = exec('../bin/cli.js -q noAction').toString().trim();
-    assert.equal('default task', out);
+    assert.equal(out, 'default task');
   });
 
   test('a task with no action and no prereqs', function () {
@@ -76,47 +60,47 @@ suite('taskBase', function () {
 
   test('a simple prereq', function () {
     let out = exec('../bin/cli.js -q foo:baz').toString().trim();
-    assert.equal('foo:bar task\nfoo:baz task', out);
+    assert.equal(out, 'foo:bar task\nfoo:baz task');
   });
 
   test('a duplicate prereq only runs once', function () {
     let out = exec('../bin/cli.js -q foo:asdf').toString().trim();
-    assert.equal('foo:bar task\nfoo:baz task\nfoo:asdf task', out);
+    assert.equal(out, 'foo:bar task\nfoo:baz task\nfoo:asdf task');
   });
 
   test('a prereq with command-line args', function () {
     let out = exec('../bin/cli.js -q foo:qux').toString().trim();
-    assert.equal('foo:bar[asdf,qwer] task\nfoo:qux task', out);
+    assert.equal(out, 'foo:bar[asdf,qwer] task\nfoo:qux task');
   });
 
   test('a prereq with args via invoke', function () {
     let out = exec('../bin/cli.js -q foo:frang[zxcv,uiop]').toString().trim();
-    assert.equal('foo:bar[zxcv,uiop] task\nfoo:frang task', out);
+    assert.equal(out, 'foo:bar[zxcv,uiop] task\nfoo:frang task');
   });
 
   test('a prereq with args via execute', function () {
     let out = exec('../bin/cli.js -q foo:zerb[zxcv,uiop]').toString().trim();
-    assert.equal('foo:bar[zxcv,uiop] task\nfoo:zerb task', out);
+    assert.equal(out, 'foo:bar[zxcv,uiop] task\nfoo:zerb task');
   });
 
   test('prereq execution-order', function () {
     let out = exec('../bin/cli.js -q hoge:fuga').toString().trim();
-    assert.equal('hoge:hoge task\nhoge:piyo task\nhoge:fuga task', out);
+    assert.equal(out, 'hoge:hoge task\nhoge:piyo task\nhoge:fuga task');
   });
 
   test('basic async task', function () {
     let out = exec('../bin/cli.js -q bar:bar').toString().trim();
-    assert.equal('bar:foo task\nbar:bar task', out);
+    assert.equal(out, 'bar:foo task\nbar:bar task');
   });
 
   test('promise async task', function () {
     let out = exec('node ../bin/cli.js -q bar:dependOnpromise').toString().trim();
-    assert.equal('bar:promise task\nbar:dependOnpromise task saw value 123654', out);
+    assert.equal(out, 'bar:promise task\nbar:dependOnpromise task saw value 123654');
   });
 
   test('failing promise async task', function () {
     try {
-      let out = exec('node ../bin/cli.js -q bar:brokenPromise');
+      exec('node ../bin/cli.js -q bar:brokenPromise');
     }
     catch(e) {
       assert(e.message.indexOf('Command failed') > -1);
@@ -125,18 +109,18 @@ suite('taskBase', function () {
 
   test('that current-prereq index gets reset', function () {
     let out = exec('../bin/cli.js -q hoge:kira').toString().trim();
-    assert.equal('hoge:hoge task\nhoge:piyo task\nhoge:fuga task\n' +
-        'hoge:charan task\nhoge:gero task\nhoge:kira task', out);
+    assert.equal(out, 'hoge:hoge task\nhoge:piyo task\nhoge:fuga task\n' +
+        'hoge:charan task\nhoge:gero task\nhoge:kira task');
   });
 
   test('modifying a task by adding prereq during execution', function () {
     let out = exec('../bin/cli.js -q voom').toString().trim();
-    assert.equal(2, out);
+    assert.equal(out, 2);
   });
 
   test('listening for task error-event', function () {
     try {
-      let out = exec('../bin/cli.js -q vronk:groo').toString().trim();
+      exec('../bin/cli.js -q vronk:groo').toString().trim();
     }
     catch(e) {
       assert(e.message.indexOf('OMFGZONG') > -1);

@@ -1,5 +1,6 @@
-var assert = require('assert');
-var h = require('./helpers');
+let assert = require('assert');
+let h = require('./helpers');
+let exec = require('child_process').execSync;
 
 suite('concurrent', function () {
 
@@ -13,46 +14,38 @@ suite('concurrent', function () {
     process.chdir('../');
   });
 
-  test(' simple concurrent prerequisites 1', function (next) {
-    h.exec('../bin/cli.js -q concurrent:simple1', function (out) {
-      assert.equal('Started A\nStarted B\nFinished B\nFinished A', out);
-      next();
-    });
+  test(' simple concurrent prerequisites 1', function () {
+    let out = exec('../bin/cli.js -q concurrent:simple1').toString().trim()
+    assert.equal('Started A\nStarted B\nFinished B\nFinished A', out);
   });
 
-  test(' simple concurrent prerequisites 2', function (next) {
-    h.exec('../bin/cli.js -q concurrent:simple2', function (out) {
-      assert.equal('Started C\nStarted D\nFinished C\nFinished D', out);
-      next();
-    });
+  test(' simple concurrent prerequisites 2', function () {
+    let out = exec('../bin/cli.js -q concurrent:simple2').toString().trim()
+    assert.equal('Started C\nStarted D\nFinished C\nFinished D', out);
   });
 
-  test(' sequential concurrent prerequisites', function (next) {
-    h.exec('../bin/cli.js -q concurrent:seqconcurrent', function (out) {
-      assert.equal('Started A\nStarted B\nFinished B\nFinished A\nStarted C\nStarted D\nFinished C\nFinished D', out);
-      next();
-    });
+  test(' sequential concurrent prerequisites', function () {
+    let out = exec('../bin/cli.js -q concurrent:seqconcurrent').toString().trim()
+    assert.equal('Started A\nStarted B\nFinished B\nFinished A\nStarted C\nStarted D\nFinished C\nFinished D', out);
   });
 
-  test(' concurrent concurrent prerequisites', function (next) {
-    h.exec('../bin/cli.js -q concurrent:concurrentconcurrent', function (out) {
-      assert.equal('Started A\nStarted B\nStarted C\nStarted D\nFinished B\nFinished C\nFinished A\nFinished D', out);
-      next();
-    });
+  test(' concurrent concurrent prerequisites', function () {
+    let out = exec('../bin/cli.js -q concurrent:concurrentconcurrent').toString().trim()
+    assert.equal('Started A\nStarted B\nStarted C\nStarted D\nFinished B\nFinished C\nFinished A\nFinished D', out);
   });
 
-  test(' concurrent prerequisites with subdependency', function (next) {
-    h.exec('../bin/cli.js -q concurrent:subdep', function (out) {
-      assert.equal('Started A\nFinished A\nStarted Ba\nFinished Ba', out);
-      next();
-    });
+  test(' concurrent prerequisites with subdependency', function () {
+    let out = exec('../bin/cli.js -q concurrent:subdep').toString().trim()
+    assert.equal('Started A\nFinished A\nStarted Ba\nFinished Ba', out);
   });
 
-  test(' failing in concurrent prerequisites', function (next) {
-    h.exec('../bin/cli.js -q concurrent:Cfail', {breakOnError:false}, function (out) {
-      assert.equal(1, out.code);
-      next();
-    });
+  test(' failing in concurrent prerequisites', function () {
+    try {
+      exec('../bin/cli.js -q concurrent:Cfail');
+    }
+    catch(err) {
+      assert(err.message.indexOf('Command failed') > -1);
+    }
   });
 
 });

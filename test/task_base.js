@@ -20,7 +20,7 @@ function _getAutoCompleteExecArgs(args) {
 
 suite('taskBase', function () {
 
-  this.timeout(4000);
+  this.timeout(5000);
 
   setup(function () {
     process.chdir('./test');

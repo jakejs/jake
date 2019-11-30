@@ -3,6 +3,8 @@ let exec = require('child_process').execSync;
 
 suite('selfDep', function () {
 
+  this.timeout(5000);
+
   let origStderrWrite;
 
   setup(function () {

@@ -1,8 +1,7 @@
-var exec = require('child_process').exec
-  , fs = require('fs')
-  , Q = require('q');
+let fs = require('fs');
+let Q = require('q');
 
-desc('The default task.');
+desc('The default t.');
 task('default', function () {
   console.log('default task');
 });
@@ -15,7 +14,7 @@ task('noActionNoPrereqs');
 
 desc('Task that throws');
 task('throwy', function () {
-  var errorListener = function (err) {
+  let errorListener = function (err) {
     console.log('Emitted');
     console.log(err.toString());
 
@@ -29,7 +28,7 @@ task('throwy', function () {
 
 desc('Accepts args and env vars.');
 task('argsEnvVars', function () {
-  var res = {
+  let res = {
     args: arguments
     , env: {
       foo: process.env.foo
@@ -40,7 +39,7 @@ task('argsEnvVars', function () {
 });
 
 namespace('foo', function () {
-  desc('The foo:bar task.');
+  desc('The foo:bar t.');
   task('bar', function () {
     if (arguments.length) {
       console.log('foo:bar[' +
@@ -64,20 +63,20 @@ namespace('foo', function () {
 
   desc('The foo:frang task,`invokes` foo:bar with passed args as a prerequisite.');
   task('frang', function () {
-    var task = jake.Task['foo:bar'];
+    let t = jake.Task['foo:bar'];
     // Do args pass-through
-    task.invoke.apply(task, arguments);
-    task.on('complete', () => {
+    t.invoke.apply(t, arguments);
+    t.on('complete', () => {
       console.log('foo:frang task');
     });
   });
 
   desc('The foo:frang task, `executes` foo:bar with passed args as a prerequisite.');
   task('zerb', function () {
-    var task = jake.Task['foo:bar'];
+    let t = jake.Task['foo:bar'];
     // Do args pass-through
-    task.execute.apply(task, arguments);
-    task.on('complete', () => {
+    t.execute.apply(t, arguments);
+    t.on('complete', () => {
       console.log('foo:zerb task');
     });
   });
@@ -100,13 +99,15 @@ namespace('foo', function () {
 });
 
 namespace('bar', function () {
-  desc('The bar:foo task, has no prerequisites, is async.');
-  task('foo', function () {
-    console.log('bar:foo task');
-    complete();
-  }, {async: true});
+  desc('The bar:foo task, has no prerequisites, is async, returns Promise which resolves.');
+  task('foo', async function () {
+    return new Promise((resolve, reject) => {
+      console.log('bar:foo task');
+      resolve();
+    });
+  });
 
-  desc('The bar:promise task is a promised based async task.');
+  desc('The bar:promise task has no prerequisites, is async, returns Q-based promise.');
   task('promise', function () {
     return Q()
       .then(function () {
@@ -120,7 +121,7 @@ namespace('bar', function () {
     console.log('bar:dependOnpromise task saw value', jake.Task["bar:promise"].value);
   });
 
-  desc('The bar:brokenPromise task is a failing promised based async task.');
+  desc('The bar:brokenPromise task is a failing Q-promise based async task.');
   task('brokenPromise', function () {
     return Q()
       .then(function () {
@@ -174,8 +175,8 @@ namespace('fileTest', function () {
   desc('File task, concatenating two files together');
   file('foo/concat.txt', ['fileTest:foo', 'fileTest:foo/src1.txt', 'fileTest:foo/src2.txt'], function () {
     console.log('fileTest:foo/concat.txt task');
-    var data1 = fs.readFileSync('foo/src1.txt');
-    var data2 = fs.readFileSync('foo/src2.txt');
+    let data1 = fs.readFileSync('foo/src1.txt');
+    let data2 = fs.readFileSync('foo/src2.txt');
     fs.writeFileSync('foo/concat.txt', data1 + data2);
   });
 
@@ -202,7 +203,7 @@ namespace('fileTest', function () {
 
   desc('File task, do not run unless the prereq file changes');
   file('foo/from-src1.txt', ['fileTest:foo', 'fileTest:foo/src1.txt'], function () {
-    var data = fs.readFileSync('foo/src1.txt').toString();
+    let data = fs.readFileSync('foo/src1.txt').toString();
     fs.writeFileSync('foo/from-src1.txt', data);
     console.log('fileTest:foo/from-src1.txt task');
   });
@@ -214,7 +215,7 @@ namespace('fileTest', function () {
 
   desc('File task, has a preexisting file (with no associated task) as a prereq');
   file('foo/from-prereq.txt', ['fileTest:foo', 'foo/prereq.txt'], function () {
-    var data = fs.readFileSync('foo/prereq.txt');
+    let data = fs.readFileSync('foo/prereq.txt');
     fs.writeFileSync('foo/from-prereq.txt', data);
     console.log('fileTest:foo/from-prereq.txt task');
   });
@@ -239,7 +240,7 @@ task('voom', ['noActionNoPrereqs']);
 
 namespace('vronk', function () {
   task('groo', function () {
-    var t = jake.Task['vronk:zong'];
+    let t = jake.Task['vronk:zong'];
     t.addListener('error', function (e) {
       console.log(e.message);
     });
@@ -262,95 +263,6 @@ namespace('one', function () {
   task('two', ['one:one'], function () {
     console.log('one:two');
   });
-});
-
-
-namespace('concurrent', function () {
-  task("A", {async: true}, function () {
-    console.log("Started A");
-    var task = this;
-    setTimeout(function () {
-      console.log("Finished A");
-      task.complete();
-    }, 200);
-  });
-  task("B", {async: true}, function () {
-    console.log("Started B");
-    var task = this;
-    setTimeout(function () {
-      console.log("Finished B");
-      task.complete();
-    },50);
-  });
-  task("C", {async: true}, function () {
-    console.log("Started C");
-    var task = this;
-    setTimeout(function () {
-      console.log("Finished C");
-      task.complete();
-    }, 100);
-  });
-  task("D", {async: true}, function () {
-    console.log("Started D");
-    var task = this;
-    setTimeout(function () {
-      console.log("Finished D");
-      task.complete();
-    },300);
-  });
-  task("Ba", ["A"], {async: true}, function () {
-    console.log("Started Ba");
-    var task = this;
-    setTimeout(function () {
-      console.log("Finished Ba");
-      task.complete();
-    },50);
-  });
-  task("Afail", {async: true}, function () {
-    console.log("Started failing task");
-    var task = this;
-    setTimeout(function () {
-      console.log("Failing B with error");
-      throw new Error("I failed");
-    },50);
-  });
-  task("simple1", ["A","B"], {async: true, concurrency: 2}, function () {
-    var task = this;
-    setTimeout(function () {
-      task.complete();
-    },50);
-  });
-  task("simple2", ["C","D"], {async: true, concurrency: 2}, function () {
-    var task = this;
-    setTimeout(function () {
-      task.complete();
-    },50);
-  });
-  task("seqconcurrent", ["simple1","simple2"], {async: true}, function () {
-    var task = this;
-    setTimeout(function () {
-      task.complete();
-    },50);
-  });
-  task("concurrentconcurrent", ["simple1","simple2"], {async: true, concurrency: 2}, function () {
-    var task = this;
-    setTimeout(function () {
-      task.complete();
-    },50);
-  });
-  task("subdep", ["A","Ba"], {async: true, concurrency: 2}, function () {
-    var task = this;
-    setTimeout(function () {
-      task.complete();
-    },50);
-  });
-  task("fail", ["A", "B", "Afail"], {async: true, concurrency: 3}, function () {
-    var task = this;
-    setTimeout(function () {
-      task.complete();
-    },50);
-  });
-
 });
 
 task('selfdepconst', [], function () {

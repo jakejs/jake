@@ -95,7 +95,7 @@ suite('fileTask', function () {
   });
 
   test('nested directory-task', function () {
-    let out = exec('../bin/cli.js -q fileTest:foo/bar/baz/bamf.txt').toString().trim();
+    exec('../bin/cli.js -q fileTest:foo/bar/baz/bamf.txt');
     let data = fs.readFileSync(process.cwd() + '/foo/bar/baz/bamf.txt');
     assert.equal('w00t', data);
     cleanUpAndNext();

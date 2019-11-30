@@ -33,6 +33,8 @@ let cleanUpAndNext = function (callback) {
 
 suite('rule', function () {
 
+  this.timeout(5000);
+
   setup(function (next) {
     process.chdir('./test');
     cleanUpAndNext(next);

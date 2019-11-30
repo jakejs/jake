@@ -8,8 +8,8 @@ fs.writeFileSync('tmp_publish/foo.txt', 'FOO');
 publishTask('zerb', function () {
   this.packageFiles.include([
     'package.json'
-  , 'tmp_publish/**'
-    ]);
+    , 'tmp_publish/**'
+  ]);
   this.publishCmd = 'node -p -e "\'%filename\'"';
   this.gitCmd = 'echo'
   this.scheduleDelay = 0;

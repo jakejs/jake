@@ -31,9 +31,9 @@ desc('Accepts args and env vars.');
 task('argsEnvVars', function () {
   var res = {
     args: arguments
-  , env: {
+    , env: {
       foo: process.env.foo
-    , baz: process.env.baz
+      , baz: process.env.baz
     }
   };
   console.log(JSON.stringify(res));
@@ -107,25 +107,25 @@ namespace('bar', function () {
   }, {async: true});
 
   desc('The bar:promise task is a promised based async task.');
-  task('promise', function() {
+  task('promise', function () {
     return Q()
-    .then(function() {
-      console.log('bar:promise task');
-      return 123654;
-    });
+      .then(function () {
+        console.log('bar:promise task');
+        return 123654;
+      });
   });
 
   desc('The bar:dependOnpromise task waits for a promise based async test');
-  task('dependOnpromise', ['promise'], function() {
-      console.log('bar:dependOnpromise task saw value', jake.Task["bar:promise"].value);
+  task('dependOnpromise', ['promise'], function () {
+    console.log('bar:dependOnpromise task saw value', jake.Task["bar:promise"].value);
   });
 
   desc('The bar:brokenPromise task is a failing promised based async task.');
-  task('brokenPromise', function() {
+  task('brokenPromise', function () {
     return Q()
-    .then(function() {
-      throw new Error("nom nom nom");
-    });
+      .then(function () {
+        throw new Error("nom nom nom");
+      });
   });
 
   desc('The bar:bar task, has the async bar:foo task as a prerequisite.');
@@ -208,7 +208,7 @@ namespace('fileTest', function () {
   });
 
   desc('File task, run if the prereq file changes');
-  task('touch-prereq', function() {
+  task('touch-prereq', function () {
     fs.writeFileSync('foo/prereq.txt', 'UPDATED');
   })
 
@@ -251,123 +251,123 @@ namespace('vronk', function () {
 });
 
 // define namespace
-namespace('one', function() {
-  task('one', function() {
+namespace('one', function () {
+  task('one', function () {
     console.log('one:one');
   });
 });
 
 // modify namespace (add task)
-namespace('one', function() {
-  task('two', ['one:one'], function() {
+namespace('one', function () {
+  task('two', ['one:one'], function () {
     console.log('one:two');
   });
 });
 
 
-namespace('concurrent', function() {
-  task("A", {async: true}, function() {
+namespace('concurrent', function () {
+  task("A", {async: true}, function () {
     console.log("Started A");
     var task = this;
-    setTimeout(function() {
+    setTimeout(function () {
       console.log("Finished A");
       task.complete();
     }, 200);
   });
-  task("B", {async: true}, function() {
+  task("B", {async: true}, function () {
     console.log("Started B");
     var task = this;
-    setTimeout(function() {
+    setTimeout(function () {
       console.log("Finished B");
       task.complete();
     },50);
   });
-  task("C", {async: true}, function() {
+  task("C", {async: true}, function () {
     console.log("Started C");
     var task = this;
-    setTimeout(function() {
+    setTimeout(function () {
       console.log("Finished C");
       task.complete();
     }, 100);
   });
-  task("D", {async: true}, function() {
+  task("D", {async: true}, function () {
     console.log("Started D");
     var task = this;
-    setTimeout(function() {
+    setTimeout(function () {
       console.log("Finished D");
       task.complete();
     },300);
   });
-  task("Ba", ["A"], {async: true}, function() {
+  task("Ba", ["A"], {async: true}, function () {
     console.log("Started Ba");
     var task = this;
-    setTimeout(function() {
+    setTimeout(function () {
       console.log("Finished Ba");
       task.complete();
     },50);
   });
-  task("Afail", {async: true}, function() {
+  task("Afail", {async: true}, function () {
     console.log("Started failing task");
     var task = this;
-    setTimeout(function() {
+    setTimeout(function () {
       console.log("Failing B with error");
       throw new Error("I failed");
     },50);
   });
-  task("simple1", ["A","B"], {async: true, concurrency: 2}, function() {
+  task("simple1", ["A","B"], {async: true, concurrency: 2}, function () {
     var task = this;
-    setTimeout(function() {
+    setTimeout(function () {
       task.complete();
     },50);
   });
-  task("simple2", ["C","D"], {async: true, concurrency: 2}, function() {
+  task("simple2", ["C","D"], {async: true, concurrency: 2}, function () {
     var task = this;
-    setTimeout(function() {
+    setTimeout(function () {
       task.complete();
     },50);
   });
-  task("seqconcurrent", ["simple1","simple2"], {async: true}, function() {
+  task("seqconcurrent", ["simple1","simple2"], {async: true}, function () {
     var task = this;
-    setTimeout(function() {
+    setTimeout(function () {
       task.complete();
     },50);
   });
-  task("concurrentconcurrent", ["simple1","simple2"], {async: true, concurrency: 2}, function() {
+  task("concurrentconcurrent", ["simple1","simple2"], {async: true, concurrency: 2}, function () {
     var task = this;
-    setTimeout(function() {
+    setTimeout(function () {
       task.complete();
     },50);
   });
-  task("subdep", ["A","Ba"], {async: true, concurrency: 2}, function() {
+  task("subdep", ["A","Ba"], {async: true, concurrency: 2}, function () {
     var task = this;
-    setTimeout(function() {
+    setTimeout(function () {
       task.complete();
     },50);
   });
-  task("fail", ["A", "B", "Afail"], {async: true, concurrency: 3}, function() {
+  task("fail", ["A", "B", "Afail"], {async: true, concurrency: 3}, function () {
     var task = this;
-    setTimeout(function() {
+    setTimeout(function () {
       task.complete();
     },50);
   });
 
 });
 
-task('selfdepconst', [], function() {
-  task('selfdep', ['selfdep'], function() {
+task('selfdepconst', [], function () {
+  task('selfdep', ['selfdep'], function () {
     console.log("I made a task that depends on itself");
   });
 });
-task('selfdepdyn', function() {
-  task('selfdeppar', [], {concurrency: 2}, function() {
+task('selfdepdyn', function () {
+  task('selfdeppar', [], {concurrency: 2}, function () {
     console.log("I will depend on myself and will fail at runtime");
   });
   task('selfdeppar', ['selfdeppar']);
   jake.Task['selfdeppar'].invoke();
 });
 
-namespace("large", function() {
-  task("leaf", function() {
+namespace("large", function () {
+  task("leaf", function () {
     console.log("large:leaf");
   });
 

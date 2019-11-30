@@ -12,7 +12,11 @@ module.exports = {
     complete: 'readable',
     file: 'readable',
     directory: 'readable',
-    fail: 'readable'
+    fail: 'readable',
+    test: 'readable',
+    suite: 'readable',
+    setup: 'readable',
+    teardown: 'readable'
   },
   parserOptions: {
     ecmaVersion: 2018,

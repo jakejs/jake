@@ -144,8 +144,8 @@ suite('taskBase', function () {
   });
 
   test('listening for jake error-event', function () {
-      let out = exec('../bin/cli.js -q throwy').toString().trim();
-      assert(out.indexOf('Emitted\nError: I am bad') > -1);
+    let out = exec('../bin/cli.js -q throwy').toString().trim();
+    assert(out.indexOf('Emitted\nError: I am bad') > -1);
   });
 
   test('large number of same prereqs', function () {

@@ -27,7 +27,7 @@ suite('fileTask', function () {
     let out;
     out = exec('../bin/cli.js -q fileTest:foo/from-src1.txt').toString().trim();
     assert.equal('fileTest:foo/src1.txt task\nfileTest:foo/from-src1.txt task',
-        out);
+      out);
     out = exec('../bin/cli.js -q -B fileTest:foo/from-src1.txt').toString().trim();
     assert.equal('fileTest:foo/src1.txt task\nfileTest:foo/from-src1.txt task',
       out);
@@ -39,7 +39,7 @@ suite('fileTask', function () {
     out = exec('../bin/cli.js -q fileTest:foo/concat.txt').toString().trim();
     assert.equal('fileTest:foo/src1.txt task\ndefault task\nfileTest:foo/src2.txt task\n' +
           'fileTest:foo/concat.txt task', out);
-      // Check to see the two files got concat'd
+    // Check to see the two files got concat'd
     let data = fs.readFileSync(process.cwd() + '/foo/concat.txt');
     assert.equal('src1src2', data.toString());
     cleanUpAndNext();

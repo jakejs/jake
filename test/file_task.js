@@ -1,6 +1,5 @@
 let assert = require('assert');
 let fs = require('fs');
-let h = require('./helpers');
 let exec = require('child_process').execSync;
 let utils = require('utilities');
 
@@ -55,13 +54,13 @@ suite('fileTask', function () {
     cleanUpAndNext();
   });
 
-  test('file-task where prereq file is modified', function (next) {
+  test('where a file-task prereq does change', function (next) {
     exec('mkdir -p ./foo');
     exec('touch ./foo/from-src1.txt');
     setTimeout(() => {
       fs.writeFileSync('./foo/src1.txt', '-SRC');
-      let out = exec('../bin/cli.js -q fileTest:foo/from-src1.txt');
-      //console.log(out);
+      let out = exec('../bin/cli.js -q fileTest:foo/from-src1.txt').toString().trim();
+      assert.equal('fileTest:foo/from-src1.txt task', out);
       cleanUpAndNext(next);
     }, 500);
   });

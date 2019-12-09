@@ -1,7 +1,7 @@
 let assert = require('assert');
 let exec = require('child_process').execSync;
 let fs = require('fs');
-let Matcher = require('../lib/rule').Matcher;
+let Rule = require('../lib/rule').Rule;
 let utils = require('utilities');
 
 let cleanUpAndNext = function (callback) {
@@ -52,8 +52,8 @@ suite('rule', function () {
   //    'dep' : 'foo:src/main.c',
   //    'file': 'src/main.c'
   //  };
-  test('Matcher.getSource', function () {
-    let src = Matcher.getSource('foo:bin/main.o', 'bin/%.o', 'src/%.c');
+  test('Rule.getSource', function () {
+    let src = Rule.getSource('foo:bin/main.o', 'bin/%.o', 'src/%.c');
     assert.equal('foo:src/main.c', src);
   });
 

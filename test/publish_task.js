@@ -3,6 +3,8 @@ let exec = require('child_process').execSync;
 
 suite('publishTask', function () {
 
+  this.timeout(7000);
+
   setup(function () {
     process.chdir('./test');
   });

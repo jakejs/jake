@@ -6,7 +6,7 @@ let exec = require('child_process').execSync;
 
 suite('namespace', function () {
 
-  this.timeout(5000);
+  this.timeout(7000);
 
   setup(function () {
     process.chdir('./test');

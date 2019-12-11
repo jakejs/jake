@@ -11,7 +11,7 @@ let cleanUpAndNext = function (callback) {
 };
 
 suite('fileTask', function () {
-  this.timeout(5000);
+  this.timeout(7000);
 
   setup(function (next) {
     process.chdir('./test');

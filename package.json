@@ -17,7 +17,8 @@
   "scripts": {
     "lint": "eslint --format codeframe \"lib/**/*.js\" \"test/**/*.js\"",
     "lint:fix": "eslint --fix \"lib/**/*.js\" \"test/**/*.js\"",
-    "test": "./bin/cli.js test"
+    "test": "./bin/cli.js test",
+    "test:ci": "npm run lint && npm run test"
   },
   "repository": {
     "type": "git",

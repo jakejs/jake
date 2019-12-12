@@ -49,7 +49,7 @@ task('test', ['package'], async function (name) {
   process.chdir('./test');
 
   // Install from the actual package, run tests from the packaged binary
-  proc.execSync('npm install ../pkg/jake-v' + version + '.tar.gz');
+  proc.execSync('npm install --force ../pkg/jake-v' + version + '.tar.gz');
 
   process.chdir('../');
 

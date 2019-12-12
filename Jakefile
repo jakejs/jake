@@ -46,12 +46,10 @@ task('test', ['package'], async function (name) {
   let pkg = JSON.parse(fs.readFileSync('./package.json').toString());
   let version = pkg.version;
 
-  process.chdir('./test');
-
   // Install from the actual package, run tests from the packaged binary
-  proc.execSync('npm install --force ../pkg/jake-v' + version + '.tar.gz');
-
-  process.chdir('../');
+  proc.execSync('mkdir -p ./test/node_modules/.bin && mv ./pkg/jake-v' +
+      version + ' ./test/node_modules/jake && ln -s ' + process.cwd() +
+    '/test/node_modules/jake/bin/cli.js ./test/node_modules/.bin/jake');
 
   let testArgs = [];
   if (name) {
@@ -63,7 +61,7 @@ task('test', ['package'], async function (name) {
   return new Promise((resolve, reject) => {
     spawned.on('exit', () => {
       proc.execSync('rm -rf test/tmp_publish && rm -rf test/package.json' +
-          ' && rm -rf test/package-lock.json && rm -rf pkg');
+          ' && rm -rf test/package-lock.json && rm -rf test/node_modules && rm -rf pkg');
       resolve();
     });
   });

@@ -41,7 +41,7 @@ suite('namespace', function () {
   });
 
   test('modifying a namespace by adding a new task', function () {
-    let out = exec('../bin/cli.js -q one:two').toString().trim();
+    let out = exec('./node_modules/.bin/jake -q one:two').toString().trim();
     assert.equal('one:one\none:two', out);
   });
 

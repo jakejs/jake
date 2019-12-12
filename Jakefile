@@ -41,3 +41,30 @@ npmPublishTask('jake', function () {
   ]);
 });
 
+task('test', ['package'], async function (name) {
+  let proc = require('child_process');
+  let pkg = JSON.parse(fs.readFileSync('./package.json').toString());
+  let version = pkg.version;
+
+  process.chdir('./test');
+
+  // Install from the actual package, run tests from the packaged binary
+  proc.execSync('npm install ../pkg/jake-v' + version + '.tar.gz');
+
+  process.chdir('../');
+
+  let testArgs = [];
+  if (name) {
+    testArgs.push(name);
+  }
+  let spawned = proc.spawn('./node_modules/.bin/mocha', testArgs, {
+    stdio: 'inherit'
+  });
+  return new Promise((resolve, reject) => {
+    spawned.on('exit', () => {
+      proc.execSync('rm -rf test/tmp_publish && rm -rf test/package.json' +
+          ' && rm -rf test/package-lock.json && rm -rf pkg');
+      resolve();
+    });
+  });
+});

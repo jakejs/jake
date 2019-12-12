@@ -16,23 +16,23 @@ suite('taskBase', function () {
 
   test('default task', function () {
     let out;
-    out = exec('../bin/cli.js -q').toString().trim();
+    out = exec('./node_modules/.bin/jake -q').toString().trim();
     assert.equal(out, 'default task');
-    out = exec('../bin/cli.js -q default').toString().trim();
+    out = exec('./node_modules/.bin/jake -q default').toString().trim();
     assert.equal(out, 'default task');
   });
 
   test('task with no action', function () {
-    let out = exec('../bin/cli.js -q noAction').toString().trim();
+    let out = exec('./node_modules/.bin/jake -q noAction').toString().trim();
     assert.equal(out, 'default task');
   });
 
   test('a task with no action and no prereqs', function () {
-    exec('../bin/cli.js noActionNoPrereqs');
+    exec('./node_modules/.bin/jake noActionNoPrereqs');
   });
 
   test('passing args to a task', function () {
-    let out = exec('../bin/cli.js -q argsEnvVars[foo,bar]').toString().trim();
+    let out = exec('./node_modules/.bin/jake -q argsEnvVars[foo,bar]').toString().trim();
     let parsed = h.parse(out);
     let args = parsed.args;
     assert.equal(args[0], 'foo');
@@ -40,7 +40,7 @@ suite('taskBase', function () {
   });
 
   test('a task with environment vars', function () {
-    let out = exec('../bin/cli.js -q argsEnvVars foo=bar baz=qux').toString().trim();
+    let out = exec('./node_modules/.bin/jake -q argsEnvVars foo=bar baz=qux').toString().trim();
     let parsed = h.parse(out);
     let env = parsed.env;
     assert.equal(env.foo, 'bar');
@@ -48,7 +48,7 @@ suite('taskBase', function () {
   });
 
   test('passing args and using environment vars', function () {
-    let out = exec('../bin/cli.js -q argsEnvVars[foo,bar] foo=bar baz=qux').toString().trim();
+    let out = exec('./node_modules/.bin/jake -q argsEnvVars[foo,bar] foo=bar baz=qux').toString().trim();
     let parsed = h.parse(out);
     let args = parsed.args;
     let env = parsed.env;
@@ -59,37 +59,37 @@ suite('taskBase', function () {
   });
 
   test('a simple prereq', function () {
-    let out = exec('../bin/cli.js -q foo:baz').toString().trim();
+    let out = exec('./node_modules/.bin/jake -q foo:baz').toString().trim();
     assert.equal(out, 'foo:bar task\nfoo:baz task');
   });
 
   test('a duplicate prereq only runs once', function () {
-    let out = exec('../bin/cli.js -q foo:asdf').toString().trim();
+    let out = exec('./node_modules/.bin/jake -q foo:asdf').toString().trim();
     assert.equal(out, 'foo:bar task\nfoo:baz task\nfoo:asdf task');
   });
 
   test('a prereq with command-line args', function () {
-    let out = exec('../bin/cli.js -q foo:qux').toString().trim();
+    let out = exec('./node_modules/.bin/jake -q foo:qux').toString().trim();
     assert.equal(out, 'foo:bar[asdf,qwer] task\nfoo:qux task');
   });
 
   test('a prereq with args via invoke', function () {
-    let out = exec('../bin/cli.js -q foo:frang[zxcv,uiop]').toString().trim();
+    let out = exec('./node_modules/.bin/jake -q foo:frang[zxcv,uiop]').toString().trim();
     assert.equal(out, 'foo:bar[zxcv,uiop] task\nfoo:frang task');
   });
 
   test('a prereq with args via execute', function () {
-    let out = exec('../bin/cli.js -q foo:zerb[zxcv,uiop]').toString().trim();
+    let out = exec('./node_modules/.bin/jake -q foo:zerb[zxcv,uiop]').toString().trim();
     assert.equal(out, 'foo:bar[zxcv,uiop] task\nfoo:zerb task');
   });
 
   test('prereq execution-order', function () {
-    let out = exec('../bin/cli.js -q hoge:fuga').toString().trim();
+    let out = exec('./node_modules/.bin/jake -q hoge:fuga').toString().trim();
     assert.equal(out, 'hoge:hoge task\nhoge:piyo task\nhoge:fuga task');
   });
 
   test('basic async task', function () {
-    let out = exec('../bin/cli.js -q bar:bar').toString().trim();
+    let out = exec('./node_modules/.bin/jake -q bar:bar').toString().trim();
     assert.equal(out, 'bar:foo task\nbar:bar task');
   });
 
@@ -108,19 +108,19 @@ suite('taskBase', function () {
   });
 
   test('that current-prereq index gets reset', function () {
-    let out = exec('../bin/cli.js -q hoge:kira').toString().trim();
+    let out = exec('./node_modules/.bin/jake -q hoge:kira').toString().trim();
     assert.equal(out, 'hoge:hoge task\nhoge:piyo task\nhoge:fuga task\n' +
         'hoge:charan task\nhoge:gero task\nhoge:kira task');
   });
 
   test('modifying a task by adding prereq during execution', function () {
-    let out = exec('../bin/cli.js -q voom').toString().trim();
+    let out = exec('./node_modules/.bin/jake -q voom').toString().trim();
     assert.equal(out, 2);
   });
 
   test('listening for task error-event', function () {
     try {
-      exec('../bin/cli.js -q vronk:groo').toString().trim();
+      exec('./node_modules/.bin/jake -q vronk:groo').toString().trim();
     }
     catch(e) {
       assert(e.message.indexOf('OMFGZONG') > -1);
@@ -128,18 +128,23 @@ suite('taskBase', function () {
   });
 
   test('listening for jake error-event', function () {
-    let out = exec('../bin/cli.js -q throwy').toString().trim();
+    let out = exec('./node_modules/.bin/jake -q throwy').toString().trim();
     assert(out.indexOf('Emitted\nError: I am bad') > -1);
   });
 
   test('large number of same prereqs', function () {
-    let out = exec('../bin/cli.js -q large:same').toString().trim();
+    let out = exec('./node_modules/.bin/jake -q large:same').toString().trim();
     assert.equal(out, 'large:leaf\nlarge:same');
   });
 
   test('large number of different prereqs', function () {
-    let out = exec('../bin/cli.js -q large:different').toString().trim();
+    let out = exec('./node_modules/.bin/jake -q large:different').toString().trim();
     assert.equal(out, 'leaf-12\nleaf-123\nlarge:different');
+  });
+
+  test('large number of different prereqs', function () {
+    let out = exec('./node_modules/.bin/jake -q usingRequire:test').toString().trim();
+    assert.equal(out, 'howdy test');
   });
 
 });

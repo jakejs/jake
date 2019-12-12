@@ -24,10 +24,10 @@ suite('fileTask', function () {
 
   test('where a file-task prereq does not change with --always-make', function () {
     let out;
-    out = exec('../bin/cli.js -q fileTest:foo/from-src1.txt').toString().trim();
+    out = exec('./node_modules/.bin/jake -q fileTest:foo/from-src1.txt').toString().trim();
     assert.equal('fileTest:foo/src1.txt task\nfileTest:foo/from-src1.txt task',
       out);
-    out = exec('../bin/cli.js -q -B fileTest:foo/from-src1.txt').toString().trim();
+    out = exec('./node_modules/.bin/jake -q -B fileTest:foo/from-src1.txt').toString().trim();
     assert.equal('fileTest:foo/src1.txt task\nfileTest:foo/from-src1.txt task',
       out);
     cleanUpAndNext();
@@ -35,7 +35,7 @@ suite('fileTask', function () {
 
   test('concating two files', function () {
     let out;
-    out = exec('../bin/cli.js -q fileTest:foo/concat.txt').toString().trim();
+    out = exec('./node_modules/.bin/jake -q fileTest:foo/concat.txt').toString().trim();
     assert.equal('fileTest:foo/src1.txt task\ndefault task\nfileTest:foo/src2.txt task\n' +
           'fileTest:foo/concat.txt task', out);
     // Check to see the two files got concat'd
@@ -46,9 +46,9 @@ suite('fileTask', function () {
 
   test('where a file-task prereq does not change', function () {
     let out;
-    out = exec('../bin/cli.js -q fileTest:foo/from-src1.txt').toString().trim();
+    out = exec('./node_modules/.bin/jake -q fileTest:foo/from-src1.txt').toString().trim();
     assert.equal('fileTest:foo/src1.txt task\nfileTest:foo/from-src1.txt task', out);
-    out = exec('../bin/cli.js -q fileTest:foo/from-src1.txt').toString().trim();
+    out = exec('./node_modules/.bin/jake -q fileTest:foo/from-src1.txt').toString().trim();
     // Second time should be a no-op
     assert.equal('', out);
     cleanUpAndNext();
@@ -59,7 +59,7 @@ suite('fileTask', function () {
     exec('touch ./foo/from-src1.txt');
     setTimeout(() => {
       fs.writeFileSync('./foo/src1.txt', '-SRC');
-      let out = exec('../bin/cli.js -q fileTest:foo/from-src1.txt').toString().trim();
+      let out = exec('./node_modules/.bin/jake -q fileTest:foo/from-src1.txt').toString().trim();
       assert.equal('fileTest:foo/from-src1.txt task', out);
       cleanUpAndNext(next);
     }, 500);
@@ -70,11 +70,11 @@ suite('fileTask', function () {
     exec('mkdir -p ./foo');
     fs.writeFileSync('foo/prereq.txt', prereqData);
     let out;
-    out =exec('../bin/cli.js -q fileTest:foo/from-prereq.txt').toString().trim();
+    out =exec('./node_modules/.bin/jake -q fileTest:foo/from-prereq.txt').toString().trim();
     assert.equal('fileTest:foo/from-prereq.txt task', out);
     let data = fs.readFileSync(process.cwd() + '/foo/from-prereq.txt');
     assert.equal(prereqData, data.toString());
-    out = exec('../bin/cli.js -q fileTest:foo/from-prereq.txt').toString().trim();
+    out = exec('./node_modules/.bin/jake -q fileTest:foo/from-prereq.txt').toString().trim();
     // Second time should be a no-op
     assert.equal('', out);
     cleanUpAndNext();
@@ -85,17 +85,17 @@ suite('fileTask', function () {
     exec('mkdir -p ./foo');
     fs.writeFileSync('foo/prereq.txt', prereqData);
     let out;
-    out = exec('../bin/cli.js -q fileTest:foo/from-prereq.txt').toString().trim();
+    out = exec('./node_modules/.bin/jake -q fileTest:foo/from-prereq.txt').toString().trim();
     assert.equal('fileTest:foo/from-prereq.txt task', out);
     let data = fs.readFileSync(process.cwd() + '/foo/from-prereq.txt');
     assert.equal(prereqData, data.toString());
-    out = exec('../bin/cli.js -q -B fileTest:foo/from-prereq.txt').toString().trim();
+    out = exec('./node_modules/.bin/jake -q -B fileTest:foo/from-prereq.txt').toString().trim();
     assert.equal('fileTest:foo/from-prereq.txt task', out);
     cleanUpAndNext();
   });
 
   test('nested directory-task', function () {
-    exec('../bin/cli.js -q fileTest:foo/bar/baz/bamf.txt');
+    exec('./node_modules/.bin/jake -q fileTest:foo/bar/baz/bamf.txt');
     let data = fs.readFileSync(process.cwd() + '/foo/bar/baz/bamf.txt');
     assert.equal('w00t', data);
     cleanUpAndNext();

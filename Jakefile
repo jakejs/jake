@@ -1,11 +1,6 @@
 var fs = require('fs')
   , path = require('path');
 
-testTask('Jake', function () {
-  this.testFiles.include('test/*.js');
-  this.testFiles.exclude('test/helpers.js');
-});
-
 namespace('doc', function () {
   task('generate', ['doc:clobber'], function () {
     var cmd = '../node-jsdoc-toolkit/app/run.js -n -r=100 ' +
@@ -32,17 +27,17 @@ task('doc', ['doc:generate']);
 
 npmPublishTask('jake', function () {
   this.packageFiles.include([
-    'Makefile'
-  , 'Jakefile'
-  , 'README.md'
-  , 'package.json'
-  , 'lib/**'
-  , 'bin/**'
-  , 'test/**'
+    'Makefile',
+    'Jakefile',
+    'README.md',
+    'package.json',
+    'usage.txt',
+    'lib/**',
+    'bin/**',
+    'test/**'
     ]);
   this.packageFiles.exclude([
     'test/tmp'
   ]);
 });
-
 

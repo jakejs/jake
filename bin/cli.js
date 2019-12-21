@@ -17,6 +17,8 @@
  *
 */
 
+require = require("esm")(module/*, options*/)
+
 // Try to load a local jake
 try {
   require(`${ process.cwd() }/node_modules/jake`);

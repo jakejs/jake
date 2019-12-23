@@ -17,7 +17,7 @@
  *
 */
 
-require = require("esm")(module/*, options*/)
+require = require("esm")(module); // eslint-disable-line no-global-assign
 
 // Try to load a local jake
 try {

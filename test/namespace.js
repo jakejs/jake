@@ -1,7 +1,7 @@
 // Load the jake global
 
-require = require("esm")(module/*, options*/)
-let jake = require('../lib/jake');
+require = require("esm")(module); // eslint-disable-line no-global-assign
+let { namespace } = require('../lib/jake');
 
 let assert = require('assert');
 let exec = require('child_process').execSync;

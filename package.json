@@ -15,7 +15,7 @@
   },
   "main": "./lib/jake.js",
   "scripts": {
-    "lint": "eslint --format codeframe \"lib/**/*.js\" \"test/**/*.js\"",
+    "lint": "eslint \"bin/**/*.js\" \"lib/**/*.js\" \"test/**/*.js\"",
     "lint:fix": "eslint --fix \"lib/**/*.js\" \"test/**/*.js\"",
     "test": "./bin/cli.js test",
     "test:ci": "npm run lint && npm run test"

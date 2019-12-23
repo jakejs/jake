@@ -1,5 +1,7 @@
 // Load the jake global
-require('../lib/jake');
+
+require = require("esm")(module/*, options*/)
+let jake = require('../lib/jake');
 
 let assert = require('assert');
 let exec = require('child_process').execSync;

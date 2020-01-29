@@ -62,7 +62,7 @@ suite('fileTask', function () {
       let out = exec('./node_modules/.bin/jake -q fileTest:foo/from-src1.txt').toString().trim();
       assert.equal('fileTest:foo/from-src1.txt task', out);
       cleanUpAndNext(next);
-    }, 500);
+    }, 1000);
   });
 
   test('a preexisting file', function () {

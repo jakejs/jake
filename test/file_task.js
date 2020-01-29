@@ -54,15 +54,20 @@ suite('fileTask', function () {
     cleanUpAndNext();
   });
 
-  test('where a file-task prereq does change', function (next) {
+  test('where a file-task prereq does change, then does not', function (next) {
     exec('mkdir -p ./foo');
     exec('touch ./foo/from-src1.txt');
     setTimeout(() => {
       fs.writeFileSync('./foo/src1.txt', '-SRC');
-      let out = exec('./node_modules/.bin/jake -q fileTest:foo/from-src1.txt').toString().trim();
+      // Task should run the first time
+      let out;
+      out = exec('./node_modules/.bin/jake -q fileTest:foo/from-src1.txt').toString().trim();
       assert.equal('fileTest:foo/from-src1.txt task', out);
+      // Task should not run on subsequent invocation
+      out = exec('./node_modules/.bin/jake -q fileTest:foo/from-src1.txt').toString().trim();
+      assert.equal('', out);
       cleanUpAndNext(next);
-    }, 500);
+    }, 1000);
   });
 
   test('a preexisting file', function () {

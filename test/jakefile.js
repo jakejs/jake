@@ -71,7 +71,7 @@ namespace('foo', function () {
     });
   });
 
-  desc('The foo:frang task, `executes` foo:bar with passed args as a prerequisite.');
+  desc('The foo:zerb task, `executes` foo:bar with passed args as a prerequisite.');
   task('zerb', function () {
     let t = jake.Task['foo:bar'];
     // Do args pass-through
@@ -86,9 +86,14 @@ namespace('foo', function () {
     console.log('foo:zoobie task');
   });
 
-  desc('The foo:voom task, has no prerequisites.');
+  desc('The foo:voom task, run the foo:zoobie task repeatedly.');
   task('voom', function () {
-    console.log('foo:voom task');
+    let t = jake.Task['foo:bar'];
+    t.on('complete', function () {
+      console.log('complete');
+    });
+    t.execute.apply(t);
+    t.execute.apply(t);
   });
 
   desc('The foo:asdf task, has the same prereq twice.');

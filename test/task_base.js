@@ -83,6 +83,11 @@ suite('taskBase', function () {
     assert.equal(out, 'foo:bar[zxcv,uiop] task\nfoo:zerb task');
   });
 
+  test('repeating the task via execute', function () {
+    let out = exec('./node_modules/.bin/jake -q foo:voom').toString().trim();
+    assert.equal(out, 'foo:bar task\nfoo:bar task\ncomplete\ncomplete');
+  });
+
   test('prereq execution-order', function () {
     let out = exec('./node_modules/.bin/jake -q hoge:fuga').toString().trim();
     assert.equal(out, 'hoge:hoge task\nhoge:piyo task\nhoge:fuga task');

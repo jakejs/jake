@@ -1,6 +1,6 @@
 ### Jake -- the JavaScript build tool for Node.js
 
-[![Build Status](https://travis-ci.org/elonmitchell/jake.svg?branch=fix%2Frepeating_task_execute)](https://travis-ci.org/elonmitchell/jake)
+[![Build Status](https://travis-ci.org/jakejs/jake.svg?branch=master)](https://travis-ci.org/jakejs/jake)
 
 Documentation site at [http://jakejs.com](http://jakejs.com/)
 

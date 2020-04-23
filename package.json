@@ -29,7 +29,6 @@
     "filelist": "0.0.x",
     "minimatch": "^3.0.4",
     "chalk": "^2.4.2",
-    "utilities": "1.0.x",
     "async": "0.9.x"
   },
   "devDependencies": {

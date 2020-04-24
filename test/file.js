@@ -16,14 +16,12 @@
  *
 */
 
-var assert = require('assert')
-  , fs = require('fs')
-  , path = require('path')
-  , file = require('../lib/utils/file')
-  , existsSync = fs.existsSync || path.existsSync
-  , exec = require('child_process').execSync
-  , tests;
-
+let assert = require('assert');
+let fs = require('fs');
+let path = require('path');
+let file = require('../lib/utils/file');
+let existsSync = fs.existsSync || path.existsSync;
+let exec = require('child_process').execSync;
 
 suite('fileUtils', function () {
 
@@ -36,16 +34,15 @@ suite('fileUtils', function () {
   });
 
   test('mkdirP', function () {
-    var expected = [
-          ['foo']
-        , ['foo', 'bar']
-        , ['foo', 'bar', 'baz']
-        , ['foo', 'bar', 'baz', 'qux']
-        ]
-      , res;
+    let expected = [
+      ['foo'],
+      ['foo', 'bar'],
+      ['foo', 'bar', 'baz'],
+      ['foo', 'bar', 'baz', 'qux']
+    ];
     file.mkdirP('foo/bar/baz/qux');
-    res = exec('find foo').toString().trim().split('\n');
-    for (var i = 0, ii = res.length; i < ii; i++) {
+    let res = exec('find foo').toString().trim().split('\n');
+    for (let i = 0, ii = res.length; i < ii; i++) {
       assert.equal(path.join.apply(path, expected[i]), res[i]);
     }
     file.rmRf('foo');
@@ -54,7 +51,7 @@ suite('fileUtils', function () {
   test('rmRf', function () {
     file.mkdirP('foo/bar/baz/qux');
     file.rmRf('foo/bar');
-    res = exec('find foo').toString().trim().split('\n');
+    let res = exec('find foo').toString().trim().split('\n');
     assert.equal(1, res.length);
     assert.equal('foo', res[0]);
     fs.rmdirSync('foo');
@@ -67,9 +64,9 @@ suite('fileUtils', function () {
     fs.symlinkSync('../foo', 'bar/foo'); file.rmRf('bar');
 
     // Make sure the bar directory was successfully deleted
-    var barDeleted = false;
+    let barDeleted = false;
     try {
-      var stat = fs.statSync('bar');
+      fs.statSync('bar');
     } catch(err) {
       if(err.code == 'ENOENT') {
         barDeleted = true;
@@ -78,7 +75,7 @@ suite('fileUtils', function () {
     assert.equal(true, barDeleted);
 
     // Make sure that the file inside the linked folder wasn't deleted
-    res = fs.readdirSync('foo');
+    let res = fs.readdirSync('foo');
     assert.equal(1, res.length);
     assert.equal('hello.txt', res[0]);
 
@@ -94,9 +91,9 @@ suite('fileUtils', function () {
     file.rmRf('bar');
 
     // Make sure the bar directory was successfully deleted
-    var barDeleted = false;
+    let barDeleted = false;
     try {
-      var stat = fs.statSync('bar');
+      fs.statSync('bar');
     } catch(err) {
       if(err.code == 'ENOENT') {
         barDeleted = true;
@@ -105,7 +102,7 @@ suite('fileUtils', function () {
     assert.equal(true, barDeleted);
 
     // Make sure that the file inside the linked folder wasn't deleted
-    res = fs.readdirSync('foo');
+    let res = fs.readdirSync('foo');
     assert.equal(1, res.length);
     assert.equal('hello.txt', res[0]);
 
@@ -115,12 +112,12 @@ suite('fileUtils', function () {
   });
 
   test('cpR with same name and different directory', function () {
-      file.mkdirP('foo');
-      fs.writeFileSync('foo/bar.txt', 'w00t');
-      file.cpR('foo', 'bar');
-      assert.ok(existsSync('bar/bar.txt'));
-      file.rmRf('foo');
-      file.rmRf('bar');
+    file.mkdirP('foo');
+    fs.writeFileSync('foo/bar.txt', 'w00t');
+    file.cpR('foo', 'bar');
+    assert.ok(existsSync('bar/bar.txt'));
+    file.rmRf('foo');
+    file.rmRf('bar');
   });
 
   test('cpR with same to and from will throw', function () {
@@ -146,17 +143,17 @@ suite('fileUtils', function () {
   });
 
   test('cpR keeps file mode', function () {
-    fs.writeFileSync('bar.txt', 'w00t', {mode: 0750});
-    fs.writeFileSync('bar1.txt', 'w00t!', {mode: 0744});
+    fs.writeFileSync('bar.txt', 'w00t', {mode: 0o750});
+    fs.writeFileSync('bar1.txt', 'w00t!', {mode: 0o744});
     file.cpR('bar.txt', 'baz.txt');
     file.cpR('bar1.txt', 'baz1.txt');
 
     assert.ok(existsSync('baz.txt'));
     assert.ok(existsSync('baz1.txt'));
-    var bazStat = fs.statSync('baz.txt');
-    var bazStat1 = fs.statSync('baz1.txt');
-    assert.equal(0750, bazStat.mode & 07777);
-    assert.equal(0744, bazStat1.mode & 07777);
+    let bazStat = fs.statSync('baz.txt');
+    let bazStat1 = fs.statSync('baz1.txt');
+    assert.equal(0o750, bazStat.mode & 0o7777);
+    assert.equal(0o744, bazStat1.mode & 0o7777);
 
     file.rmRf('bar.txt');
     file.rmRf('baz.txt');
@@ -165,26 +162,26 @@ suite('fileUtils', function () {
   });
 
   test('cpR keeps file mode when overwriting with preserveMode', function () {
-    fs.writeFileSync('bar.txt', 'w00t', {mode: 0755});
-    fs.writeFileSync('baz.txt', 'w00t!', {mode: 0744});
+    fs.writeFileSync('bar.txt', 'w00t', {mode: 0o755});
+    fs.writeFileSync('baz.txt', 'w00t!', {mode: 0o744});
     file.cpR('bar.txt', 'baz.txt', {silent: true, preserveMode: true});
 
     assert.ok(existsSync('baz.txt'));
-    var bazStat = fs.statSync('baz.txt');
-    assert.equal(0755, bazStat.mode & 07777);
+    let bazStat = fs.statSync('baz.txt');
+    assert.equal(0o755, bazStat.mode & 0o777);
 
     file.rmRf('bar.txt');
     file.rmRf('baz.txt');
   });
 
   test('cpR does not keep file mode when overwriting', function () {
-    fs.writeFileSync('bar.txt', 'w00t', {mode: 0766});
-    fs.writeFileSync('baz.txt', 'w00t!', {mode: 0744});
+    fs.writeFileSync('bar.txt', 'w00t', {mode: 0o766});
+    fs.writeFileSync('baz.txt', 'w00t!', {mode: 0o744});
     file.cpR('bar.txt', 'baz.txt');
 
     assert.ok(existsSync('baz.txt'));
-    var bazStat = fs.statSync('baz.txt');
-    assert.equal(0744, bazStat.mode & 07777);
+    let bazStat = fs.statSync('baz.txt');
+    assert.equal(0o744, bazStat.mode & 0o777);
 
     file.rmRf('bar.txt');
     file.rmRf('baz.txt');
@@ -192,12 +189,12 @@ suite('fileUtils', function () {
 
   test('cpR copies file mode recursively', function () {
     fs.mkdirSync('foo');
-    fs.writeFileSync('foo/bar.txt', 'w00t', {mode: 0740});
+    fs.writeFileSync('foo/bar.txt', 'w00t', {mode: 0o740});
     file.cpR('foo', 'baz');
 
     assert.ok(existsSync('baz'));
-    var barStat = fs.statSync('baz/bar.txt');
-    assert.equal(0740, barStat.mode & 07777);
+    let barStat = fs.statSync('baz/bar.txt');
+    assert.equal(0o740, barStat.mode & 0o777);
 
     file.rmRf('foo');
     file.rmRf('baz');
@@ -205,28 +202,28 @@ suite('fileUtils', function () {
 
   test('cpR keeps file mode recursively', function () {
     fs.mkdirSync('foo');
-    fs.writeFileSync('foo/bar.txt', 'w00t', {mode: 0740});
+    fs.writeFileSync('foo/bar.txt', 'w00t', {mode: 0o740});
     fs.mkdirSync('baz');
     fs.mkdirSync('baz/foo');
-    fs.writeFileSync('baz/foo/bar.txt', 'w00t!', {mode: 0755});
+    fs.writeFileSync('baz/foo/bar.txt', 'w00t!', {mode: 0o755});
     file.cpR('foo', 'baz', {silent: true, preserveMode: true});
 
     assert.ok(existsSync('baz'));
-    var barStat = fs.statSync('baz/foo/bar.txt');
-    assert.equal(0740, barStat.mode & 07777);
+    let barStat = fs.statSync('baz/foo/bar.txt');
+    assert.equal(0o740, barStat.mode & 0o777);
 
     file.rmRf('foo');
     file.rmRf('baz');
   });
 
   test('cpR copies directory mode recursively', function () {
-    fs.mkdirSync('foo', 0755);
-    fs.mkdirSync('foo/bar', 0700);
+    fs.mkdirSync('foo', 0o755);
+    fs.mkdirSync('foo/bar', 0o700);
     file.cpR('foo', 'bar');
 
     assert.ok(existsSync('foo'));
-    var fooBarStat = fs.statSync('bar/bar');
-    assert.equal(0700, fooBarStat.mode & 07777);
+    let fooBarStat = fs.statSync('bar/bar');
+    assert.equal(0o700, fooBarStat.mode & 0o777);
 
     file.rmRf('foo');
     file.rmRf('bar');

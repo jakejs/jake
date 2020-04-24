@@ -1,8 +1,8 @@
 let assert = require('assert');
 let exec = require('child_process').execSync;
 let fs = require('fs');
-let Rule = require('../lib/rule').Rule;
-let utils = require('utilities');
+let { Rule } = require('../lib/rule');
+let { rmRf } = require('../lib/jake');
 
 let cleanUpAndNext = function (callback) {
   // Gotta add globbing to file utils rmRf
@@ -24,7 +24,7 @@ let cleanUpAndNext = function (callback) {
     , 'foo.html'
   ];
   tmpFiles.forEach(function (f) {
-    utils.file.rmRf(f, {
+    rmRf(f, {
       silent: true
     });
   });
@@ -142,8 +142,8 @@ suite('rule', function () {
     test('rule with source file not created yet (' + key  + ')', function () {
       let write = process.stderr.write;
       process.stderr.write = () => {};
-      utils.file.rmRf('foo.txt', {silent: true});
-      utils.file.rmRf('foo.html', {silent: true});
+      rmRf('foo.txt', {silent: true});
+      rmRf('foo.html', {silent: true});
       try {
         exec('./node_modules/.bin/jake  ' + key + ':test');
       }
@@ -184,7 +184,7 @@ suite('rule', function () {
         ' (should be normal file-task) (' + key  + ')', function () {
       // Remove just the source file
       fs.writeFileSync('foo.html', '');
-      utils.file.rmRf('foo.txt', {silent: true});
+      rmRf('foo.txt', {silent: true});
       let out = exec('./node_modules/.bin/jake -q  ' + key + ':test').toString().trim();
       // Should treat existing objective file as plain file-task,
       // and just run test-task

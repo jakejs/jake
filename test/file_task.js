@@ -1,10 +1,10 @@
 let assert = require('assert');
 let fs = require('fs');
 let exec = require('child_process').execSync;
-let utils = require('utilities');
+let { rmRf } = require('../lib/jake');
 
 let cleanUpAndNext = function (callback) {
-  utils.file.rmRf('./foo', {
+  rmRf('./foo', {
     silent: true
   });
   callback && callback();

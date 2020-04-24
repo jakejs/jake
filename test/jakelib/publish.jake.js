@@ -1,9 +1,8 @@
 let fs = require('fs');
-let utils = require('utilities');
-let publishTask = require('../../lib/jake').publishTask;
+let { publishTask, rmRf, mkdirP } = require('../../lib/jake');
 
 fs.writeFileSync('package.json', '{"version": "0.0.1"}');
-utils.file.mkdirP('tmp_publish');
+mkdirP('tmp_publish');
 fs.writeFileSync('tmp_publish/foo.txt', 'FOO');
 
 publishTask('zerb', function () {
@@ -24,7 +23,7 @@ publishTask('zerb', function () {
 jake.setTaskTimeout(5000);
 
 jake.Task['publish'].on('complete', function () {
-  utils.file.rmRf('tmp_publish', {silent: true});
-  utils.file.rmRf('package.json', {silent: true});
+  rmRf('tmp_publish', {silent: true});
+  rmRf('package.json', {silent: true});
 });
 

@@ -1,8 +1,7 @@
 let exec = require('child_process').execSync;
 let fs = require('fs');
 let util = require('util');
-let utils = require('utilities');
-let rule = require('../../lib/jake').rule;
+let { rule, rmRf } = require('../../lib/jake');
 
 directory('tmpsrc');
 directory('tmpbin');
@@ -198,6 +197,6 @@ namespace('sourceFunction', function () {
 
 ////////////////////////////////////////////////////////////
 task('clean', function () {
-  utils.file.rmRf('./foo');
-  utils.file.rmRf('./tmp');
+  rmRf('./foo');
+  rmRf('./tmp');
 });

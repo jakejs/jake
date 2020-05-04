@@ -26,6 +26,22 @@ task('throwy', function () {
   throw new Error('I am bad');
 });
 
+desc('Task that rejects a Promise');
+task('promiseRejecter', function () {
+  const origialOption = jake.program.opts['allow-rejection'];
+
+  const errorListener = function (err) {
+    console.log(err.toString());
+    jake.removeListener('error', errorListener);
+    jake.program.opts['allow-rejection'] = origialOption; // Restore original 'allow-rejection' option
+  };
+  jake.on('error', errorListener);
+
+  jake.program.opts['allow-rejection'] = false; // Do not allow rejection so the rejection is passed to error handlers
+
+  Promise.reject('<promise rejected on purpose>');
+});
+
 desc('Accepts args and env vars.');
 task('argsEnvVars', function () {
   let res = {

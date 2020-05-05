@@ -137,6 +137,11 @@ suite('taskBase', function () {
     assert(out.indexOf('Emitted\nError: I am bad') > -1);
   });
 
+  test('listening for jake unhandledRejection-event', function () {
+    let out = exec('./node_modules/.bin/jake -q promiseRejecter').toString().trim();
+    assert.equal(out, '<promise rejected on purpose>');
+  });
+
   test('large number of same prereqs', function () {
     let out = exec('./node_modules/.bin/jake -q large:same').toString().trim();
     assert.equal(out, 'large:leaf\nlarge:same');

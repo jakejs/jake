@@ -41,29 +41,35 @@ npmPublishTask('jake', function () {
   ]);
 });
 
-task('test', ['package'], async function (name) {
-  let proc = require('child_process');
-  let pkg = JSON.parse(fs.readFileSync('./package.json').toString());
-  let version = pkg.version;
+namespace('test', function () {
 
-  proc.execSync('rm -rf ./test/node_modules');
-  // Install from the actual package, run tests from the packaged binary
-  proc.execSync('mkdir -p ./test/node_modules/.bin && mv ./pkg/jake-v' +
-      version + ' ./test/node_modules/jake && ln -s ' + process.cwd() +
-    '/test/node_modules/jake/bin/cli.js ./test/node_modules/.bin/jake');
+  task('integration', ['package'], async function (name) {
+    let proc = require('child_process');
+    let pkg = JSON.parse(fs.readFileSync('./package.json').toString());
+    let version = pkg.version;
 
-  let testArgs = [];
-  if (name) {
-    testArgs.push(name);
-  }
-  let spawned = proc.spawn('./node_modules/.bin/mocha', testArgs, {
-    stdio: 'inherit'
-  });
-  return new Promise((resolve, reject) => {
-    spawned.on('exit', () => {
-      proc.execSync('rm -rf test/tmp_publish && rm -rf test/package.json' +
-          ' && rm -rf test/package-lock.json && rm -rf test/node_modules && rm -rf pkg');
-      resolve();
+    proc.execSync('rm -rf ./test/node_modules');
+    // Install from the actual package, run tests from the packaged binary
+    proc.execSync('mkdir -p ./test/node_modules/.bin && mv ./pkg/jake-v' +
+        version + ' ./test/node_modules/jake && ln -s ' + process.cwd() +
+      '/test/node_modules/jake/bin/cli.js ./test/node_modules/.bin/jake');
+
+    let testArgs = [];
+    if (name) {
+      testArgs.push(name);
+    }
+    let spawned = proc.spawn('./node_modules/.bin/mocha', testArgs, {
+      stdio: 'inherit'
+    });
+    return new Promise((resolve, reject) => {
+      spawned.on('exit', () => {
+        proc.execSync('rm -rf test/tmp_publish && rm -rf test/package.json' +
+            ' && rm -rf test/package-lock.json && rm -rf test/node_modules && rm -rf pkg');
+        resolve();
+      });
     });
   });
+
 });
+
+task('test', ['test:integration']);

@@ -43,7 +43,7 @@ npmPublishTask('jake', function () {
 
 namespace('test', function () {
 
-  task('integration', ['package'], async function (name) {
+  task('integration', ['package'], async function () {
     let proc = require('child_process');
     let pkg = JSON.parse(fs.readFileSync('./package.json').toString());
     let version = pkg.version;
@@ -55,8 +55,8 @@ namespace('test', function () {
       '/test/node_modules/jake/bin/cli.js ./test/node_modules/.bin/jake');
 
     let testArgs = [];
-    if (name) {
-      testArgs.push(name);
+    if (process.env.filter) {
+      testArgs.push(process.env.filter);
     }
     let spawned = proc.spawn('./node_modules/.bin/mocha', testArgs, {
       stdio: 'inherit'
@@ -68,6 +68,7 @@ namespace('test', function () {
         resolve();
       });
     });
+
   });
 
 });

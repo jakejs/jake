@@ -46,6 +46,7 @@ task('test', ['package'], async function (name) {
   let pkg = JSON.parse(fs.readFileSync('./package.json').toString());
   let version = pkg.version;
 
+  proc.execSync('rm -rf ./test/node_modules');
   // Install from the actual package, run tests from the packaged binary
   proc.execSync('mkdir -p ./test/node_modules/.bin && mv ./pkg/jake-v' +
       version + ' ./test/node_modules/jake && ln -s ' + process.cwd() +

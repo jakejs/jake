@@ -117,7 +117,7 @@ suite('rule', function () {
     cleanUpAndNext();
   });
 
-  testskip('rule w pattern w folder w namespace', function () {
+  test.skip('rule w pattern w folder w namespace', function () {
     let out = exec( './node_modules/.bin/jake -q   tmp_ns').toString().trim();
     let output = [
       "tmpsrc/file2.c init task" // yes

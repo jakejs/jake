@@ -117,8 +117,7 @@ suite('rule', function () {
     cleanUpAndNext();
   });
 
-  /*
-  test('rule w pattern w folder w namespace', function () {
+  testskip('rule w pattern w folder w namespace', function () {
     let out = exec( './node_modules/.bin/jake -q   tmp_ns').toString().trim();
     let output = [
       "tmpsrc/file2.c init task" // yes
@@ -134,10 +133,9 @@ suite('rule', function () {
     assert.equal('src/src_1src/src_2src/src_3 pattern folder namespace', data.toString());
     cleanUpAndNext();
   });
-  */
 
-  test.skip('rule w chain w pattern w folder w namespace', function () {
-    let out = exec( './node_modules/.bin/jake -q   tmp_cr').toString().trim();
+  test('rule w chain w pattern w folder w namespace', function () {
+    let out = exec( './node_modules/.bin/jake -q tmp_cr').toString().trim();
     let output = [
       "chainrule init task"
       , "cp tmpsrc/file1.tex tmpbin/file1.dvi tex->dvi task"

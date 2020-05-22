@@ -71,10 +71,12 @@ namespace('test', function () {
     });
     return new Promise((resolve, reject) => {
       spawned.on('exit', () => {
-        proc.execSync('rm -rf tmp_publish && rm -rf package.json' +
-            ' && rm -rf package-lock.json && rm -rf node_modules');
-        // Rather than invoking 'clobber' task
-        jake.rmRf(`${PROJECT_DIR}/pkg`);
+        if (!(process.env.noclobber || process.env.noClobber)) {
+          proc.execSync('rm -rf tmp_publish && rm -rf package.json' +
+              ' && rm -rf package-lock.json && rm -rf node_modules');
+          // Rather than invoking 'clobber' task
+          jake.rmRf(`${PROJECT_DIR}/pkg`);
+        }
         resolve();
       });
     });

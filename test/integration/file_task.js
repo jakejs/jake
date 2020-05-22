@@ -48,7 +48,7 @@ suite('fileTask', function () {
     cleanUpAndNext();
   });
 
-  test.skip('concating two files', function () {
+  test('concating two files', function () {
     let out;
     out = exec('./node_modules/.bin/jake -q fileTest:foo/concat.txt').toString().trim();
     assert.equal('fileTest:foo/src1.txt task\ndefault task\nfileTest:foo/src2.txt task\n' +

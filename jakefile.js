@@ -2,6 +2,7 @@ let fs = require('fs')
 let path = require('path');
 
 const PROJECT_DIR = process.cwd();
+process.env.PROJECT_DIR = PROJECT_DIR;
 
 namespace('doc', function () {
   task('generate', ['doc:clobber'], function () {
@@ -67,7 +68,6 @@ namespace('test', function () {
       stdio: 'inherit'
     });
     return new Promise((resolve, reject) => {
-        resolve();
       spawned.on('exit', () => {
         proc.execSync('rm -rf tmp_publish && rm -rf package.json' +
             ' && rm -rf package-lock.json && rm -rf node_modules');
@@ -79,7 +79,7 @@ namespace('test', function () {
 
   });
 
-  integrationTest.directory = './test';
+  integrationTest.directory = './test/integration';
 });
 
 task('test', ['test:integration']);

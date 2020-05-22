@@ -1,5 +1,5 @@
 /*
- * Utilities: A classic collection of JavaScript utilities
+ * Jake JavaScript build tool
  * Copyright 2112 Matthew Eernisse (mde@fleegix.org)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,10 +16,12 @@
  *
 */
 
+const PROJECT_DIR = process.env.PROJECT_DIR;
+
 let assert = require('assert');
 let fs = require('fs');
 let path = require('path');
-let file = require('../lib/utils/file');
+let file = require(`${PROJECT_DIR}/lib/utils/file`);
 let existsSync = fs.existsSync || path.existsSync;
 let exec = require('child_process').execSync;
 

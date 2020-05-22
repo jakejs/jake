@@ -91,13 +91,13 @@ suite('taskBase', function () {
   });
 
   test('promise async task', function () {
-    let out = exec('node ../bin/cli.js -q bar:dependOnpromise').toString().trim();
+    let out = exec('./node_modules/.bin/jake -q bar:dependOnpromise').toString().trim();
     assert.equal(out, 'bar:promise task\nbar:dependOnpromise task saw value 123654');
   });
 
   test('failing promise async task', function () {
     try {
-      exec('node ../bin/cli.js -q bar:brokenPromise');
+      exec('./node_modules/.bin/jake -q bar:brokenPromise');
     }
     catch(e) {
       assert(e.message.indexOf('Command failed') > -1);

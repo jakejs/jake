@@ -8,14 +8,6 @@ suite('namespace', function () {
 
   this.timeout(7000);
 
-  setup(function () {
-    process.chdir('./test');
-  });
-
-  teardown(function () {
-    process.chdir('../');
-  });
-
   test('resolve namespace by relative name', function () {
     let foo;
     let bar;

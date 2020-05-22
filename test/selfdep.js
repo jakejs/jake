@@ -10,12 +10,10 @@ suite('selfDep', function () {
   setup(function () {
     origStderrWrite = process.stderr.write;
     process.stderr.write = function () {};
-    process.chdir('./test');
   });
 
   teardown(function () {
     process.stderr.write = origStderrWrite;
-    process.chdir('../');
   });
 
   test('self dep const', function () {

@@ -25,14 +25,6 @@ let exec = require('child_process').execSync;
 
 suite('fileUtils', function () {
 
-  setup(function () {
-    process.chdir('./test');
-  });
-
-  teardown(function () {
-    process.chdir('../');
-  });
-
   test('mkdirP', function () {
     let expected = [
       ['foo'],

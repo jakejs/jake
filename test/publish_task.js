@@ -5,14 +5,6 @@ suite('publishTask', function () {
 
   this.timeout(7000);
 
-  setup(function () {
-    process.chdir('./test');
-  });
-
-  teardown(function () {
-    process.chdir('../');
-  });
-
   test('default task', function () {
     let out = exec('./node_modules/.bin/jake  -q publish').toString().trim();
     let expected = [

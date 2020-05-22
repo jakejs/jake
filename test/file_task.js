@@ -13,13 +13,8 @@ let cleanUpAndNext = function (callback) {
 suite('fileTask', function () {
   this.timeout(7000);
 
-  setup(function (next) {
-    process.chdir('./test');
-    cleanUpAndNext(next);
-  });
-
-  teardown(function () {
-    process.chdir('../');
+  setup(function () {
+    cleanUpAndNext();
   });
 
   test('where a file-task prereq does not change with --always-make', function () {

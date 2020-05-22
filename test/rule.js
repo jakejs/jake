@@ -36,13 +36,9 @@ suite('rule', function () {
   this.timeout(7000);
 
   setup(function (next) {
-    process.chdir('./test');
     cleanUpAndNext(next);
   });
 
-  teardown(function () {
-    process.chdir('../');
-  });
 
   //  - name   foo:bin/main.o
   //  - pattern    bin/%.o

@@ -6,14 +6,6 @@ suite('taskBase', function () {
 
   this.timeout(7000);
 
-  setup(function () {
-    process.chdir('./test');
-  });
-
-  teardown(function () {
-    process.chdir('../');
-  });
-
   test('default task', function () {
     let out;
     out = exec('./node_modules/.bin/jake -q').toString().trim();

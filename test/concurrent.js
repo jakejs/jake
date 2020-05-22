@@ -5,14 +5,6 @@ suite('concurrent', function () {
 
   this.timeout(7000);
 
-  setup(function () {
-    process.chdir('./test');
-  });
-
-  teardown(function () {
-    process.chdir('../');
-  });
-
   test(' simple concurrent prerequisites 1', function () {
     let out = exec('./node_modules/.bin/jake -q concurrent:simple1').toString().trim()
     assert.equal('Started A\nStarted B\nFinished B\nFinished A', out);

@@ -1,5 +1,7 @@
-var fs = require('fs')
-  , path = require('path');
+let fs = require('fs')
+let path = require('path');
+
+const PROJECT_DIR = process.cwd();
 
 namespace('doc', function () {
   task('generate', ['doc:clobber'], function () {
@@ -28,7 +30,7 @@ task('doc', ['doc:generate']);
 npmPublishTask('jake', function () {
   this.packageFiles.include([
     'Makefile',
-    'Jakefile',
+    'jakefile.js',
     'README.md',
     'package.json',
     'usage.txt',
@@ -43,34 +45,41 @@ npmPublishTask('jake', function () {
 
 namespace('test', function () {
 
-  task('integration', ['package'], async function () {
+  let integrationTest = task('integration', ['package'], async function () {
     let proc = require('child_process');
-    let pkg = JSON.parse(fs.readFileSync('./package.json').toString());
+    let pkg = JSON.parse(fs.readFileSync(`${PROJECT_DIR}/package.json`).toString());
     let version = pkg.version;
 
-    proc.execSync('rm -rf ./test/node_modules');
+    proc.execSync('rm -rf ./node_modules');
     // Install from the actual package, run tests from the packaged binary
-    proc.execSync('mkdir -p ./test/node_modules/.bin && mv ./pkg/jake-v' +
-        version + ' ./test/node_modules/jake && ln -s ' + process.cwd() +
-      '/test/node_modules/jake/bin/cli.js ./test/node_modules/.bin/jake');
+    proc.execSync(`mkdir -p node_modules/.bin && mv ${PROJECT_DIR}/pkg/jake-v` +
+        `${version} node_modules/jake && ln -s ${process.cwd()}` +
+      '/node_modules/jake/bin/cli.js ./node_modules/.bin/jake');
 
     let testArgs = [];
     if (process.env.filter) {
       testArgs.push(process.env.filter);
     }
-    let spawned = proc.spawn('./node_modules/.bin/mocha', testArgs, {
+    else {
+      testArgs.push('*.js');
+    }
+    let spawned = proc.spawn(`${PROJECT_DIR}/node_modules/.bin/mocha`, testArgs, {
       stdio: 'inherit'
     });
     return new Promise((resolve, reject) => {
+        resolve();
       spawned.on('exit', () => {
-        proc.execSync('rm -rf test/tmp_publish && rm -rf test/package.json' +
-            ' && rm -rf test/package-lock.json && rm -rf test/node_modules && rm -rf pkg');
+        proc.execSync('rm -rf tmp_publish && rm -rf package.json' +
+            ' && rm -rf package-lock.json && rm -rf node_modules');
+        // Rather than invoking 'clobber' task
+        jake.rmRf(`${PROJECT_DIR}/pkg`);
         resolve();
       });
     });
 
   });
 
+  integrationTest.directory = './test';
 });
 
 task('test', ['test:integration']);

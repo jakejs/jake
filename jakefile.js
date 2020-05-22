@@ -1,5 +1,6 @@
 let fs = require('fs')
 let path = require('path');
+let proc = require('child_process');
 
 const PROJECT_DIR = process.cwd();
 process.env.PROJECT_DIR = PROJECT_DIR;
@@ -44,10 +45,11 @@ npmPublishTask('jake', function () {
   ]);
 });
 
+jake.Task['publish:package'].directory = PROJECT_DIR;
+
 namespace('test', function () {
 
-  let integrationTest = task('integration', ['package'], async function () {
-    let proc = require('child_process');
+  let integrationTest = task('integration', ['publish:package'], async function () {
     let pkg = JSON.parse(fs.readFileSync(`${PROJECT_DIR}/package.json`).toString());
     let version = pkg.version;
 
@@ -79,7 +81,22 @@ namespace('test', function () {
 
   });
 
-  integrationTest.directory = './test/integration';
+  integrationTest.directory = `${PROJECT_DIR}/test/integration`;
+
+  let unitTest = task('unit', async function () {
+    let testArgs = [];
+    if (process.env.filter) {
+      testArgs.push(process.env.filter);
+    }
+    else {
+      testArgs.push('*.js');
+    }
+    let spawned = proc.spawn(`${PROJECT_DIR}/node_modules/.bin/mocha`, testArgs, {
+      stdio: 'inherit'
+    });
+  });
+
+  unitTest.directory = `${PROJECT_DIR}/test/unit`;
 });
 
-task('test', ['test:integration']);
+task('test', ['test:unit', 'test:integration']);

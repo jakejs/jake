@@ -28,12 +28,12 @@ task('throwy', function () {
 
 desc('Task that rejects a Promise');
 task('promiseRejecter', function () {
-  const origialOption = jake.program.opts['allow-rejection'];
+  const originalOption = jake.program.opts['allow-rejection'];
 
   const errorListener = function (err) {
     console.log(err.toString());
     jake.removeListener('error', errorListener);
-    jake.program.opts['allow-rejection'] = origialOption; // Restore original 'allow-rejection' option
+    jake.program.opts['allow-rejection'] = originalOption; // Restore original 'allow-rejection' option
   };
   jake.on('error', errorListener);
 

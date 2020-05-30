@@ -134,7 +134,7 @@ suite('rule', function () {
     cleanUpAndNext();
   });
 
-  test('rule w chain w pattern w folder w namespace', function () {
+  test.skip('rule w chain w pattern w folder w namespace', function () {
     let out = exec( './node_modules/.bin/jake -q tmp_cr').toString().trim();
     let output = [
       "chainrule init task"

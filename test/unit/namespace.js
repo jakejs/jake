@@ -21,6 +21,8 @@ const PROJECT_DIR = process.env.PROJECT_DIR;
 // Load the jake global
 require(`${PROJECT_DIR}/lib/jake`);
 
+require('./jakefile');
+
 let assert = require('assert');
 let exec = require('child_process').execSync;
 
@@ -29,13 +31,9 @@ suite('namespace', function () {
   this.timeout(7000);
 
   test('resolve namespace by relative name', function () {
-    let foo;
-    let bar;
-    let baz;
-
-    foo = namespace('foo', function () {
-      bar = namespace('bar', function () {
-        baz = namespace('baz', function () {
+    let foo = namespace('foo', function () {
+      let bar = namespace('bar', function () {
+        let baz = namespace('baz', function () {
         });
       });
     });
@@ -50,11 +48,6 @@ suite('namespace', function () {
       'baz -> "foo:bar:baz"');
     assert.ok(baz === baz.resolveNamespace('bar:baz'),
       'baz -> "bar:baz"');
-  });
-
-  test('modifying a namespace by adding a new task', function () {
-    let out = exec('./node_modules/.bin/jake -q one:two').toString().trim();
-    assert.equal('one:one\none:two', out);
   });
 
 });

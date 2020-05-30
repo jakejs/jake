@@ -149,4 +149,9 @@ suite('taskBase', function () {
     assert.equal(out, 'howdy test');
   });
 
+  test('modifying a namespace by adding a new task', function () {
+    let out = exec('./node_modules/.bin/jake -q one:two').toString().trim();
+    assert.equal('one:one\none:two', out);
+  });
+
 });

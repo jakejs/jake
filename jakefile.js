@@ -101,4 +101,5 @@ namespace('test', function () {
   unitTest.directory = `${PROJECT_DIR}/test/unit`;
 });
 
+desc('Runs all tests');
 task('test', ['test:unit', 'test:integration']);

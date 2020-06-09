@@ -23,6 +23,13 @@ suite('taskBase', function () {
     exec('./node_modules/.bin/jake noActionNoPrereqs');
   });
 
+  test('a task that exists at the top-level, and not in the specified namespace, should error', function () {
+    let res = require('child_process').spawnSync('./node_modules/.bin/jake',
+    ['asdfasdfasdf:zerbofrangazoomy']);
+    let err = res.stderr.toString();
+    assert.ok(err.indexOf('Unknown task' > -1));
+  });
+
   test('passing args to a task', function () {
     let out = exec('./node_modules/.bin/jake -q argsEnvVars[foo,bar]').toString().trim();
     let parsed = h.parse(out);

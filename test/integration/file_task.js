@@ -90,7 +90,7 @@ suite('fileTask', function () {
     exec('mkdir -p ./foo');
     fs.writeFileSync('foo/prereq.txt', prereqData);
     let out;
-    out =exec('./node_modules/.bin/jake -q fileTest:foo/from-prereq.txt').toString().trim();
+    out = exec('./node_modules/.bin/jake -q fileTest:foo/from-prereq.txt').toString().trim();
     assert.equal('fileTest:foo/from-prereq.txt task', out);
     let data = fs.readFileSync(process.cwd() + '/foo/from-prereq.txt');
     assert.equal(prereqData, data.toString());

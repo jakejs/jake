@@ -12,6 +12,11 @@ task({'noAction': ['default']});
 desc('No action, no prereqs.');
 task('noActionNoPrereqs');
 
+desc('Top-level zerbofrangazoomy task');
+task('zerbofrangazoomy', function () {
+  console.log('Whaaaaaaaa? Ran the zerbofrangazoomy task!')
+});
+
 desc('Task that throws');
 task('throwy', function () {
   let errorListener = function (err) {

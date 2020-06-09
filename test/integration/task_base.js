@@ -25,7 +25,7 @@ suite('taskBase', function () {
 
   test('a task that exists at the top-level, and not in the specified namespace, should error', function () {
     let res = require('child_process').spawnSync('./node_modules/.bin/jake',
-    ['asdfasdfasdf:zerbofrangazoomy']);
+      ['asdfasdfasdf:zerbofrangazoomy']);
     let err = res.stderr.toString();
     assert.ok(err.indexOf('Unknown task' > -1));
   });

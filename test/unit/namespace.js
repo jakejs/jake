@@ -68,4 +68,10 @@ suite('namespace', function () {
     assert.ok(task.action.toString().indexOf('zooby:frang:w00t:bar') > -1);
   });
 
+  test('resolution miss with throw error', function () {
+    let curr = Namespace.ROOT_NAMESPACE;
+    let task = curr.resolveTask('asdf:qwer');
+    assert.ok(!task);
+  });
+
 });

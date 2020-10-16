@@ -66,6 +66,7 @@ suite('namespace', function () {
     let curr = Namespace.ROOT_NAMESPACE.resolveNamespace('hurr:durr');
     let task = curr.resolveTask('zooby:frang:w00t:bar');
     assert.ok(task.action.toString().indexOf('zooby:frang:w00t:bar') > -1);
+    assert.ok(!task.greedy);
   });
 
   test('resolution miss with throw error', function () {
@@ -74,4 +75,10 @@ suite('namespace', function () {
     assert.ok(!task);
   });
 
+  test('resolution task with greedy option set', function () {
+    let curr = Namespace.ROOT_NAMESPACE;
+    let task = curr.resolveTask('zooby:frang:zumm');
+    assert.ok(task.action.toString().indexOf('zooby:frang:zumm') > -1);
+    assert.ok(task.greedy);
+  });
 });

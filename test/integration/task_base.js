@@ -161,4 +161,9 @@ suite('taskBase', function () {
     assert.equal('one:one\none:two', out);
   });
 
+  test('greedy task consumes all remaining CLI params as arguments', function () {
+    let out = exec('./node_modules/.bin/jake -q oink one two three').toString().trim();
+    assert.equal("greedy task consumed 3 remaining arguments:  [ \'one\', \'two\', \'three\' ]", out);
+  });
+
 });

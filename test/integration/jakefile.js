@@ -334,4 +334,10 @@ namespace("large", function () {
   task("different", different, { concurrency: 2 } , function () {
     console.log("large:different")
   })
+
 });
+
+desc("Task that greedily consumes all remaining CLI params");
+task("oink", { greedy: true } , function (...args) {
+  console.log("greedy task consumed", args.length, "remaining arguments: ", args);
+})

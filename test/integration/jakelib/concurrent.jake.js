@@ -108,6 +108,33 @@ namespace('concurrent', function () {
     });
   });
 
+  task('invoke1', function () {
+    let t = jake.Task['concurrent:seqconcurrent'];
+
+    console.log('Started invoke1');
+    return new Promise((resolve) => {
+      t.addListener('complete', () => {
+        console.log('Finished invoke1');
+        resolve();
+      });
+      t.invoke();
+    });
+  });
+
+  task('invoke2', function () {
+    let t = jake.Task['concurrent:seqconcurrent'];
+
+    console.log('Started invoke2');
+    return new Promise((resolve) => {
+      t.addListener('complete', () => {
+        console.log('Finished invoke2');
+        resolve();
+      });
+      t.invoke();
+    });
+  });
+
+  task('invoke', ['invoke1', 'invoke2'], {concurrency: 2});
 });
 
 

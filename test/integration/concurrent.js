@@ -30,6 +30,12 @@ suite('concurrent', function () {
     assert.equal('Started A\nFinished A\nStarted Ba\nFinished Ba', out);
   });
 
+  test(' concurrent prerequisites with invoke', function () {
+    let out = exec('./node_modules/.bin/jake -q concurrent:invoke').toString().trim()
+    assert.equal('Started invoke1\nStarted invoke2\nStarted A\nStarted B\nFinished B\nFinished A\n' +
+                 'Started C\nStarted D\nFinished C\nFinished D\nFinished invoke1\nFinished invoke2', out);
+  });
+
   test(' failing in concurrent prerequisites', function () {
     try {
       exec('./node_modules/.bin/jake -q concurrent:Cfail');

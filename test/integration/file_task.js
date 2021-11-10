@@ -20,7 +20,7 @@ const PROJECT_DIR = process.env.PROJECT_DIR;
 
 let assert = require('assert');
 let fs = require('fs');
-let exec = require('child_process').execSync;
+let {execSync: exec} = require('child_process');
 let { rmRf } = require(`${PROJECT_DIR}/lib/jake`);
 
 let cleanUpAndNext = function (callback) {

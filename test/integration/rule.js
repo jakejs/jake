@@ -19,7 +19,7 @@
 const PROJECT_DIR = process.env.PROJECT_DIR;
 
 let assert = require('assert');
-let exec = require('child_process').execSync;
+let {execSync: exec} = require('child_process');
 let fs = require('fs');
 let { Rule } = require(`${PROJECT_DIR}/lib/rule`);
 let { rmRf } = require(`${PROJECT_DIR}/lib/jake`);

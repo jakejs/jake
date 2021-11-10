@@ -1,6 +1,6 @@
 let assert = require('assert');
-let h = require('./helpers');
-let exec = require('child_process').execSync;
+let {execSync: exec} = require('child_process');
+let h = require('./helpers.js');
 
 suite('taskBase', function () {
 

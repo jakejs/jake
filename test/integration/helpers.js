@@ -1,4 +1,4 @@
-var exec = require('child_process').exec;
+var {exec} = require('child_process');
 
 var helpers = new (function () {
   var _tests;

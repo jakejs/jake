@@ -1,5 +1,5 @@
 let assert = require('assert');
-let exec = require('child_process').execSync;
+let {execSync: exec} = require('child_process');
 
 suite('concurrent', function () {
 

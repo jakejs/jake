@@ -23,7 +23,7 @@ let fs = require('fs');
 let path = require('path');
 let file = require(`${PROJECT_DIR}/lib/utils/file`);
 let existsSync = fs.existsSync || path.existsSync;
-let exec = require('child_process').execSync;
+let {execSync: exec} = require('child_process');
 
 suite('fileUtils', function () {
 

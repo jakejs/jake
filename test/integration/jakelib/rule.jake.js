@@ -16,11 +16,12 @@
  *
 */
 
-const PROJECT_DIR = process.env.PROJECT_DIR;
-
-let exec = require('child_process').execSync;
+let {execSync: exec} = require('child_process');
 let fs = require('fs');
 let util = require('util');
+
+const PROJECT_DIR = process.env.PROJECT_DIR;
+
 let { rule, rmRf } = require(`${PROJECT_DIR}/lib/jake`);
 
 directory('tmpsrc');

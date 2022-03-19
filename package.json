@@ -28,7 +28,7 @@
   "dependencies": {
     "filelist": "^1.0.1",
     "minimatch": "^3.0.4",
-    "chalk": "^2.4.2",
+    "chalk": "^4.0.2",
     "async": "0.9.x"
   },
   "devDependencies": {
@@ -37,6 +37,6 @@
     "q": "^1.5.1"
   },
   "engines": {
-    "node": "*"
+    "node": ">=10"
   }
 }

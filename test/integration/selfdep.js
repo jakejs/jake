@@ -1,6 +1,9 @@
 let assert = require('assert');
 let exec = require('child_process').execSync;
 
+const PROJECT_DIR = process.env.PROJECT_DIR;
+const JAKE_CMD = `${PROJECT_DIR}/bin/cli.js`;
+
 suite('selfDep', function () {
 
   this.timeout(7000);
@@ -18,7 +21,7 @@ suite('selfDep', function () {
 
   test('self dep const', function () {
     try {
-      exec('./node_modules/.bin/jake selfdepconst');
+      exec(`${JAKE_CMD} selfdepconst`);
     }
     catch(e) {
       assert(e.message.indexOf('dependency of itself') > -1)
@@ -27,7 +30,7 @@ suite('selfDep', function () {
 
   test('self dep dyn', function () {
     try {
-      exec('./node_modules/.bin/jake selfdepdyn');
+      exec(`${JAKE_CMD} selfdepdyn`);
     }
     catch(e) {
       assert(e.message.indexOf('dependency of itself') > -1)

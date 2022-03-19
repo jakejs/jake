@@ -1,12 +1,15 @@
 let assert = require('assert');
 let exec = require('child_process').execSync;
 
+const PROJECT_DIR = process.env.PROJECT_DIR;
+const JAKE_CMD = `${PROJECT_DIR}/bin/cli.js`;
+
 suite('publishTask', function () {
 
   this.timeout(7000);
 
   test('default task', function () {
-    let out = exec('./node_modules/.bin/jake  -q publish').toString().trim();
+    let out = exec(`${JAKE_CMD} -q publish`).toString().trim();
     let expected = [
       'Fetched remote tags.'
       , 'On branch v0.0'

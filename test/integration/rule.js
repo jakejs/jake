@@ -17,6 +17,7 @@
 */
 
 const PROJECT_DIR = process.env.PROJECT_DIR;
+const JAKE_CMD = `${PROJECT_DIR}/bin/cli.js`;
 
 let assert = require('assert');
 let exec = require('child_process').execSync;
@@ -74,7 +75,7 @@ suite('rule', function () {
   });
 
   test('rule w/o pattern', function () {
-    let out = exec( './node_modules/.bin/jake -q  tmp').toString().trim();
+    let out = exec( `${JAKE_CMD} -q  tmp`).toString().trim();
     let output = [
       "tmp_dep2.c task"
       , "tmp_dep1.c task"
@@ -88,7 +89,7 @@ suite('rule', function () {
   });
 
   test('rule w pattern w/o folder w/o namespace', function () {
-    let out = exec( './node_modules/.bin/jake  -q  tmp_p').toString().trim();
+    let out = exec( `${JAKE_CMD}  -q  tmp_p`).toString().trim();
     let output = [
       "tmp_dep2.c task"
       , "tmp_dep1.c task"
@@ -103,7 +104,7 @@ suite('rule', function () {
   });
 
   test('rule w pattern w folder w/o namespace', function () {
-    let out = exec( './node_modules/.bin/jake  -q  tmp_pf').toString().trim();
+    let out = exec( `${JAKE_CMD}  -q  tmp_pf`).toString().trim();
     let output = [
       "tmpsrc/tmp_dep1.c task"
       , "cp tmpsrc/tmp_dep1.c tmpbin/tmp_dep1.oo task"
@@ -118,7 +119,7 @@ suite('rule', function () {
   });
 
   test.skip('rule w pattern w folder w namespace', function () {
-    let out = exec( './node_modules/.bin/jake -q   tmp_ns').toString().trim();
+    let out = exec( `${JAKE_CMD} -q   tmp_ns`).toString().trim();
     let output = [
       "tmpsrc/file2.c init task" // yes
       , "tmpsrc/tmp_dep2.c task" // no
@@ -135,7 +136,7 @@ suite('rule', function () {
   });
 
   test.skip('rule w chain w pattern w folder w namespace', function () {
-    let out = exec( './node_modules/.bin/jake -q tmp_cr').toString().trim();
+    let out = exec( `${JAKE_CMD} -q tmp_cr`).toString().trim();
     let output = [
       "chainrule init task"
       , "cp tmpsrc/file1.tex tmpbin/file1.dvi tex->dvi task"
@@ -159,7 +160,7 @@ suite('rule', function () {
       rmRf('foo.txt', {silent: true});
       rmRf('foo.html', {silent: true});
       try {
-        exec('./node_modules/.bin/jake  ' + key + ':test');
+        exec(`${JAKE_CMD}  ` + key + ':test');
       }
       catch(err) {
         // foo.txt prereq doesn't exist yet
@@ -170,7 +171,7 @@ suite('rule', function () {
 
     test('rule with source file now created (' + key  + ')', function () {
       fs.writeFileSync('foo.txt', '');
-      let out = exec('./node_modules/.bin/jake -q  ' + key + ':test').toString().trim();
+      let out = exec(`${JAKE_CMD} -q  ` + key + ':test').toString().trim();
       // Should run prereq and test task
       let output = [
         'created html'
@@ -182,7 +183,7 @@ suite('rule', function () {
     test('rule with source file modified (' + key  + ')', function (next) {
       setTimeout(function () {
         fs.writeFileSync('foo.txt', '');
-        let out = exec('./node_modules/.bin/jake -q  ' + key + ':test').toString().trim();
+        let out = exec(`${JAKE_CMD} -q  ` + key + ':test').toString().trim();
         // Should again run both prereq and test task
         let output = [
           'created html'
@@ -199,7 +200,7 @@ suite('rule', function () {
       // Remove just the source file
       fs.writeFileSync('foo.html', '');
       rmRf('foo.txt', {silent: true});
-      let out = exec('./node_modules/.bin/jake -q  ' + key + ':test').toString().trim();
+      let out = exec(`${JAKE_CMD} -q  ` + key + ':test').toString().trim();
       // Should treat existing objective file as plain file-task,
       // and just run test-task
       let output = [

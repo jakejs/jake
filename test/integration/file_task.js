@@ -17,6 +17,7 @@
 */
 
 const PROJECT_DIR = process.env.PROJECT_DIR;
+const JAKE_CMD = `${PROJECT_DIR}/bin/cli.js`;
 
 let assert = require('assert');
 let fs = require('fs');
@@ -39,10 +40,10 @@ suite('fileTask', function () {
 
   test('where a file-task prereq does not change with --always-make', function () {
     let out;
-    out = exec('./node_modules/.bin/jake -q fileTest:foo/from-src1.txt').toString().trim();
+    out = exec(`${JAKE_CMD} -q fileTest:foo/from-src1.txt`).toString().trim();
     assert.equal('fileTest:foo/src1.txt task\nfileTest:foo/from-src1.txt task',
       out);
-    out = exec('./node_modules/.bin/jake -q -B fileTest:foo/from-src1.txt').toString().trim();
+    out = exec(`${JAKE_CMD} -q -B fileTest:foo/from-src1.txt`).toString().trim();
     assert.equal('fileTest:foo/src1.txt task\nfileTest:foo/from-src1.txt task',
       out);
     cleanUpAndNext();
@@ -50,7 +51,7 @@ suite('fileTask', function () {
 
   test('concating two files', function () {
     let out;
-    out = exec('./node_modules/.bin/jake -q fileTest:foo/concat.txt').toString().trim();
+    out = exec(`${JAKE_CMD} -q fileTest:foo/concat.txt`).toString().trim();
     assert.equal('fileTest:foo/src1.txt task\ndefault task\nfileTest:foo/src2.txt task\n' +
           'fileTest:foo/concat.txt task', out);
     // Check to see the two files got concat'd
@@ -61,9 +62,9 @@ suite('fileTask', function () {
 
   test('where a file-task prereq does not change', function () {
     let out;
-    out = exec('./node_modules/.bin/jake -q fileTest:foo/from-src1.txt').toString().trim();
+    out = exec(`${JAKE_CMD} -q fileTest:foo/from-src1.txt`).toString().trim();
     assert.equal('fileTest:foo/src1.txt task\nfileTest:foo/from-src1.txt task', out);
-    out = exec('./node_modules/.bin/jake -q fileTest:foo/from-src1.txt').toString().trim();
+    out = exec(`${JAKE_CMD} -q fileTest:foo/from-src1.txt`).toString().trim();
     // Second time should be a no-op
     assert.equal('', out);
     cleanUpAndNext();
@@ -76,10 +77,10 @@ suite('fileTask', function () {
       fs.writeFileSync('./foo/src1.txt', '-SRC');
       // Task should run the first time
       let out;
-      out = exec('./node_modules/.bin/jake -q fileTest:foo/from-src1.txt').toString().trim();
+      out = exec(`${JAKE_CMD} -q fileTest:foo/from-src1.txt`).toString().trim();
       assert.equal('fileTest:foo/from-src1.txt task', out);
       // Task should not run on subsequent invocation
-      out = exec('./node_modules/.bin/jake -q fileTest:foo/from-src1.txt').toString().trim();
+      out = exec(`${JAKE_CMD} -q fileTest:foo/from-src1.txt`).toString().trim();
       assert.equal('', out);
       cleanUpAndNext(next);
     }, 1000);
@@ -90,11 +91,11 @@ suite('fileTask', function () {
     exec('mkdir -p ./foo');
     fs.writeFileSync('foo/prereq.txt', prereqData);
     let out;
-    out = exec('./node_modules/.bin/jake -q fileTest:foo/from-prereq.txt').toString().trim();
+    out = exec(`${JAKE_CMD} -q fileTest:foo/from-prereq.txt`).toString().trim();
     assert.equal('fileTest:foo/from-prereq.txt task', out);
     let data = fs.readFileSync(process.cwd() + '/foo/from-prereq.txt');
     assert.equal(prereqData, data.toString());
-    out = exec('./node_modules/.bin/jake -q fileTest:foo/from-prereq.txt').toString().trim();
+    out = exec(`${JAKE_CMD} -q fileTest:foo/from-prereq.txt`).toString().trim();
     // Second time should be a no-op
     assert.equal('', out);
     cleanUpAndNext();
@@ -105,17 +106,17 @@ suite('fileTask', function () {
     exec('mkdir -p ./foo');
     fs.writeFileSync('foo/prereq.txt', prereqData);
     let out;
-    out = exec('./node_modules/.bin/jake -q fileTest:foo/from-prereq.txt').toString().trim();
+    out = exec(`${JAKE_CMD} -q fileTest:foo/from-prereq.txt`).toString().trim();
     assert.equal('fileTest:foo/from-prereq.txt task', out);
     let data = fs.readFileSync(process.cwd() + '/foo/from-prereq.txt');
     assert.equal(prereqData, data.toString());
-    out = exec('./node_modules/.bin/jake -q -B fileTest:foo/from-prereq.txt').toString().trim();
+    out = exec(`${JAKE_CMD} -q -B fileTest:foo/from-prereq.txt`).toString().trim();
     assert.equal('fileTest:foo/from-prereq.txt task', out);
     cleanUpAndNext();
   });
 
   test('nested directory-task', function () {
-    exec('./node_modules/.bin/jake -q fileTest:foo/bar/baz/bamf.txt');
+    exec(`${JAKE_CMD} -q fileTest:foo/bar/baz/bamf.txt`);
     let data = fs.readFileSync(process.cwd() + '/foo/bar/baz/bamf.txt');
     assert.equal('w00t', data);
     cleanUpAndNext();

@@ -1,4 +1,4 @@
-let { task, namespace } = require("jake");
+let { task, namespace } = require(`${process.env.PROJECT_DIR}/lib/jake`);
 
 namespace('usingRequire', function () {
   task('test', () => {

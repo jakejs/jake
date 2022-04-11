@@ -27,7 +27,7 @@
   "preferGlobal": true,
   "dependencies": {
     "filelist": "^1.0.1",
-    "minimatch": "^3.0.4",
+    "minimatch": "^5.0.1",
     "chalk": "^4.0.2",
     "async": "0.9.x"
   },

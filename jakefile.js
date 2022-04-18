@@ -1,5 +1,3 @@
-let fs = require('fs')
-let path = require('path');
 let proc = require('child_process');
 
 const PROJECT_DIR = process.cwd();

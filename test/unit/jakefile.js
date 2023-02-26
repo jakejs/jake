@@ -25,6 +25,10 @@ namespace('zooby', function () {
     });
 
     task('asdf', function () {});
+
+    task('zumm', { greedy: true }, function (args) {
+      console.log('ran zooby:frang:zumm');
+    });
   });
 
 });

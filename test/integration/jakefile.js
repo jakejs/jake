@@ -253,6 +253,21 @@ namespace('fileTest', function () {
     fs.writeFileSync('foo/bar/baz/bamf.txt', 'w00t');
   });
 
+  file('foo/output1.txt', ['foo'], () => {
+    fs.writeFileSync('foo/output1.txt', 'Contents of foo/output1.txt');
+  });
+
+  file('foo/output2a.txt', ['foo/output1.txt'], () => {
+    fs.writeFileSync('foo/output2a.txt', 'Contents of foo/output2a.txt');
+  });
+
+  file('foo/output2b.txt', ['foo/output1.txt'], () => {
+    fs.writeFileSync('foo/output2b.txt', 'Contents of foo/output2b.txt');
+  });
+
+  file('foo/output3.txt', [ 'foo/output2a.txt', 'foo/output2b.txt'], () => {
+    fs.writeFileSync('foo/output3.txt', 'w00t');
+  });
 });
 
 task('blammo');

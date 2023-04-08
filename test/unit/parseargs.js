@@ -16,9 +16,7 @@
  *
 */
 
-const PROJECT_DIR = process.env.PROJECT_DIR;
-
-let parseargs = require(`${PROJECT_DIR}/lib/parseargs`);
+let parseargs = require('../../lib/parseargs');
 let assert = require('assert');
 let optsReg = [
   { full: 'directory',

@@ -16,10 +16,8 @@
  *
 */
 
-const PROJECT_DIR = process.env.PROJECT_DIR;
-
 let fs = require('fs');
-let { publishTask, rmRf, mkdirP } = require(`${PROJECT_DIR}/lib/jake`);
+let { publishTask, rmRf, mkdirP } = require(`../../../lib/jake`);
 
 fs.writeFileSync('package.json', '{"version": "0.0.1"}');
 mkdirP('tmp_publish');

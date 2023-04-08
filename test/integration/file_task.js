@@ -16,13 +16,10 @@
  *
 */
 
-const PROJECT_DIR = process.env.PROJECT_DIR;
-const JAKE_CMD = `${PROJECT_DIR}/bin/cli.js`;
-
 let assert = require('assert');
 let fs = require('fs');
-let exec = require('child_process').execSync;
-let { rmRf } = require(`${PROJECT_DIR}/lib/jake`);
+let { rmRf } = require('../../lib/jake');
+const { execJake } = require('./helpers');
 
 let cleanUpAndNext = function (callback) {
   rmRf('./foo', {
@@ -39,86 +36,110 @@ suite('fileTask', function () {
   });
 
   test('where a file-task prereq does not change with --always-make', function () {
-    let out;
-    out = exec(`${JAKE_CMD} -q fileTest:foo/from-src1.txt`).toString().trim();
-    assert.equal('fileTest:foo/src1.txt task\nfileTest:foo/from-src1.txt task',
-      out);
-    out = exec(`${JAKE_CMD} -q -B fileTest:foo/from-src1.txt`).toString().trim();
-    assert.equal('fileTest:foo/src1.txt task\nfileTest:foo/from-src1.txt task',
-      out);
+
+    let out = execJake('-q fileTest:foo/from-src1.txt');
+    assert.equal(out, [
+      'fileTest:foo/src1.txt task',
+      'fileTest:foo/from-src1.txt task',
+    ].join("\n"));
+
+    out = execJake('-q -B fileTest:foo/from-src1.txt');
+    assert.equal(out, [
+      'fileTest:foo/src1.txt task',
+      'fileTest:foo/from-src1.txt task',
+    ].join("\n"));
+
     cleanUpAndNext();
   });
 
   test('concating two files', function () {
-    let out;
-    out = exec(`${JAKE_CMD} -q fileTest:foo/concat.txt`).toString().trim();
-    assert.equal('fileTest:foo/src1.txt task\ndefault task\nfileTest:foo/src2.txt task\n' +
-          'fileTest:foo/concat.txt task', out);
+
+    let out = execJake('-q fileTest:foo/concat.txt');
+    assert.equal(out, [
+      'fileTest:foo/src1.txt task',
+      'default task',
+      'fileTest:foo/src2.txt task',
+      'fileTest:foo/concat.txt task',
+    ].join('\n'));
+
     // Check to see the two files got concat'd
-    let data = fs.readFileSync(process.cwd() + '/foo/concat.txt');
-    assert.equal('src1src2', data.toString());
+    let data = fs.readFileSync('foo/concat.txt');
+    assert.equal(data.toString(), 'src1src2');
+
     cleanUpAndNext();
   });
 
   test('where a file-task prereq does not change', function () {
-    let out;
-    out = exec(`${JAKE_CMD} -q fileTest:foo/from-src1.txt`).toString().trim();
-    assert.equal('fileTest:foo/src1.txt task\nfileTest:foo/from-src1.txt task', out);
-    out = exec(`${JAKE_CMD} -q fileTest:foo/from-src1.txt`).toString().trim();
+
+    let out = execJake('-q fileTest:foo/from-src1.txt');
+    assert.equal(out, [
+      'fileTest:foo/src1.txt task',
+      'fileTest:foo/from-src1.txt task',
+    ].join("\n"));
+
+    out = execJake('-q fileTest:foo/from-src1.txt');
     // Second time should be a no-op
-    assert.equal('', out);
+    assert.equal(out, '');
+
     cleanUpAndNext();
   });
 
   test('where a file-task prereq does change, then does not', function (next) {
-    exec('mkdir -p ./foo');
-    exec('touch ./foo/from-src1.txt');
+    fs.mkdirSync('foo', { recursive: true });
+    fs.writeFileSync('foo/from-src1.txt', '');
     setTimeout(() => {
       fs.writeFileSync('./foo/src1.txt', '-SRC');
+
       // Task should run the first time
-      let out;
-      out = exec(`${JAKE_CMD} -q fileTest:foo/from-src1.txt`).toString().trim();
-      assert.equal('fileTest:foo/from-src1.txt task', out);
+      let out = execJake('-q fileTest:foo/from-src1.txt');
+      assert.equal(out, 'fileTest:foo/from-src1.txt task');
+
       // Task should not run on subsequent invocation
-      out = exec(`${JAKE_CMD} -q fileTest:foo/from-src1.txt`).toString().trim();
-      assert.equal('', out);
+      out = execJake('-q fileTest:foo/from-src1.txt');
+      assert.equal(out, '');
+
       cleanUpAndNext(next);
     }, 1000);
   });
 
-  test('a preexisting file', function () {
-    let prereqData = 'howdy';
-    exec('mkdir -p ./foo');
-    fs.writeFileSync('foo/prereq.txt', prereqData);
-    let out;
-    out = exec(`${JAKE_CMD} -q fileTest:foo/from-prereq.txt`).toString().trim();
-    assert.equal('fileTest:foo/from-prereq.txt task', out);
-    let data = fs.readFileSync(process.cwd() + '/foo/from-prereq.txt');
-    assert.equal(prereqData, data.toString());
-    out = exec(`${JAKE_CMD} -q fileTest:foo/from-prereq.txt`).toString().trim();
-    // Second time should be a no-op
-    assert.equal('', out);
-    cleanUpAndNext();
-  });
+  suite('a preexisting file', function () {
+    const prereqData = 'howdy';
 
-  test('a preexisting file with --always-make flag', function () {
-    let prereqData = 'howdy';
-    exec('mkdir -p ./foo');
-    fs.writeFileSync('foo/prereq.txt', prereqData);
-    let out;
-    out = exec(`${JAKE_CMD} -q fileTest:foo/from-prereq.txt`).toString().trim();
-    assert.equal('fileTest:foo/from-prereq.txt task', out);
-    let data = fs.readFileSync(process.cwd() + '/foo/from-prereq.txt');
-    assert.equal(prereqData, data.toString());
-    out = exec(`${JAKE_CMD} -q -B fileTest:foo/from-prereq.txt`).toString().trim();
-    assert.equal('fileTest:foo/from-prereq.txt task', out);
-    cleanUpAndNext();
+    setup(function () {
+
+      // Set up the prerequisite file.
+      fs.mkdirSync('foo', { recursive: true });
+      fs.writeFileSync('foo/prereq.txt', prereqData);
+
+      // Run jake to generate the output.
+      const out = execJake('-q fileTest:foo/from-prereq.txt');
+      assert.equal(out, 'fileTest:foo/from-prereq.txt task');
+
+      // Ensure the prerequisite data was copied successfully.
+      const data = fs.readFileSync('foo/from-prereq.txt');
+      assert.equal(data.toString(), prereqData);
+
+    });
+
+    test('with no changes', function () {
+      const out = execJake('-q fileTest:foo/from-prereq.txt');
+      // Second time should be a no-op
+      assert.equal(out, '');
+      cleanUpAndNext();
+    });
+
+    test('with --always-make flag', function () {
+      const out = execJake('-q -B fileTest:foo/from-prereq.txt');
+      assert.equal(out, 'fileTest:foo/from-prereq.txt task');
+      cleanUpAndNext();
+    });
+
   });
 
   test('nested directory-task', function () {
-    exec(`${JAKE_CMD} -q fileTest:foo/bar/baz/bamf.txt`);
-    let data = fs.readFileSync(process.cwd() + '/foo/bar/baz/bamf.txt');
-    assert.equal('w00t', data);
+    execJake('-q fileTest:foo/bar/baz/bamf.txt');
+    let data = fs.readFileSync('foo/bar/baz/bamf.txt');
+    assert.equal(data, 'w00t');
     cleanUpAndNext();
   });
 

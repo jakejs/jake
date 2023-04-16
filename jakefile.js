@@ -90,3 +90,23 @@ namespace('test', function () {
 
 desc('Runs all tests');
 task('test', ['test:unit', 'test:integration', 'test:integrationClobber']);
+
+desc('Runs eslint for both lib and test directories');
+task('lint', function (doFix) {
+
+  let cmd = 'eslint --format codeframe "lib/**/*.js" "test/**/*.js"';
+  if (doFix) {
+    cmd += ' --fix';
+  }
+  try {
+    proc.execSync(cmd);
+  }
+  catch (err) {
+    console.log(err.message);
+    console.log(err.stderr.toString());
+    console.log(err.stdout.toString());
+    fail('eslint failed');
+  }
+});
+
+

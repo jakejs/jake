@@ -24,6 +24,7 @@ module.exports = {
   },
   extends: 'eslint:recommended',
   rules: {
+    'semi': ["error", "always"],
     'indent': ['error', 2],
     'no-console': 'off',
     'no-empty': 'off',

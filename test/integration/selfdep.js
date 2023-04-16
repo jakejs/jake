@@ -24,7 +24,7 @@ suite('selfDep', function () {
       exec(`${JAKE_CMD} selfdepconst`);
     }
     catch(e) {
-      assert(e.message.indexOf('dependency of itself') > -1)
+      assert(e.message.indexOf('dependency of itself') > -1);
     }
   });
 
@@ -33,7 +33,7 @@ suite('selfDep', function () {
       exec(`${JAKE_CMD} selfdepdyn`);
     }
     catch(e) {
-      assert(e.message.indexOf('dependency of itself') > -1)
+      assert(e.message.indexOf('dependency of itself') > -1);
     }
   });
 

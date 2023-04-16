@@ -31,12 +31,12 @@ publishTask('zerb', function () {
     , 'tmp_publish/**'
   ]);
   this.publishCmd = 'node -p -e "\'%filename\'"';
-  this.gitCmd = 'echo'
+  this.gitCmd = 'echo';
   this.scheduleDelay = 0;
 
   this._ensureRepoClean = function () {};
   this._getCurrentBranch = function () {
-    return 'v0.0'
+    return 'v0.0';
   };
 });
 

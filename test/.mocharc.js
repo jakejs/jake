@@ -6,6 +6,6 @@ module.exports = {
     'jakefile.publish.js',
     'jakefile.rule.js',
     'helpers.js'
-  ]
+  ],
 }
 

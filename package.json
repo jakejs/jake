@@ -17,7 +17,9 @@
   "scripts": {
     "lint": "eslint --format codeframe \"lib/**/*.js\" \"test/**/*.js\"",
     "lint:fix": "eslint --fix \"lib/**/*.js\" \"test/**/*.js\"",
-    "test": "./bin/cli.js test",
+    "test:unit": "cd test/unit && mocha .",
+    "test:integration": "cd test/integration && mocha .",
+    "test": "npm run test:unit && npm run test:integration",
     "test:ci": "npm run lint && npm run test"
   },
   "repository": {

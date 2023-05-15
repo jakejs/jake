@@ -122,5 +122,20 @@ suite('fileTask', function () {
     cleanUpAndNext();
   });
 
+  test('partially existing prereqs', function () {
+    /*
+     dependency graph:
+                               /-- foo/output2a.txt --\
+     foo -- foo/output1.txt --+                        +-- output3.txt
+                               \-- foo/output2b.txt --/
+    */
+    // build part of the prereqs
+    exec(`${JAKE_CMD} -q fileTest:foo/output2a.txt`);
+    // verify the final target gets built
+    exec(`${JAKE_CMD} -q fileTest:foo/output3.txt`);
+    let data = fs.readFileSync(process.cwd() + '/foo/output3.txt');
+    assert.equal('w00t', data);
+    cleanUpAndNext();
+  });
 });
 

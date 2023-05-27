@@ -7,7 +7,7 @@
     "make",
     "rake"
   ],
-  "version": "10.8.6",
+  "version": "10.8.7",
   "author": "Matthew Eernisse <mde@fleegix.org> (http://fleegix.org)",
   "license": "Apache-2.0",
   "bin": {

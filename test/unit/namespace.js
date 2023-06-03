@@ -16,11 +16,9 @@
  *
 */
 
-const PROJECT_DIR = process.env.PROJECT_DIR;
-
 // Load the jake global
-require(`${PROJECT_DIR}/lib/jake`);
-let { Namespace } = require(`${PROJECT_DIR}/lib/namespace`);
+let { namespace } = require('../../lib/jake');
+let { Namespace } = require('../../lib/namespace');
 
 require('./jakefile');
 

@@ -16,19 +16,17 @@
  *
 */
 
-const PROJECT_DIR = process.env.PROJECT_DIR;
-
 let exec = require('child_process').execSync;
 let fs = require('fs');
 let util = require('util');
-let { rule, rmRf } = require(`${PROJECT_DIR}/lib/jake`);
+let { rule, rmRf } = require(`../../../lib/jake`);
 
 directory('tmpsrc');
 directory('tmpbin');
 
 ////////////////////////////////////////////////////////////
 // Simple Suffix Rule
-file('tmp', ['tmp_init', 'tmp_dep1.o', 'tmp_dep2.o'], function (params) {
+file('tmp', ['tmp_init', 'tmp_dep1.o', 'tmp_dep2.o'], function () {
   console.log('tmp task');
   let data1 = fs.readFileSync('tmp_dep1.o');
   let data2 = fs.readFileSync('tmp_dep2.o');
@@ -56,7 +54,7 @@ task('tmp_init', function () {
 
 ////////////////////////////////////////////////////////////
 // Pattern Rule
-file('tmp_p', ['tmp_init', 'tmp_dep1.oo', 'tmp_dep2.oo'], function (params) {
+file('tmp_p', ['tmp_init', 'tmp_dep1.oo', 'tmp_dep2.oo'], function () {
   console.log('tmp pattern task');
   let data1 = fs.readFileSync('tmp_dep1.oo');
   let data2 = fs.readFileSync('tmp_dep2.oo');
@@ -77,7 +75,7 @@ file('tmp_pf', [
   'tmp_src_init'
   , 'tmpbin'
   , 'tmpbin/tmp_dep1.oo'
-  , 'tmpbin/tmp_dep2.oo' ], function (params) {
+  , 'tmpbin/tmp_dep2.oo' ], function () {
   console.log('tmp pattern folder task');
   let data1 = fs.readFileSync('tmpbin/tmp_dep1.oo');
   let data2 = fs.readFileSync('tmpbin/tmp_dep2.oo');

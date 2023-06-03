@@ -1,8 +1,9 @@
+let { namespace, task } = require('../../../lib/jake');
 
 namespace('concurrent', function () {
   task('A', function () {
     console.log('Started A');
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       setTimeout(() => {
         console.log('Finished A');
         resolve();
@@ -12,7 +13,7 @@ namespace('concurrent', function () {
 
   task('B', function () {
     console.log('Started B');
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       setTimeout(() => {
         console.log('Finished B');
         resolve();
@@ -22,7 +23,7 @@ namespace('concurrent', function () {
 
   task('C', function () {
     console.log('Started C');
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       setTimeout(() => {
         console.log('Finished C');
         resolve();
@@ -32,7 +33,7 @@ namespace('concurrent', function () {
 
   task('D', function () {
     console.log('Started D');
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       setTimeout(() => {
         console.log('Finished D');
         resolve();
@@ -42,7 +43,7 @@ namespace('concurrent', function () {
 
   task('Ba', ['A'], function () {
     console.log('Started Ba');
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       setTimeout(() => {
         console.log('Finished Ba');
         resolve();
@@ -52,7 +53,7 @@ namespace('concurrent', function () {
 
   task('Afail', function () {
     console.log('Started failing task');
-    return new Promise((resolve, reject) => {
+    return new Promise(() => {
       setTimeout(() => {
         console.log('Failing B with error');
         throw new Error('I failed');
@@ -61,7 +62,7 @@ namespace('concurrent', function () {
   });
 
   task('simple1', ['A','B'], {concurrency: 2}, function () {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       setTimeout(() => {
         resolve();
       }, 50);
@@ -69,7 +70,7 @@ namespace('concurrent', function () {
   });
 
   task('simple2', ['C','D'], {concurrency: 2}, function () {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       setTimeout(() => {
         resolve();
       }, 50);
@@ -77,7 +78,7 @@ namespace('concurrent', function () {
   });
 
   task('seqconcurrent', ['simple1','simple2'], function () {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       setTimeout(() => {
         resolve();
       }, 50);
@@ -85,7 +86,7 @@ namespace('concurrent', function () {
   });
 
   task('concurrentconcurrent', ['simple1','simple2'], {concurrency: 2}, function () {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       setTimeout(() => {
         resolve();
       }, 50);
@@ -93,7 +94,7 @@ namespace('concurrent', function () {
   });
 
   task('subdep', ['A','Ba'], {concurrency: 2}, function () {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       setTimeout(() => {
         resolve();
       }, 50);
@@ -101,7 +102,7 @@ namespace('concurrent', function () {
   });
 
   task('fail', ['A', 'B', 'Afail'], {concurrency: 3}, function () {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       setTimeout(() => {
         resolve();
       }, 50);

@@ -16,14 +16,11 @@
  *
 */
 
-const PROJECT_DIR = process.env.PROJECT_DIR;
-const JAKE_CMD = `${PROJECT_DIR}/bin/cli.js`;
-
 let assert = require('assert');
-let exec = require('child_process').execSync;
 let fs = require('fs');
-let { Rule } = require(`${PROJECT_DIR}/lib/rule`);
-let { rmRf } = require(`${PROJECT_DIR}/lib/jake`);
+let { Rule } = require(`../../lib/rule`);
+let { rmRf } = require(`../../lib/jake`);
+let {execJake} = require('./helpers');
 
 let cleanUpAndNext = function (callback) {
   // Gotta add globbing to file utils rmRf
@@ -75,21 +72,21 @@ suite('rule', function () {
   });
 
   test('rule w/o pattern', function () {
-    let out = exec( `${JAKE_CMD} -q  tmp`).toString().trim();
+    let out = execJake('-q  tmp');
     let output = [
       "tmp_dep2.c task"
       , "tmp_dep1.c task"
       , "cp tmp_dep1.c tmp_dep1.o task"
       , "cp tmp_dep2.c tmp_dep2.o task"
       , "tmp task"];
-    assert.equal( output.join('\n'), out);
-    let data = fs.readFileSync(process.cwd() + '/tmp');
-    assert.equal('src_1src_2', data.toString());
+    assert.equal(out, output.join('\n'));
+    let data = fs.readFileSync('tmp');
+    assert.equal(data.toString(), 'src_1src_2');
     cleanUpAndNext();
   });
 
   test('rule w pattern w/o folder w/o namespace', function () {
-    let out = exec( `${JAKE_CMD}  -q  tmp_p`).toString().trim();
+    let out = execJake('-q  tmp_p');
     let output = [
       "tmp_dep2.c task"
       , "tmp_dep1.c task"
@@ -97,14 +94,14 @@ suite('rule', function () {
       , "cp tmp_dep2.c tmp_dep2.oo task"
       , "tmp pattern task"];
     let data;
-    assert.equal( output.join('\n'), out);
-    data = fs.readFileSync(process.cwd() + '/tmp_p');
-    assert.equal('src_1src_2 pattern', data.toString());
+    assert.equal(out, output.join('\n'));
+    data = fs.readFileSync('tmp_p');
+    assert.equal(data.toString(), 'src_1src_2 pattern');
     cleanUpAndNext();
   });
 
   test('rule w pattern w folder w/o namespace', function () {
-    let out = exec( `${JAKE_CMD}  -q  tmp_pf`).toString().trim();
+    let out = execJake(' -q  tmp_pf');
     let output = [
       "tmpsrc/tmp_dep1.c task"
       , "cp tmpsrc/tmp_dep1.c tmpbin/tmp_dep1.oo task"
@@ -112,14 +109,14 @@ suite('rule', function () {
       , "cp tmpsrc/tmp_dep2.c tmpbin/tmp_dep2.oo task"
       , "tmp pattern folder task"];
     let data;
-    assert.equal( output.join('\n'), out);
-    data = fs.readFileSync(process.cwd() + '/tmp_pf');
-    assert.equal('src/src_1src/src_2 pattern folder', data.toString());
+    assert.equal(out, output.join('\n'));
+    data = fs.readFileSync('tmp_pf');
+    assert.equal(data.toString(), 'src/src_1src/src_2 pattern folder');
     cleanUpAndNext();
   });
 
   test.skip('rule w pattern w folder w namespace', function () {
-    let out = exec( `${JAKE_CMD} -q   tmp_ns`).toString().trim();
+    let out = execJake('-q tmp_ns');
     let output = [
       "tmpsrc/file2.c init task" // yes
       , "tmpsrc/tmp_dep2.c task" // no
@@ -128,15 +125,14 @@ suite('rule', function () {
       , "cp tmpsrc/dep1.c tmpbin/dep1.oo ns task" // no
       , "cp tmpsrc/file2.c tmpbin/file2.oo ns task" // yes
       , "tmp pattern folder namespace task"]; // yes
-    let data;
-    assert.equal( output.join('\n'), out);
-    data = fs.readFileSync(process.cwd() + '/tmp_ns');
-    assert.equal('src/src_1src/src_2src/src_3 pattern folder namespace', data.toString());
+    assert.equal(output.join('\n'), out);
+    let data = fs.readFileSync(process.cwd() + '/tmp_ns');
+    assert.equal(data.toString(), 'src/src_1src/src_2src/src_3 pattern folder namespace');
     cleanUpAndNext();
   });
 
   test.skip('rule w chain w pattern w folder w namespace', function () {
-    let out = exec( `${JAKE_CMD} -q tmp_cr`).toString().trim();
+    let out = execJake('-q tmp_cr');
     let output = [
       "chainrule init task"
       , "cp tmpsrc/file1.tex tmpbin/file1.dvi tex->dvi task"
@@ -145,68 +141,58 @@ suite('rule', function () {
       , "cp tmpbin/file2.dvi tmpbin/file2.pdf dvi->pdf task"
       , "tmp chainrule namespace task"];
     let data;
-    assert.equal( output.join('\n'), out);
-    data = fs.readFileSync(process.cwd() + '/tmp_cr');
-    assert.equal('tex1 tex2  chainrule namespace', data.toString());
+    assert.equal(output.join('\n'), out);
+    data = fs.readFileSync('tmp_cr');
+    assert.equal(data.toString(), 'tex1 tex2  chainrule namespace');
     cleanUpAndNext();
   });
 
 
   ['precedence', 'regexPattern', 'sourceFunction'].forEach(function (key) {
 
-    test('rule with source file not created yet (' + key  + ')', function () {
+    test(`rule with source file not created yet (${key})`, function () {
       let write = process.stderr.write;
       process.stderr.write = () => {};
       rmRf('foo.txt', {silent: true});
       rmRf('foo.html', {silent: true});
-      try {
-        exec(`${JAKE_CMD}  ` + key + ':test');
-      }
-      catch(err) {
-        // foo.txt prereq doesn't exist yet
-        assert.ok(err.message.indexOf('Unknown task "foo.html"') > -1);
-      }
+      assert.throws(() => execJake(`${key}:test`), /Unknown task "foo.html"/);
       process.stderr.write = write;
     });
 
     test('rule with source file now created (' + key  + ')', function () {
       fs.writeFileSync('foo.txt', '');
-      let out = exec(`${JAKE_CMD} -q  ` + key + ':test').toString().trim();
+      let out = execJake(`-q ${key}:test`);
       // Should run prereq and test task
-      let output = [
-        'created html'
-        , 'ran test'
-      ];
-      assert.equal(output.join('\n'), out);
+      assert.equal(out, [
+        'created html',
+        'ran test',
+      ].join('\n'));
     });
 
-    test('rule with source file modified (' + key  + ')', function (next) {
+    test(`rule with source file modified (${key})`, function (next) {
       setTimeout(function () {
         fs.writeFileSync('foo.txt', '');
-        let out = exec(`${JAKE_CMD} -q  ` + key + ':test').toString().trim();
+        let out = execJake(`-q ${key}:test`);
         // Should again run both prereq and test task
-        let output = [
+        assert.equal(out, [
           'created html'
           , 'ran test'
-        ];
-        assert.equal(output.join('\n'), out);
+        ].join('\n'));
         //next();
         cleanUpAndNext(next);
       }, 1000); // Wait to do the touch to ensure mod-time is different
     });
 
-    test('rule with existing objective file and no source ' +
-        ' (should be normal file-task) (' + key  + ')', function () {
+    test(`rule with existing objective file and no source  (should be normal file-task) (${key})`, function () {
       // Remove just the source file
       fs.writeFileSync('foo.html', '');
       rmRf('foo.txt', {silent: true});
-      let out = exec(`${JAKE_CMD} -q  ` + key + ':test').toString().trim();
+      let out = execJake(`-q ${key}:test`);
       // Should treat existing objective file as plain file-task,
       // and just run test-task
-      let output = [
+      assert.equal(out, [
         'ran test'
-      ];
-      assert.equal(output.join('\n'), out);
+      ].join('\n'));
       cleanUpAndNext();
     });
 

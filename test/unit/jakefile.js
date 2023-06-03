@@ -1,3 +1,4 @@
+let { task, namespace } = require('../../lib/jake');
 
 task('foo', function () {
   console.log('ran top-level foo');

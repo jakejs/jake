@@ -1,57 +1,51 @@
 let assert = require('assert');
-let h = require('./helpers');
-let exec = require('child_process').execSync;
-
-const PROJECT_DIR = process.env.PROJECT_DIR;
-const JAKE_CMD = `${PROJECT_DIR}/bin/cli.js`;
+let { execJake, spawnJake, parse } = require('./helpers');
 
 suite('taskBase', function () {
 
   this.timeout(7000);
 
   test('default task', function () {
-    let out;
-    out = exec(`${JAKE_CMD} -q`).toString().trim();
+    let out = execJake('-q');
     assert.equal(out, 'default task');
-    out = exec(`${JAKE_CMD} -q default`).toString().trim();
+    out = execJake(`-q default`);
     assert.equal(out, 'default task');
   });
 
   test('task with no action', function () {
-    let out = exec(`${JAKE_CMD} -q noAction`).toString().trim();
+    let out = execJake('-q noAction');
     assert.equal(out, 'default task');
   });
 
   test('a task with no action and no prereqs', function () {
-    exec(`${JAKE_CMD} noActionNoPrereqs`);
+    execJake('noActionNoPrereqs');
   });
 
   test('a task that exists at the top-level, and not in the specified namespace, should error', function () {
-    let res = require('child_process').spawnSync(`${JAKE_CMD}`,
-      ['asdfasdfasdf:zerbofrangazoomy']);
+    let res = spawnJake([ 'asdfasdfasdf:zerbofrangazoomy' ], { stdio: [ 'inherit', 'inherit', 'pipe' ] });
     let err = res.stderr.toString();
-    assert.ok(err.indexOf('Unknown task' > -1));
+    assert.ok(err.indexOf('Unknown task') > -1);
   });
 
   test('passing args to a task', function () {
-    let out = exec(`${JAKE_CMD} -q argsEnvVars[foo,bar]`).toString().trim();
-    let parsed = h.parse(out);
+    let out = execJake('-q argsEnvVars[foo,bar]');
+    let parsed = parse(out);
     let args = parsed.args;
     assert.equal(args[0], 'foo');
     assert.equal(args[1], 'bar');
   });
 
   test('a task with environment vars', function () {
-    let out = exec(`${JAKE_CMD} -q argsEnvVars foo=bar baz=qux`).toString().trim();
-    let parsed = h.parse(out);
+    let out = execJake('-q argsEnvVars foo=bar baz=qux');
+    let parsed = parse(out);
     let env = parsed.env;
     assert.equal(env.foo, 'bar');
     assert.equal(env.baz, 'qux');
   });
 
   test('passing args and using environment vars', function () {
-    let out = exec(`${JAKE_CMD} -q argsEnvVars[foo,bar] foo=bar baz=qux`).toString().trim();
-    let parsed = h.parse(out);
+    let out = execJake('-q argsEnvVars[foo,bar] foo=bar baz=qux');
+    let parsed = parse(out);
     let args = parsed.args;
     let env = parsed.env;
     assert.equal(args[0], 'foo');
@@ -61,107 +55,108 @@ suite('taskBase', function () {
   });
 
   test('a simple prereq', function () {
-    let out = exec(`${JAKE_CMD} -q foo:baz`).toString().trim();
-    assert.equal(out, 'foo:bar task\nfoo:baz task');
+    let out = execJake('-q foo:baz');
+    assert.equal(out, [ 'foo:bar task', 'foo:baz task' ].join("\n"));
   });
 
   test('a duplicate prereq only runs once', function () {
-    let out = exec(`${JAKE_CMD} -q foo:asdf`).toString().trim();
-    assert.equal(out, 'foo:bar task\nfoo:baz task\nfoo:asdf task');
+    let out = execJake('-q foo:asdf');
+    assert.equal(out, [ 'foo:bar task', 'foo:baz task', 'foo:asdf task' ].join("\n"));
   });
 
   test('a prereq with command-line args', function () {
-    let out = exec(`${JAKE_CMD} -q foo:qux`).toString().trim();
-    assert.equal(out, 'foo:bar[asdf,qwer] task\nfoo:qux task');
+    let out = execJake('-q foo:qux');
+    assert.equal(out, [ 'foo:bar[asdf,qwer] task', 'foo:qux task' ].join("\n"));
   });
 
   test('a prereq with args via invoke', function () {
-    let out = exec(`${JAKE_CMD} -q foo:frang[zxcv,uiop]`).toString().trim();
-    assert.equal(out, 'foo:bar[zxcv,uiop] task\nfoo:frang task');
+    let out = execJake('-q foo:frang[zxcv,uiop]');
+    assert.equal(out, [ 'foo:bar[zxcv,uiop] task', 'foo:frang task' ].join("\n"));
   });
 
   test('a prereq with args via execute', function () {
-    let out = exec(`${JAKE_CMD} -q foo:zerb[zxcv,uiop]`).toString().trim();
-    assert.equal(out, 'foo:bar[zxcv,uiop] task\nfoo:zerb task');
+    let out = execJake('-q foo:zerb[zxcv,uiop]');
+    assert.equal(out, [ 'foo:bar[zxcv,uiop] task', 'foo:zerb task' ].join("\n"));
   });
 
   test('repeating the task via execute', function () {
-    let out = exec(`${JAKE_CMD} -q foo:voom`).toString().trim();
-    assert.equal(out, 'foo:bar task\nfoo:bar task\ncomplete\ncomplete');
+    let out = execJake('-q foo:voom');
+    assert.equal(out, [ 'foo:bar task', 'foo:bar task', 'complete', 'complete' ].join("\n"));
   });
 
   test('prereq execution-order', function () {
-    let out = exec(`${JAKE_CMD} -q hoge:fuga`).toString().trim();
-    assert.equal(out, 'hoge:hoge task\nhoge:piyo task\nhoge:fuga task');
+    let out = execJake('-q hoge:fuga');
+    assert.equal(out, [ 'hoge:hoge task', 'hoge:piyo task', 'hoge:fuga task' ].join("\n"));
   });
 
   test('basic async task', function () {
-    let out = exec(`${JAKE_CMD} -q bar:bar`).toString().trim();
-    assert.equal(out, 'bar:foo task\nbar:bar task');
+    let out = execJake('-q bar:bar');
+    assert.equal(out, [ 'bar:foo task', 'bar:bar task' ].join("\n"));
   });
 
   test('promise async task', function () {
-    let out = exec(`${JAKE_CMD} -q bar:dependOnpromise`).toString().trim();
-    assert.equal(out, 'bar:promise task\nbar:dependOnpromise task saw value 123654');
+    let out = execJake('-q bar:dependOnpromise');
+    assert.equal(out, [ 'bar:promise task', 'bar:dependOnpromise task saw value 123654' ].join("\n"));
   });
 
   test('failing promise async task', function () {
-    try {
-      exec(`${JAKE_CMD} -q bar:brokenPromise`);
-    }
-    catch(e) {
-      assert(e.message.indexOf('Command failed') > -1);
-    }
+    assert.throws(() => execJake('-q bar:brokenPromise'), /Command failed/);
   });
 
   test('that current-prereq index gets reset', function () {
-    let out = exec(`${JAKE_CMD} -q hoge:kira`).toString().trim();
-    assert.equal(out, 'hoge:hoge task\nhoge:piyo task\nhoge:fuga task\n' +
-        'hoge:charan task\nhoge:gero task\nhoge:kira task');
+    let out = execJake('-q hoge:kira');
+    assert.equal(out, [
+      'hoge:hoge task',
+      'hoge:piyo task',
+      'hoge:fuga task',
+      'hoge:charan task',
+      'hoge:gero task',
+      'hoge:kira task',
+    ].join("\n"));
   });
 
   test('modifying a task by adding prereq during execution', function () {
-    let out = exec(`${JAKE_CMD} -q voom`).toString().trim();
+    let out = execJake('-q voom');
     assert.equal(out, 2);
   });
 
+  test('listening for task error', function () {
+    assert.throws(() => execJake('vronk:zong'), /OMFGZONG/);
+  });
+
   test('listening for task error-event', function () {
-    try {
-      exec(`${JAKE_CMD} -q vronk:groo`).toString().trim();
-    }
-    catch(e) {
-      assert(e.message.indexOf('OMFGZONG') > -1);
-    }
+    const out = execJake('vronk:groo');
+    assert.match(out, /OMFGZONG/);
   });
 
   test('listening for jake error-event', function () {
-    let out = exec(`${JAKE_CMD} -q throwy`).toString().trim();
-    assert(out.indexOf('Emitted\nError: I am bad') > -1);
+    let out = execJake('-q throwy');
+    assert.match(out, /Emitted\nError: I am bad/);
   });
 
   test('listening for jake unhandledRejection-event', function () {
-    let out = exec(`${JAKE_CMD} -q promiseRejecter`).toString().trim();
+    let out = execJake('-q promiseRejecter');
     assert.equal(out, '<promise rejected on purpose>');
   });
 
   test('large number of same prereqs', function () {
-    let out = exec(`${JAKE_CMD} -q large:same`).toString().trim();
-    assert.equal(out, 'large:leaf\nlarge:same');
+    let out = execJake('-q large:same');
+    assert.equal(out, [ 'large:leaf', 'large:same' ].join("\n"));
   });
 
   test('large number of different prereqs', function () {
-    let out = exec(`${JAKE_CMD} -q large:different`).toString().trim();
-    assert.equal(out, 'leaf-12\nleaf-123\nlarge:different');
+    let out = execJake('-q large:different');
+    assert.equal(out, [ 'leaf-12', 'leaf-123', 'large:different' ].join("\n"));
   });
 
   test('large number of different prereqs', function () {
-    let out = exec(`${JAKE_CMD} -q usingRequire:test`).toString().trim();
+    let out = execJake('-q usingRequire:test');
     assert.equal(out, 'howdy test');
   });
 
   test('modifying a namespace by adding a new task', function () {
-    let out = exec(`${JAKE_CMD} -q one:two`).toString().trim();
-    assert.equal('one:one\none:two', out);
+    let out = execJake('-q one:two');
+    assert.equal(out, [ 'one:one', 'one:two' ].join("\n"));
   });
 
 });

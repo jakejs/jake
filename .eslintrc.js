@@ -1,5 +1,12 @@
 
 module.exports = {
+  plugins: [
+    'compat',
+  ],
+  extends: [
+    'eslint:recommended',
+    'plugin:compat/recommended',
+  ],
   env: {
     node: true,
     es6: true
@@ -22,7 +29,6 @@ module.exports = {
     ecmaVersion: 2018,
     sourceType: 'module'
   },
-  extends: 'eslint:recommended',
   rules: {
     'semi': ["error", "always"],
     'indent': ['error', 2],
@@ -35,5 +41,8 @@ module.exports = {
       'named': 'never',
       'asyncArrow': 'always'
     }]
+  },
+  settings: {
+    lintAllEsApis: true,
   }
 }

@@ -17,7 +17,9 @@
   "scripts": {
     "lint": "eslint --format codeframe \"lib/**/*.js\" \"test/**/*.js\"",
     "lint:fix": "eslint --fix \"lib/**/*.js\" \"test/**/*.js\"",
-    "test": "./bin/cli.js test",
+    "test:unit": "cd test/unit && mocha .",
+    "test:integration": "cd test/integration && mocha .",
+    "test": "npm run test:unit && npm run test:integration",
     "test:ci": "npm run lint && npm run test"
   },
   "repository": {
@@ -32,11 +34,18 @@
     "minimatch": "^3.1.2"
   },
   "devDependencies": {
+    "browserslist": "^4.21.5",
     "eslint": "^6.8.0",
+    "eslint-plugin-compat": "^4.1.4",
     "mocha": "^10.2.0",
     "q": "^1.5.1"
   },
   "engines": {
     "node": ">=10"
-  }
+  },
+  "browserslist": [
+    "node 8",
+    "node 10",
+    "node 12"
+  ]
 }

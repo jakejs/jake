@@ -1,0 +1,42 @@
+name: tests
+
+on:
+  workflow_dispatch:
+  pull_request:
+  push:
+    branches:
+
+permissions:
+  contents:      read
+  pull-requests: read
+
+jobs:
+
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version:
+          - 8
+          - 10
+          - 12
+    steps:
+
+      - name: checkout
+        uses: actions/checkout@v3
+
+      - name: node-setup
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache:        npm
+
+      - name: node-deps
+        run:  npm clean-install
+
+      - name: lint
+        run:  npm run lint
+
+      - name: test
+        run:  npm run test

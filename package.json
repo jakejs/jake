@@ -29,7 +29,7 @@
     "async": "^3.2.3",
     "chalk": "^4.0.2",
     "filelist": "^1.0.4",
-    "minimatch": "^3.1.2"
+    "minimatch": "^5.1.6"
   },
   "devDependencies": {
     "eslint": "^6.8.0",

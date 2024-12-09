@@ -26,14 +26,16 @@
   },
   "preferGlobal": true,
   "dependencies": {
-    "async": "^3.2.3",
+    "async": "^3.2.6",
     "filelist": "^1.0.4",
-    "minimatch": "^3.1.2",
     "picocolors": "^1.1.1"
   },
   "devDependencies": {
-    "eslint": "^6.8.0",
-    "mocha": "^10.2.0",
+    "@eslint/js": "^9.16.0",
+    "eslint": "^9.16.0",
+    "eslint-formatter-codeframe": "^7.32.1",
+    "globals": "^15.13.0",
+    "mocha": "^11.0.1",
     "q": "^1.5.1"
   },
   "engines": {

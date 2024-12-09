@@ -7,5 +7,5 @@ module.exports = {
     'jakefile.rule.js',
     'helpers.js'
   ]
-}
+};
 

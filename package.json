@@ -27,7 +27,7 @@
   "preferGlobal": true,
   "dependencies": {
     "async": "^3.2.6",
-    "filelist": "^1.0.4",
+    "filelist": "^2.0.1",
     "picocolors": "^1.1.1"
   },
   "devDependencies": {

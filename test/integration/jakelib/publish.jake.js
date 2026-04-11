@@ -47,3 +47,18 @@ jake.Task['publish'].on('complete', function () {
   rmRf('package.json', {silent: true});
 });
 
+task('cleanupUsesDoneEvent', function () {
+  let cleanup = jake.Task['publish:cleanup'];
+  let clobber = jake.Task.clobber;
+
+  clobber.invoke = function () {
+    this.taskStatus = jake.Task.runStatuses.DONE;
+    this.emit('_done');
+  };
+
+  return new Promise((resolve, reject) => {
+    cleanup.once('error', reject);
+    cleanup.once('_done', resolve);
+    cleanup.invoke();
+  });
+});

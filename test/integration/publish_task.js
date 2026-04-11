@@ -23,5 +23,10 @@ suite('publishTask', function () {
     assert.equal(expected, out);
   });
 
-});
+  test('cleanup resolves on _done without a complete event', function () {
+    let out = exec(`${JAKE_CMD} -q cleanupUsesDoneEvent`, {timeout: 2000})
+      .toString().trim();
+    assert.equal('Cleaned up package', out);
+  });
 
+});

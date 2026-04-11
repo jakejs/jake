@@ -19,7 +19,10 @@
 const PROJECT_DIR = process.env.PROJECT_DIR;
 
 let assert = require('assert');
+let fs = require('fs');
+let path = require('path');
 let jake = require(`${PROJECT_DIR}/lib/jake`);
+let { FileTask } = require(`${PROJECT_DIR}/lib/task/file_task`);
 let { Task } = require(`${PROJECT_DIR}/lib/task/task`);
 
 suite('task', function () {
@@ -56,6 +59,29 @@ suite('task', function () {
       global.setTimeout = originalSetTimeout;
       jake.fail = originalFail;
       jake._taskTimeout = originalTaskTimeout;
+    }
+  });
+
+  test('marks a skipped root invocation chain as done', function () {
+    let originalInvocationChain = jake._invocationChain;
+    let tmpFile = path.join(PROJECT_DIR, 'test', 'unit', 'tmp-skipped-file-task.txt');
+    let task = new FileTask(tmpFile, [], function () {});
+
+    fs.writeFileSync(tmpFile, 'exists');
+
+    task.namespace = jake.defaultNamespace;
+    task._invocationChain = [];
+    task._invocationChainRoot = true;
+    jake._invocationChain = [task];
+
+    try {
+      task.run();
+      assert.equal(jake._invocationChain.includes(task), false);
+      assert.equal(task._invocationChain.chainStatus, Task.runStatuses.DONE);
+    }
+    finally {
+      jake._invocationChain = originalInvocationChain;
+      fs.rmSync(tmpFile, {force: true});
     }
   });
 

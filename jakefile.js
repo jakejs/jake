@@ -1,7 +1,11 @@
+let fs = require('fs');
+let path = require('path');
 let proc = require('child_process');
 
 const PROJECT_DIR = process.cwd();
 process.env.PROJECT_DIR = PROJECT_DIR;
+const MOCHA_BIN = require.resolve('mocha/bin/mocha.js');
+const ESLINT_BIN = path.join(path.dirname(require.resolve('eslint/package.json')), 'bin', 'eslint.js');
 
 namespace('doc', function () {
   task('generate', ['doc:clobber'], function () {
@@ -55,7 +59,7 @@ namespace('test', function () {
     else {
       testArgs.push('*.js');
     }
-    let spawned = proc.spawn(`${PROJECT_DIR}/node_modules/.bin/mocha`, testArgs, {
+    let spawned = proc.spawn(process.execPath, [MOCHA_BIN].concat(testArgs), {
       stdio: 'inherit'
     });
     return new Promise((resolve, reject) => {
@@ -68,7 +72,12 @@ namespace('test', function () {
   integrationTest.directory = `${PROJECT_DIR}/test/integration`;
 
   let integrationClobber = task('integrationClobber', function () {
-    proc.execSync('rm -rf package.json pkg tmp_publish');
+    ['package.json', 'pkg', 'tmp_publish'].forEach(function (name) {
+      fs.rmSync(path.join(`${PROJECT_DIR}/test/integration`, name), {
+        recursive: true,
+        force: true
+      });
+    });
   });
   integrationClobber.directory = `${PROJECT_DIR}/test/integration`;
 
@@ -80,8 +89,13 @@ namespace('test', function () {
     else {
       testArgs.push('*.js');
     }
-    let spawned = proc.spawn(`${PROJECT_DIR}/node_modules/.bin/mocha`, testArgs, {
+    let spawned = proc.spawn(process.execPath, [MOCHA_BIN].concat(testArgs), {
       stdio: 'inherit'
+    });
+    return new Promise((resolve) => {
+      spawned.on('exit', () => {
+        resolve();
+      });
     });
   });
   unitTest.directory = `${PROJECT_DIR}/test/unit`;
@@ -93,20 +107,23 @@ task('test', ['test:unit', 'test:integration', 'test:integrationClobber']);
 
 desc('Runs eslint for both lib and test directories');
 task('lint', function (doFix) {
-
-  let cmd = 'eslint --format codeframe "lib/**/*.js" "test/**/*.js"';
+  let args = [ESLINT_BIN, '--format', 'codeframe', 'lib/**/*.js', 'test/**/*.js'];
   if (doFix) {
-    cmd += ' --fix';
+    args.push('--fix');
   }
   try {
-    proc.execSync(cmd);
+    proc.execFileSync(process.execPath, args, {
+      stdio: 'inherit'
+    });
   }
   catch (err) {
     console.log(err.message);
-    console.log(err.stderr.toString());
-    console.log(err.stdout.toString());
+    if (err.stderr) {
+      console.log(err.stderr.toString());
+    }
+    if (err.stdout) {
+      console.log(err.stdout.toString());
+    }
     fail('eslint failed');
   }
 });
-
-

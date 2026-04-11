@@ -18,10 +18,14 @@
 
 const PROJECT_DIR = process.env.PROJECT_DIR;
 
-let exec = require('child_process').execSync;
 let fs = require('fs');
 let util = require('util');
 let { rule, rmRf } = require(`${PROJECT_DIR}/lib/jake`);
+
+let copy = function (source, dest, label) {
+  fs.copyFileSync(source, dest);
+  console.log(label);
+};
 
 directory('tmpsrc');
 directory('tmpbin');
@@ -37,8 +41,7 @@ file('tmp', ['tmp_init', 'tmp_dep1.o', 'tmp_dep2.o'], function (params) {
 
 rule('.o', '.c', function () {
   let cmd = util.format('cp %s %s', this.source, this.name);
-  console.log(cmd + ' task');
-  exec(cmd);
+  copy(this.source, this.name, cmd + ' task');
 });
 
 file('tmp_dep1.c', function () {
@@ -65,8 +68,7 @@ file('tmp_p', ['tmp_init', 'tmp_dep1.oo', 'tmp_dep2.oo'], function (params) {
 
 rule('%.oo', '%.c', function () {
   let cmd = util.format('cp %s %s', this.source, this.name);
-  console.log(cmd + ' task');
-  exec(cmd);
+  copy(this.source, this.name, cmd + ' task');
 });
 ////////////////////////////////////////////////////////////
 
@@ -86,8 +88,7 @@ file('tmp_pf', [
 
 rule('tmpbin/%.oo', 'tmpsrc/%.c', function () {
   let cmd = util.format('cp %s %s', this.source, this.name);
-  console.log(cmd + ' task');
-  exec(cmd);
+  copy(this.source, this.name, cmd + ' task');
 });
 
 file('tmpsrc/tmp_dep2.c',['tmpsrc'], function () {
@@ -134,8 +135,7 @@ namespace('rule', function () {
 
   rule('tmpbin/%.oo', 'tmpsrc/%.c', function () {
     let cmd = util.format('cp %s %s', this.source, this.name);
-    console.log(cmd + ' ns task');
-    exec(cmd);
+    copy(this.source, this.name, cmd + ' ns task');
   });
 });
 ////////////////////////////////////////////////////////////
@@ -163,14 +163,12 @@ namespace('chainrule', function () {
 
   rule('tmpbin/%.pdf', 'tmpbin/%.dvi', function () {
     let cmd = util.format('cp %s %s', this.source, this.name);
-    console.log(cmd + ' dvi->pdf task');
-    exec(cmd);
+    copy(this.source, this.name, cmd + ' dvi->pdf task');
   });
 
   rule('tmpbin/%.dvi', 'tmpsrc/%.tex', ['tmpbin'], function () {
     let cmd = util.format('cp %s %s', this.source, this.name);
-    console.log(cmd + ' tex->dvi task');
-    exec(cmd);
+    copy(this.source, this.name, cmd + ' tex->dvi task');
   });
 });
 ////////////////////////////////////////////////////////////

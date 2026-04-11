@@ -71,8 +71,8 @@ suite('fileTask', function () {
   });
 
   test('where a file-task prereq does change, then does not', function (next) {
-    exec('mkdir -p ./foo');
-    exec('touch ./foo/from-src1.txt');
+    fs.mkdirSync('./foo', {recursive: true});
+    fs.closeSync(fs.openSync('./foo/from-src1.txt', 'w'));
     setTimeout(() => {
       fs.writeFileSync('./foo/src1.txt', '-SRC');
       // Task should run the first time
@@ -88,7 +88,7 @@ suite('fileTask', function () {
 
   test('a preexisting file', function () {
     let prereqData = 'howdy';
-    exec('mkdir -p ./foo');
+    fs.mkdirSync('./foo', {recursive: true});
     fs.writeFileSync('foo/prereq.txt', prereqData);
     let out;
     out = exec(`${JAKE_CMD} -q fileTest:foo/from-prereq.txt`).toString().trim();
@@ -103,7 +103,7 @@ suite('fileTask', function () {
 
   test('a preexisting file with --always-make flag', function () {
     let prereqData = 'howdy';
-    exec('mkdir -p ./foo');
+    fs.mkdirSync('./foo', {recursive: true});
     fs.writeFileSync('foo/prereq.txt', prereqData);
     let out;
     out = exec(`${JAKE_CMD} -q fileTest:foo/from-prereq.txt`).toString().trim();
@@ -138,4 +138,3 @@ suite('fileTask', function () {
     cleanUpAndNext();
   });
 });
-

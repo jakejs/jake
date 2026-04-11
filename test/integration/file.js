@@ -23,7 +23,32 @@ let fs = require('fs');
 let path = require('path');
 let file = require(`${PROJECT_DIR}/lib/utils/file`);
 let existsSync = fs.existsSync || path.existsSync;
-let exec = require('child_process').execSync;
+
+let walk = function (dir) {
+  let ret = [dir];
+
+  fs.readdirSync(dir).forEach(function (entry) {
+    let current = path.join(dir, entry);
+    let stat = fs.statSync(current);
+    if (stat.isDirectory()) {
+      ret = ret.concat(walk(current));
+    }
+    else {
+      ret.push(current);
+    }
+  });
+
+  return ret;
+};
+
+let symlinkDir = function (target, linkPath) {
+  let resolvedTarget = process.platform == 'win32'
+    ? path.resolve(target)
+    : target;
+  let type = process.platform == 'win32' ? 'junction' : 'dir';
+
+  fs.symlinkSync(resolvedTarget, linkPath, type);
+};
 
 suite('fileUtils', function () {
 
@@ -35,7 +60,7 @@ suite('fileUtils', function () {
       ['foo', 'bar', 'baz', 'qux']
     ];
     file.mkdirP('foo/bar/baz/qux');
-    let res = exec('find foo').toString().trim().split('\n');
+    let res = walk('foo');
     for (let i = 0, ii = res.length; i < ii; i++) {
       assert.equal(path.join.apply(path, expected[i]), res[i]);
     }
@@ -45,7 +70,7 @@ suite('fileUtils', function () {
   test('rmRf', function () {
     file.mkdirP('foo/bar/baz/qux');
     file.rmRf('foo/bar');
-    let res = exec('find foo').toString().trim().split('\n');
+    let res = walk('foo');
     assert.equal(1, res.length);
     assert.equal('foo', res[0]);
     fs.rmdirSync('foo');
@@ -55,7 +80,7 @@ suite('fileUtils', function () {
     file.mkdirP('foo');
     file.mkdirP('bar');
     fs.writeFileSync('foo/hello.txt', 'hello, it\'s me');
-    fs.symlinkSync('../foo', 'bar/foo'); file.rmRf('bar');
+    symlinkDir('foo', 'bar/foo'); file.rmRf('bar');
 
     // Make sure the bar directory was successfully deleted
     let barDeleted = false;
@@ -81,7 +106,7 @@ suite('fileUtils', function () {
   test('rmRf with symlinked dir', function () {
     file.mkdirP('foo');
     fs.writeFileSync('foo/hello.txt', 'hello!');
-    fs.symlinkSync('foo', 'bar');
+    symlinkDir('foo', 'bar');
     file.rmRf('bar');
 
     // Make sure the bar directory was successfully deleted
@@ -224,5 +249,4 @@ suite('fileUtils', function () {
   });
 
 });
-
 

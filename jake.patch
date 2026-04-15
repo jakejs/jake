@@ -1,0 +1,1292 @@
+diff -u -r -N '--exclude=.git' '--exclude=.gitignore' '--exclude=.jshintignore' '--exclude=.jshintrc' '--exclude=changelog.md' '--exclude=docs' '--exclude=LICENSE' '--exclude=*.swp' '--exclude=node_modules' '--exclude=site' '--exclude=.travis.yml' '--exclude=patcher.sh' '--exclude=jake' '--exclude=jake.bat' '--exclude=npm-debug.log' jake.o/lib/jake.js jake/lib/jake.js
+--- jake.o/lib/jake.js	2014-10-04 00:22:15.000000000 +0600
++++ jake/lib/jake.js	2016-04-25 21:33:30.648098559 +0500
+@@ -19,6 +19,9 @@
+ var EventEmitter = require('events').EventEmitter;
+ // And so it begins
+ global.jake = new EventEmitter();
++// Do not use : on windows, it will break path tasks
++// TODO: move to namespace
++jake.nsSep = /^win/.test(process.platform) ? '|' : ':';
+ 
+ var fs = require('fs')
+   , path = require('path')
+@@ -42,6 +45,12 @@
+   this.args = args;
+ };
+ 
++var task_constructors = {
++  'task': Task,
++  'file': FileTask,
++  'directory': DirectoryTask,
++};
++
+ // Globalize jake and top-level API methods (e.g., `task`, `desc`)
+ utils.mixin(global, api);
+ 
+@@ -88,28 +97,17 @@
+   this.Namespace = Namespace;
+   this.Rule = Rule;
+ 
+-  this.parseAllTasks = function () {
+-    var _parseNs = function (name, ns) {
+-      var nsTasks = ns.tasks
+-        , task
+-        , nsNamespaces = ns.childNamespaces
+-        , fullName;
+-      // Iterate through the tasks in each namespace
+-      for (var q in nsTasks) {
+-        task = nsTasks[q];
+-        // Prefix namespaced tasks
+-        fullName = name == 'default' ? q : name + ':' + q;
+-        // Save with 'taskname' or 'namespace:taskname' key
+-        task.fullName = fullName;
+-        jake.Task[fullName] = task;
+-      }
+-      for (var p in nsNamespaces) {
+-        fullName = (name == 'default') ? p : name + ':' + p;
+-        _parseNs(fullName, nsNamespaces[p]);
+-      }
+-    };
+-
+-    _parseNs('default', jake.defaultNamespace);
++  this.registerTask = function(task){
++      var ns = task.namespace;
++      var full = task.name;
++      while (ns&&ns.name!='default') {
++          full = ns.name + jake.nsSep + full;
++          ns = ns.parentNamespace;
++      }
++      task.fullName = full;
++      jake.Task[full] = task;
++      if (process.version>='v0.12.')
++          task.setMaxListeners(1000);
+   };
+ 
+   /**
+@@ -154,78 +152,58 @@
+     }
+   };
+ 
+-  this.createTask = function () {
+-    var args = Array.prototype.slice.call(arguments)
+-      , arg
+-      , obj
+-      , task
+-      , type
+-      , name
+-      , action
+-      , opts = {}
+-      , prereqs = [];
+-
+-      type = args.shift();
++  function is_func(x){ return typeof x==='function'; }
++  this.createTask = function (constructor) {
++    var args = Array.prototype.slice.call(arguments, 1);
+ 
+-    // name, [deps], [action]
+-    // Name (string) + deps (array) format
++    var name, obj, prereqs = [];
+     if (typeof args[0] == 'string') {
++      // name, [deps], [action]
++      // Name (string) + deps (array) format name = args.shift();
+       name = args.shift();
+-      if (Array.isArray(args[0])) {
++      if (Array.isArray(args[0]) || (is_func(args[0]) &&
++          (is_func(args[1])||is_func(args[2]))))
+         prereqs = args.shift();
+-      }
+-    }
+-    // name:deps, [action]
+-    // Legacy object-literal syntax, e.g.: {'name': ['depA', 'depB']}
+-    else {
++    } else {
++      // name:deps, [action]
++      // Legacy object-literal syntax, e.g.: {'name': ['depA', 'depB']}
+       obj = args.shift();
+       for (var p in obj) {
+-        prereqs = prereqs.concat(obj[p]);
++        prereqs.push.apply(prereqs, obj[p]);
+         name = p;
+       }
+     }
+ 
+     // Optional opts/callback or callback/opts
++    var arg, action, opts = {};
+     while ((arg = args.shift())) {
+-      if (typeof arg == 'function') {
++      if (is_func(arg))
+         action = arg;
+-      }
+-      else {
++      else
+         opts = arg;
+-      }
+     }
+ 
+-    task = jake.currentNamespace.resolveTask(name);
++    var task = jake.currentNamespace.resolveTask(name);
+     if (task && !action) {
+       // Task already exists and no action, just update prereqs, and return it.
+-      task.prereqs = task.prereqs.concat(prereqs);
++      if (Array.isArray(task._prereqs))
++        task._prereqs = utils.uniq(task._prereqs.concat(prereqs));
+       return task;
+     }
+ 
+-    switch (type) {
+-      case 'directory':
+-        action = function () {
+-          jake.mkdirP(name);
+-        };
+-        task = new DirectoryTask(name, prereqs, action, opts);
+-        break;
+-      case 'file':
+-        task = new FileTask(name, prereqs, action, opts);
+-        break;
+-      default:
+-        task = new Task(name, prereqs, action, opts);
+-    }
+-
++    if (typeof constructor == 'string')
++      constructor = task_constructors[constructor];
++    if (Array.isArray(prereqs))
++        prereqs = utils.uniq(prereqs);
++    task = new constructor(name, prereqs, action, opts);
+     if (jake.currentTaskDescription) {
+       task.description = jake.currentTaskDescription;
+       jake.currentTaskDescription = null;
+     }
++
+     jake.currentNamespace.tasks[name] = task;
+     task.namespace = jake.currentNamespace;
+-
+-    // FIXME: Should only need to add a new entry for the current
+-    // task-definition, not reparse the entire structure
+-    jake.parseAllTasks();
++    jake.registerTask(task);
+ 
+     return task;
+   };
+@@ -244,43 +222,26 @@
+     return prereq || null;
+   };
+ 
+-  this.createPlaceholderFileTask = function (name, namespace) {
+-    var nsPath = ''
+-      , filePath = name.split(':').pop() // Strip any namespace
+-      , parts
+-      , fileTaskName
+-      , task
+-      , stats;
+-
+-    if (namespace) {
+-      if (typeof namespace == 'string') {
+-        nsPath = namespace;
+-      }
+-      else {
+-        nsPath = namespace.path;
+-      }
++  this.createDummyFileTask = function(name, ns) {
++    var task_name, task, ns_path = '';
++    var file_path = name.split(jake.nsSep).pop(); // Strip any namespace
++    if (ns) {
++      ns_path = typeof ns=='string' ? ns : ns.path || '';
++      if (ns_path.length)
++        ns_path += jake.nsSep;
+     }
+-
+-    parts = nsPath.length ? nsPath.split(':') : [];
+-    parts.push(filePath);
+-    fileTaskName = parts.join(':');
+-
+-    task = jake.Task[fileTaskName];
++    task_name = ns_path+file_path;
++    task = jake.Task[task_name];
+ 
+     // If there's not already an existing dummy FileTask for it,
+-    // create one
+-    if (!task) {
+-      // Create a dummy FileTask only if file actually exists
+-      if (fs.existsSync(filePath)) {
+-        stats = fs.statSync(filePath);
+-        task = new jake.FileTask(filePath);
+-        task.fullName = fileTaskName;
+-        task.modTime = stats.mtime;
+-        task.dummy = true;
+-        // Put this dummy Task in the global Tasks list so
+-        // modTime will be eval'd correctly
+-        jake.Task[fileTaskName] = task;
+-      }
++    // create one, but only if file exists
++    // XXX replace with always cfile when file task added
++    var task_func = global.cfile||jake.FileTask;
++    if (!task && fs.existsSync(file_path)) {
++      task = new task_func(file_path);
++      task.dummy = true;
++      task.fullName = task_name;
++      jake.Task[task_name] = task;
+     }
+ 
+     return task || null;
+@@ -320,7 +281,11 @@
+             'or place one in the current directory.');
+       }
+ 
+-      program.run();
++      jake.emit('loaded');
++      if (!opts['no-run'])
++        program.run();
++      else
++        jake.emit('complete');
+     }
+   };
+ 
+diff -u -r -N '--exclude=.git' '--exclude=.gitignore' '--exclude=.jshintignore' '--exclude=.jshintrc' '--exclude=changelog.md' '--exclude=docs' '--exclude=LICENSE' '--exclude=*.swp' '--exclude=node_modules' '--exclude=site' '--exclude=.travis.yml' '--exclude=patcher.sh' '--exclude=jake' '--exclude=jake.bat' '--exclude=npm-debug.log' jake.o/lib/loader.js jake/lib/loader.js
+--- jake.o/lib/loader.js	2014-10-04 00:22:15.000000000 +0600
++++ jake/lib/loader.js	2015-01-17 17:50:29.000000000 +0500
+@@ -52,6 +52,7 @@
+       // Warning, recursive
+       , exists
+       , oldCwd = process.cwd();
++    jakefile = utils.file.normalize(jakefile);
+ 
+     exists = function () {
+       var cwd = process.cwd();
+@@ -85,7 +86,7 @@
+   this.loadDirectory = function (d) {
+     var dirname = d || 'jakelib'
+       , dirlist;
+-    dirname = utils.file.absolutize(dirname);
++    dirname = utils.file.normalize(utils.file.absolutize(dirname));
+     if (existsSync(dirname)) {
+       dirlist = fs.readdirSync(dirname);
+       dirlist.forEach(function (filePath) {
+diff -u -r -N '--exclude=.git' '--exclude=.gitignore' '--exclude=.jshintignore' '--exclude=.jshintrc' '--exclude=changelog.md' '--exclude=docs' '--exclude=LICENSE' '--exclude=*.swp' '--exclude=node_modules' '--exclude=site' '--exclude=.travis.yml' '--exclude=patcher.sh' '--exclude=jake' '--exclude=jake.bat' '--exclude=npm-debug.log' jake.o/lib/namespace.js jake/lib/namespace.js
+--- jake.o/lib/namespace.js	2014-10-04 00:22:15.000000000 +0600
++++ jake/lib/namespace.js	2015-01-17 17:50:29.000000000 +0500
+@@ -11,9 +11,9 @@
+ Namespace.prototype = new (function () {
+ 
+   this.resolveTask = function(relativeName) {
+-    var parts = relativeName.split(':')
++    var parts = relativeName.split(jake.nsSep)
+       , name = parts.pop()
+-      , ns = this.resolveNamespace(parts.join(':'));
++      , ns = this.resolveNamespace(parts.join(jake.nsSep));
+ 
+     return (ns && ns.tasks[name]) ||
+         (this.parentNamespace &&
+@@ -21,14 +21,11 @@
+   };
+ 
+   this.resolveNamespace = function(relativeName) {
+-    var parts = relativeName.split(':')
+-      , ns;
+-
+-    if (!relativeName) {
++    if (!relativeName)
+       return this;
+-    }
+ 
+-    ns = this;
++    var parts = relativeName.split(jake.nsSep)
++      , ns = this;
+     for (var i = 0, ii = parts.length; ns && i < ii; i++) {
+       ns = ns.childNamespaces[parts[i]];
+     }
+@@ -38,14 +35,14 @@
+   };
+ 
+   this.matchRule = function(relativeName) {
+-    var parts = relativeName.split(':')
++    var parts = relativeName.split(jake.nsSep)
+       , name = parts.pop()
+-      , ns = this.resolveNamespace(parts.join(':'))
++      , ns = this.resolveNamespace(parts.join(jake.nsSep))
+       , rules = ns ? ns.rules : []
+       , r
+       , match;
+ 
+-    for (var p in rules) {
++    for (var p = 0, pp = rules.length; p < pp; p++) {
+       r = rules[p];
+       if (r.match(relativeName)) {
+         match = r;
+@@ -65,7 +62,7 @@
+       next = next.parentNamespace;
+     }
+     parts.pop(); // Remove 'default'
+-    return parts.reverse().join(':');
++    return parts.reverse().join(jake.nsSep);
+   };
+ 
+ })();
+diff -u -r -N '--exclude=.git' '--exclude=.gitignore' '--exclude=.jshintignore' '--exclude=.jshintrc' '--exclude=changelog.md' '--exclude=docs' '--exclude=LICENSE' '--exclude=*.swp' '--exclude=node_modules' '--exclude=site' '--exclude=.travis.yml' '--exclude=patcher.sh' '--exclude=jake' '--exclude=jake.bat' '--exclude=npm-debug.log' jake.o/lib/package_task.js jake/lib/package_task.js
+--- jake.o/lib/package_task.js	2014-10-04 00:22:15.000000000 +0600
++++ jake/lib/package_task.js	2015-01-17 17:50:29.000000000 +0500
+@@ -256,13 +256,6 @@
+     var doCommand = function (p) {
+       var filename = path.resolve(self.packageDir + '/' + self.packageName() +
+                                   _compressOpts[p].ext);
+-      if (process.platform == 'win32') {
+-          // Windows full path may have drive letter, which is going to cause
+-          // namespace problems, so strip it.
+-          if (filename.length > 2 && filename[1] == ':') {
+-            filename = filename.substr(2);
+-          }
+-      }
+       compressTaskArr.push(filename);
+ 
+       file(filename, [packageDirPath], function () {
+diff -u -r -N '--exclude=.git' '--exclude=.gitignore' '--exclude=.jshintignore' '--exclude=.jshintrc' '--exclude=changelog.md' '--exclude=docs' '--exclude=LICENSE' '--exclude=*.swp' '--exclude=node_modules' '--exclude=site' '--exclude=.travis.yml' '--exclude=patcher.sh' '--exclude=jake' '--exclude=jake.bat' '--exclude=npm-debug.log' jake.o/lib/program.js jake/lib/program.js
+--- jake.o/lib/program.js	2014-10-04 00:22:15.000000000 +0600
++++ jake/lib/program.js	2016-03-15 19:13:12.604598254 +0500
+@@ -68,16 +68,27 @@
+   , abbr: 'V'
+   , preempts: true
+   }
+-  // Alias lowercase v
+-, { full: 'version'
++, { full: 'verbose'
+   , abbr: 'v'
+-  , preempts: true
++  , expectValue: true
+   }
+ , { full: 'jakelibdir'
+   , abbr: 'J'
+   , preempts: false
+   , expectValue: true
+   }
++, { full: 'numjobs'
++  , abbr: 'j'
++  , expectValue: true
++  },
++  { full: 'sandbox'
++  , expectValue: true
++  },
++  { full: 'root'
++  , expectValue: true
++  },
++  { full: 'no-run'
++  },
+ ];
+ 
+ preempts = {
+@@ -99,13 +110,17 @@
+     + '{Options}:\n'
+     + '  -f,     --jakefile FILE            Use FILE as the Jakefile.\n'
+     + '  -C,     --directory DIRECTORY      Change to DIRECTORY before running tasks.\n'
+-    + '  -q,     --quiet                    Do not log messages to standard output.\n'
++    + '  -v,     --verbose                  Set output level.\n'
++    + '  -q,     --quiet                    Disable any output (same as -v0).\n'
+     + '  -B,     --always-make              Unconditionally make all targets.\n'
+-    + '  -T/ls,  --tasks                 Display the tasks (matching optional PATTERN) with descriptions, then exit.\n'
+-    + '  -J,     --jakelibdir JAKELIBDIR    Auto-import any .jake files in JAKELIBDIR. (default is \'jakelib\')\n'
++    + '  -j,     --numjobs                  Number of parallel tasks to use.\n'
++    + '  -T/ls,  --tasks                    Display the tasks (matching optional PATTERN)\n'
++    + '                                     with descriptions, then exit.\n'
++    + '  -J,     --jakelibdir JAKELIBDIR    Auto-import any .jake files in JAKELIBDIR.\n'
++    + '                                     (default is \'jakelib\')\n'
+     + '  -t,     --trace                    Enable full backtrace.\n'
+     + '  -h,     --help                     Display this help message.\n'
+-    + '  -V/v,   --version                  Display the Jake version.\n'
++    + '  -V,     --version                  Display the Jake version.\n'
+     + '';
+ 
+ Program = function () {
+@@ -117,14 +132,21 @@
+ 
+ Program.prototype = new (function () {
+ 
+-  this.handleErr = function (err) {
+-    if(jake.listeners('error').length !== 0) {
+-      jake.emit('error', err);
+-      return;
+-    }
+-
+-    var msg;
++  this.exit = function(code){
++    if (code)
++      jake.logger.warn('Exit initiated, wait running tasks to finish');
++    jake.Task.threads.exit(function(){
++      process.stdout.write('', function() {
++        process.stderr.write('', function() {
++          if (code===undefined)
++            code = jake.errorCode = jake.errorCode || 1;
++           process.exit(code);
++        });
++      });
++    });
++  };
+ 
++  this.handleErr = function (err) {
+     if (jake.listeners('error').length) {
+       jake.emit('error', err);
+       return;
+@@ -136,7 +158,7 @@
+     }
+     else {
+       if (err.stack) {
+-        msg = err.stack.split('\n').slice(0, 3).join('\n');
++        var msg = err.stack.split('\n').slice(0, 3).join('\n');
+         utils.logger.error(msg);
+         utils.logger.error('(See full trace by running task with --trace)');
+       }
+@@ -144,12 +166,7 @@
+         utils.logger.error(err.message);
+       }
+     }
+-    process.stdout.write('', function() {
+-      process.stderr.write('', function() {
+-        jake.errorCode = jake.errorCode || 1;
+-        process.exit(jake.errorCode);
+-      });
+-    });
++    this.exit(1);
+   };
+ 
+   this.parseArgs = function (args) {
+@@ -168,7 +185,11 @@
+     if (names && !Array.isArray(names)) {
+       throw new Error('Task names must be an array');
+     }
+-    this.taskNames = (names && names.length) ? names : ['default'];
++    if (names && names.length) {
++      this.taskNames = names.map(utils.file.normalize);
++    } else {
++      this.taskNames = ['default'];
++    }
+   };
+ 
+   this.setEnvVars = function (vars) {
+@@ -203,6 +224,10 @@
+     if (this.envVars) {
+       utils.mixin(process.env, this.envVars);
+     }
++    // setup sandbox & root dir
++    this.root = utils.file.normalize(this.opts.root||process.cwd());
++    if (this.opts.sandbox)
++        this.sandbox = utils.file.normalize(this.opts.sandbox);
+   };
+ 
+   this.run = function () {
+@@ -234,6 +259,9 @@
+     }
+ 
+     task('__root__', taskNames, function () {});
++    var tarjan = utils.tarjan.process(jake.Task, ['__root__']);
++    if (tarjan.scc.length)
++        die('Recursive dependencies found: '+JSON.stringify(tarjan.scc), 1);
+ 
+     rootTask = jake.Task.__root__;
+     rootTask.once('complete', function () {
+@@ -245,13 +273,9 @@
+ 
+ })();
+ 
+-die = function (msg) {
++die = function (msg, code) {
+   console.log(msg);
+-  process.stdout.write('', function() {
+-    process.stderr.write('', function() {
+-      process.exit();
+-	});
+-  });
++  Program.exit(code||0);
+ };
+ 
+ module.exports.Program = Program;
+diff -u -r -N '--exclude=.git' '--exclude=.gitignore' '--exclude=.jshintignore' '--exclude=.jshintrc' '--exclude=changelog.md' '--exclude=docs' '--exclude=LICENSE' '--exclude=*.swp' '--exclude=node_modules' '--exclude=site' '--exclude=.travis.yml' '--exclude=patcher.sh' '--exclude=jake' '--exclude=jake.bat' '--exclude=npm-debug.log' jake.o/lib/publish_task.js jake/lib/publish_task.js
+--- jake.o/lib/publish_task.js	2014-10-04 00:22:15.000000000 +0600
++++ jake/lib/publish_task.js	2015-01-17 17:50:29.000000000 +0500
+@@ -225,7 +225,7 @@
+       });
+ 
+       task('package', {async: true}, function () {
+-        var definePack = jake.Task['publish:definePackage']
++        var definePack = jake.Task['publish'+jake.nsSep+'definePackage']
+           , pack = jake.Task.package
+           , version = getPackageVersionNumber();
+ 
+@@ -280,27 +280,25 @@
+     });
+ 
+     var prefixNs = function (item) {
+-      return 'publish:' + item;
++      return 'publish' + jake.nsSep + item;
+     };
+ 
+     // Create aliases in the default namespace
+-    desc('Create a new version and release.');
++    desc('Version and release.');
+     task('publish', self.prereqs.concat(['version', 'release']
+         .map(prefixNs)));
+ 
+-    desc('Release the existing version.');
+-    task('publishExisting', self.prereqs.concat(['release']
+-        .map(prefixNs)));
+-
++    desc('Increment the verison number.');
+     task('version', ['fetchTags', 'getCurrentBranch', 'pushVersion']
+         .map(prefixNs));
+ 
++    desc('Package, publish, and clean up.');
+     task('release', ['package', 'publish', 'cleanup']
+         .map(prefixNs));
+ 
+     // Invoke proactively so there will be a callable 'package' task
+     // which can be used apart from 'publish'
+-    jake.Task['publish:definePackage'].invoke();
++    jake.Task['publish'+jake.nsSep+'definePackage'].invoke();
+   };
+ 
+ })();
+diff -u -r -N '--exclude=.git' '--exclude=.gitignore' '--exclude=.jshintignore' '--exclude=.jshintrc' '--exclude=changelog.md' '--exclude=docs' '--exclude=LICENSE' '--exclude=*.swp' '--exclude=node_modules' '--exclude=site' '--exclude=.travis.yml' '--exclude=patcher.sh' '--exclude=jake' '--exclude=jake.bat' '--exclude=npm-debug.log' jake.o/lib/rule.js jake/lib/rule.js
+--- jake.o/lib/rule.js	2014-10-04 00:22:15.000000000 +0600
++++ jake/lib/rule.js	2015-01-17 17:50:29.000000000 +0500
+@@ -13,7 +13,7 @@
+   // - 'ns'     : foo
+   // - 'name'   : bin/a%.c
+   this.split = function(task) {
+-    var parts = task.split(':')
++    var parts = task.split(jake.nsSep)
+     , name  = parts.pop()
+     , ns    = this.resolveNS( parts );
+     return {
+@@ -258,9 +258,9 @@
+ 
+     // TODO: Write a utility function that appends a
+     // taskname to a namespace path
+-    src = nsPath.split(':').filter(function (item) {
++    src = nsPath.split(jake.nsSep).filter(function (item) {
+       return !!item;
+-    }).concat(src).join(':');
++    }).concat(src).join(jake.nsSep);
+ 
+     // Generate the prerequisite for the matching task.
+     //    It is the original prerequisites plus the prerequisite
+@@ -307,7 +307,7 @@
+       tNs = jake.currentNamespace;
+       jake.currentNamespace = ns;
+       createdTask = jake.createTask('file', name, prereqs, action, opts);
+-      createdTask.source = src.split(':').pop();
++      createdTask.source = src.split(jake.nsSep).pop();
+       jake.currentNamespace = tNs;
+ 
+       return createdTask;
+diff -u -r -N '--exclude=.git' '--exclude=.gitignore' '--exclude=.jshintignore' '--exclude=.jshintrc' '--exclude=changelog.md' '--exclude=docs' '--exclude=LICENSE' '--exclude=*.swp' '--exclude=node_modules' '--exclude=site' '--exclude=.travis.yml' '--exclude=patcher.sh' '--exclude=jake' '--exclude=jake.bat' '--exclude=npm-debug.log' jake.o/lib/task/task.js jake/lib/task/task.js
+--- jake.o/lib/task/task.js	2014-10-04 00:22:15.000000000 +0600
++++ jake/lib/task/task.js	2016-04-26 11:38:32.243176820 +0500
+@@ -4,7 +4,6 @@
+   , Task
+   , TaskBase
+   , utils = require('../utils')
+-  , async = require('async')
+   , rule; // Lazy-require this at the bottom
+ 
+ var UNDEFINED_VALUE;
+@@ -38,22 +37,69 @@
+ 
+ util.inherits(Task, EventEmitter);
+ 
++function Pool(max_running){
++  var running = 0;
++  var pool = [];
++  var stopped = false;
++
++  function resolver(func){
++    var called = false;
++    return function(){
++      running--;
++      setImmediate(run);
++      if (!called && func){
++        called = true;
++        return func.apply(this, arguments);
++      }
++    };
++  }
++
++  function run(){
++    if (stopped||pool.length<=0||running>max_running)
++      return;
++    for (var i=running; i<max_running; ++i){
++      var task = pool.shift();
++      if (!task||!task.callback)
++        return;
++      running++;
++      task.callback(resolver(task.resolve), resolver(task.reject));
++    }
++  }
++
++  this.exit = function(cb){
++      stopped = true;
++      if (running<=0)
++          return cb();
++      // Try next cycle
++      setImmediate(this.exit.bind(this, cb));
++  };
++
++  this.push = function(cb, rs, rj){
++    pool.push({callback: cb, resolve: rs, reject: rj});
++    setImmediate(run);
++  };
++}
++
+ TaskBase = new (function () {
+ 
+   // Parse any positional args attached to the task-name
+-  var parsePrereqName = function (name) {
+-        var taskArr = name.split('[')
+-          , taskName = taskArr[0]
+-          , taskArgs = [];
+-        if (taskArr[1]) {
+-          taskArgs = taskArr[1].replace(/\]$/, '');
+-          taskArgs = taskArgs.split(',');
+-        }
+-        return {
+-          name: taskName
+-        , args: taskArgs
+-        };
+-      };
++  var parsePrereqName = function(name){
++      // Should use regex
++      var args = [], idx = name.indexOf('[');
++      if (idx>0){
++          args = name.substr(idx+1, name.indexOf(']', idx)).split(',');
++          name = name.substr(0, idx);
++      }
++      return {name: name, args: args};
++  };
++
++  Task.threads = null;
++  function is_async(base){
++    var threads = parseInt(jake.program.opts.numjobs)||1;
++    if (!Task.threads)
++        Task.threads = new Pool(threads);
++    return threads>1;
++  }
+ 
+   /**
+     @name jake.Task#event:complete
+@@ -63,33 +109,33 @@
+   this.init = function (name, prereqs, action, options) {
+     var opts = options || {};
+ 
+-    this._currentPrereqIndex = 0;
++    this._prereqsPending = 0;
+ 
+     this.name = name;
+-    this.prereqs = prereqs;
+     this.action = action;
+-    this.async = false;
+     this.taskStatus = Task.runStatuses.UNSTARTED;
+     this.fullName = null;
+     this.description = null;
+     this.args = [];
+     this.value = UNDEFINED_VALUE;
+     this.namespace = null;
+-    this.parallelLimit = 1;
+-
+-    // Support legacy async-flag -- if not explicitly passed or falsy, will
+-    // be set to empty-object
+-    if (typeof opts == 'boolean' && opts === true) {
+-      this.async = true;
+-    }
+-    else {
+-      if (opts.async) {
+-        this.async = true;
+-      }
+-      if (opts.parallelLimit) {
+-        this.parallelLimit = opts.parallelLimit;
+-      }
+-    }
++    this.origin = opts.origin;
++    // Should initialize thread pool
++    this.async = is_async();
++    if (opts.async)
++      this.async = opts.async;
++
++    this._prereqs = prereqs||[];
++    this.__defineGetter__('prereqs', function(){
++      var pr = this._prereqs;
++      if (typeof pr==='function')
++        pr = pr.call(this);
++      if(Array.isArray(pr) && pr.indexOf(this.name) !== -1)
++        throw new Error('Cannot use prereq '+
++              this.name + ' as a dependency of itself');
++      delete this.prereqs;
++      return this.prereqs = pr;
++    });
+   };
+ 
+   /**
+@@ -100,8 +146,16 @@
+    */
+   this.invoke = function () {
+     jake._invocationChain.push(this);
++    this.emit('invoke');
+     this.args = Array.prototype.slice.call(arguments);
+-    this.runPrereqs();
++    var prereqs = this.prereqs||[];
++    this._prereqsPending = prereqs.length;
++    if (this.async){
++        var callback = this.prereqsComplete.bind(this);
++        for (var i=0; i<prereqs.length; i++)
++            this.prereqImmediate(prereqs[i], callback);
++    }
++    this.prereqsComplete();
+   };
+ 
+   /**
+@@ -117,85 +171,44 @@
+     this.run();
+   };
+ 
+-  this.runPrereqs = function () {
+-    if (this.prereqs && this.prereqs.length) {
+-      if(this.parallelLimit > 1) {
+-        var currenttask = this;
+-        async.eachLimit(currenttask.prereqs,currenttask.parallelLimit,function(name, cb) {
+-
+-          var parsed = parsePrereqName(name);
+-
+-          var prereq = currenttask.namespace.resolveTask(parsed.name) ||
+-          jake.attemptRule(name, currenttask.namespace, 0) ||
+-          jake.createPlaceholderFileTask(name, currenttask.namespace);
+-
+-          if (!prereq) {
+-            throw new Error('Unknown task "' + name + '"');
+-          }
+-
+-          if (prereq.taskStatus === Task.runStatuses.DONE) {
+-            //prereq already done, return
+-            cb();
+-          } else {
+-            //wait for complete before calling cb
+-            prereq.once('complete', function () {
+-              cb();
+-            });
+-            //start te prereq if we are the first to encounter it
+-            if(prereq.taskStatus === Task.runStatuses.UNSTARTED) {
+-              prereq.taskStatus = Task.runStatuses.RUNNING;
+-              prereq.invoke.apply(prereq, parsed.args);
+-            }
+-          }
+-        }, function(err) {
+-          //async callback is called after all prereqs have run.
+-          currenttask.run();
+-        });
+-      } else {
+-        this.nextPrereq();
+-      }
+-    }
+-    else {
+-      this.run();
+-    }
+-  };
+-
+-  this.nextPrereq = function () {
+-    var self = this
+-      , index = this._currentPrereqIndex
+-      , name = this.prereqs[index]
+-      , prereq
+-      , parsed
+-      , filePath
+-      , stats;
+-
+-    if (name) {
+-
+-      parsed = parsePrereqName(name);
+-
+-      prereq = this.namespace.resolveTask(parsed.name) ||
++  this.invokePrereq = function(name, cb) {
++    if (!name)
++      throw new Error('Prereq without name invoked from '+this.name);
++    var parsed = parsePrereqName(name);
++    var prereq = this.namespace.resolveTask(parsed.name) ||
+           jake.attemptRule(name, this.namespace, 0) ||
+-          jake.createPlaceholderFileTask(name, this.namespace);
++          jake.createDummyFileTask(name, this.namespace);
+ 
+-      if (!prereq) {
+-        throw new Error('Unknown task "' + name + '"');
+-      }
+-
+-      // Do when done
+-      if (prereq.taskStatus === Task.runStatuses.DONE) {
+-        self.handlePrereqComplete(prereq);
+-      } else {
+-        prereq.once('complete', function () {
+-          self.handlePrereqComplete(prereq);
+-        });
+-        if(prereq.taskStatus === Task.runStatuses.UNSTARTED) {
+-           prereq.taskStatus = Task.runStatuses.RUNNING;
+-           prereq.invoke.apply(prereq, parsed.args);
+-        }
++    if (!prereq)
++      throw new Error('Unknown task "'+name+
++          '", possibly originated in: '+this.origin);
++
++    //Test for circular invocation
++    if (prereq === this) {
++      cb(new Error("Cannot use prereq " + prereq.name +
++          " as a dependency of itself"));
++    }
++
++    // Do when done
++    if (prereq.taskStatus === Task.runStatuses.DONE) {
++      //prereq already done, return
++      cb(null, name);
++    } else {
++      //wait for complete before calling cb
++      prereq.once('complete', cb.bind(null, null, name));
++      //start te prereq if we are the first to encounter it
++      if(prereq.taskStatus === Task.runStatuses.UNSTARTED) {
++        prereq.taskStatus = Task.runStatuses.STARTED;
++        this.emit('prereq', prereq);
++        prereq.invoke.apply(prereq, parsed.args);
+       }
+     }
+   };
+ 
++  this.prereqImmediate = function(name, cb){
++      setImmediate(this.invokePrereq.bind(this, name, cb));
++  };
++
+   /**
+     @name jake.Task#reenable
+     @function
+@@ -210,78 +223,62 @@
+       prereqs = this.prereqs;
+       for (var i = 0, ii = prereqs.length; i < ii; i++) {
+         prereq = jake.Task[prereqs[i]];
+-        if (prereq) {
++        if (prereq)
+           prereq.reenable(deep);
+-        }
+       }
+     }
+   };
+ 
+-  this.handlePrereqComplete = function (prereq) {
+-    var self = this;
+-    this._currentPrereqIndex++;
+-    if (this._currentPrereqIndex < this.prereqs.length) {
+-      setTimeout(function () {
+-        self.nextPrereq();
+-      }, 0);
+-    }
+-    else {
++  this.prereqsComplete = function(err, prereq){
++    if (err)
++      throw err;
++    if (!this._prereqsPending) {
+       this.run();
++    } else {
++      if (!this.async) {
++          var next = this.prereqs.length-this._prereqsPending;
++          this.prereqImmediate(this.prereqs[next],
++              this.prereqsComplete.bind(this));
++      }
++      this._prereqsPending--;
+     }
+   };
+ 
+-  this.isNeeded = function () {
+-    if (this.taskStatus === Task.runStatuses.DONE || typeof this.action != 'function') {
+-      return false;
+-    }
+-    return true;
++  this.isNeeded = function(){
++    return this.taskStatus !== Task.runStatuses.DONE &&
++      typeof this.action == 'function';
+   };
+ 
+-  this.run = function () {
+-    var runAction = this.isNeeded()
+-      , val;
+-
+-    if (runAction) {
+-      this.emit('start');
++  this.run = function(){
++    var runAction = this.isNeeded();
++    if (!runAction){
++      this.emit('skip');
++      return this.complete();
++    }
++    var self = this;
++    return Task.threads.push(function(resolve, reject){
++      var val;
++      self.emit('start');
+       try {
+-        val = this.action.apply(this, this.args);
++        if (typeof self.action == 'function')
++          val = self.action.apply(self, self.args);
+ 
+         if (typeof val == 'object' && typeof val.then == 'function') {
+-          this.async = true;
+-
+-          val.then(
+-            function(result) {
+-              setTimeout(function() {
+-                  complete(result);
+-                },
+-                0);
+-            },
+-            function(err) {
+-              setTimeout(function() {
+-                  fail(err);
+-                },
+-                0);
+-            });
++          val.then(resolve, reject);
++        } else {
++          resolve(val);
+         }
+       }
+-      catch (e) {
+-        this.emit('error', e);
+-        return; // Bail out, not complete
++      catch (err) {
++        reject(err); // Bail out, not complete
+       }
+-    }
+-    else {
+-      this.emit('skip');
+-    }
+-
+-    if (!(runAction && this.async)) {
+-      this.complete(val);
+-    }
++    }, this.complete.bind(this), this.emit.bind(this, 'error'));
+   };
+ 
+   this.complete = function (val) {
+-    jake._invocationChain.splice(jake._invocationChain.indexOf(this),1);
++    jake._invocationChain.splice(jake._invocationChain.indexOf(this), 1);
+ 
+-    this._currentPrereqIndex = 0;
++    this._prereqsPending = 0;
+     this.taskStatus = Task.runStatuses.DONE;
+ 
+     // If 'complete' getting called because task has been
+@@ -297,11 +294,11 @@
+ utils.mixin(Task.prototype, TaskBase);
+ 
+ Task.getBaseNamespacePath = function (fullName) {
+-  return fullName.split(':').slice(0, -1).join(':');
++  return fullName.split(jake.nsSep).slice(0, -1).join(jake.nsSep);
+ };
+ 
+ Task.getBaseTaskName = function (fullName) {
+-  return fullName.split(':').pop();
++  return fullName.split(jake.nsSep).pop();
+ };
+ 
+ //The task is in one of three states
+diff -u -r -N '--exclude=.git' '--exclude=.gitignore' '--exclude=.jshintignore' '--exclude=.jshintrc' '--exclude=changelog.md' '--exclude=docs' '--exclude=LICENSE' '--exclude=*.swp' '--exclude=node_modules' '--exclude=site' '--exclude=.travis.yml' '--exclude=patcher.sh' '--exclude=jake' '--exclude=jake.bat' '--exclude=npm-debug.log' jake.o/lib/test_task.js jake/lib/test_task.js
+--- jake.o/lib/test_task.js	2014-10-04 00:22:15.000000000 +0600
++++ jake/lib/test_task.js	2015-02-26 15:55:59.000000000 +0500
+@@ -101,7 +101,7 @@
+   }
+ 
+   task(this.testName, prereqs, {async: true}, function () {
+-    var t = jake.Task[self.testName + ':run'];
++    var t = jake.Task[self.testName + jake.nsSep + 'run'];
+     t.on('complete', function () {
+       complete();
+     });
+@@ -162,20 +162,12 @@
+               // A wrapped function that passes in the `next` function
+               // for any tasks that run asynchronously
+               return function () {
+-                var cb
+-                  , msg;
+-                if (a.length) {
++                var cb;
++                if (a.length)
+                   cb = next;
+-                }
+                 if (!(n == 'before' || n == 'after' ||
+                     /_beforeEach$/.test(n) || /_afterEach$/.test(n))) {
+-                  if (n.toLowerCase().indexOf('test') === 0) {
+-                    msg = n;
+-                  }
+-                  else {
+-                    msg = 'test ' + n;
+-                  }
+-                  jake.logger.log(n);
++                  jake.logger.log(/^test/i.test(n) ? 'test' : '', n);
+                 }
+                 // 'this' will be the task when action is run
+                 return a.call(this, cb);
+@@ -195,7 +187,7 @@
+           // Create a namespace for each filename, so test-name collisions
+           // won't be a problem
+           namespace(file, function () {
+-            var testPrefix = self.testName + 'Exec:' + file + ':'
++            var testPrefix = self.testName+'Exec'+jake.nsSep+file+jake.nsSep
+               , testName;
+             // Dummy task for displaying file banner
+             testName = '*** Running ' + file + ' ***';
+diff -u -r -N '--exclude=.git' '--exclude=.gitignore' '--exclude=.jshintignore' '--exclude=.jshintrc' '--exclude=changelog.md' '--exclude=docs' '--exclude=LICENSE' '--exclude=*.swp' '--exclude=node_modules' '--exclude=site' '--exclude=.travis.yml' '--exclude=patcher.sh' '--exclude=jake' '--exclude=jake.bat' '--exclude=npm-debug.log' jake.o/lib/utils/index.js jake/lib/utils/index.js
+--- jake.o/lib/utils/index.js	2014-10-04 00:22:15.000000000 +0600
++++ jake/lib/utils/index.js	2015-01-21 21:40:49.000000000 +0500
+@@ -23,6 +23,8 @@
+   , EventEmitter = require('events').EventEmitter
+   , utils = require('utilities')
+   , logger = require('./logger')
++  //, tarjan = require('./tarjan')
++  , fs = require('fs')
+   , Exec;
+ 
+ var parseArgs = function (argumentsObj) {
+@@ -145,6 +147,17 @@
+     return new Exec(a, b, c);
+   };
+ 
++  function reduce_uniq(p, c){
++      p[c] = 1;
++      return p;
++  }
++  this.uniq = function(arr){
++      if (!arr)
++          return [];
++      // Order may be lost
++      return Object.keys(arr.reduce(reduce_uniq, {}));
++  };
++
+ })());
+ 
+ Exec = function () {
+@@ -245,6 +258,170 @@
+ 
+ utils.Exec = Exec;
+ utils.logger = logger;
++// tarjan.js
++function Tarjan(){
++    this.index = 0;
++    this.stack = [];
++    this.scc = [];
++}
++function Vertex(name){
++    this.name = name || null;
++    this.connections = [];
++    this.index= -1;
++    this.lowlink = -1;
++}
++var TJ = {};
++TJ.process = function(tasks, list){
++    // convert all tasks to graph
++    var cache = {}, vertices = [];
++    function to_vertex(task){
++        if (!task)
++            return;
++        var name = task.fullName;
++        if (name in cache)
++            return cache[name];
++        var vertex = cache[name] = new Vertex(name);
++        vertices.push(vertex);
++        for (var p=0; p<task.prereqs.length; p++) {
++            var child = to_vertex(tasks[task.prereqs[p]]);
++            if (child)
++                vertex.connections.push(child);
++        }
++        return vertex;
++    };
++    var tlist = list||Object.keys(tasks);
++    for (var t=0, tt=tlist.length; t<tt; t++)
++        to_vertex(tasks[tlist[t]]);
++    return TJ.run(vertices);
++};
++TJ.run = function(vertices){
++    var T = new Tarjan();
++    var S = {cache: {}, stack: []};
++    for (var i=0; i<vertices.length; i++) {
++        var vertex = vertices[i];
++        if (vertex.index<0)
++            TJ.strong(T, S, vertices[i]);
++    }
++    return T;
++};
++TJ.strong = function(T, S, vertex){
++    // Set the depth index for v to the smallest unused index
++    vertex.index = T.index;
++    vertex.lowlink = T.index;
++    T.index = T.index + 1;
++    S.stack.push(vertex);
++    if (vertex.name in S.cache)
++        throw new Error('Duplicated vertex '+vertex.name+' found');
++    S.cache[vertex.name] = vertex;
++
++    // Consider successors of v
++    // aka... consider each vertex in vertex.connections
++    for (var c=0; c<vertex.connections.length; c++){
++        var v = vertex, w = vertex.connections[c];
++        if (w.index<0){
++            // Successor w has not yet been visited; recurse on it
++            TJ.strong(T, S, w);
++            v.lowlink = Math.min(v.lowlink, w.lowlink);
++        } else if (w.name in S.cache){
++            // Successor w is in stack S and hence in the current SCC
++            v.lowlink = Math.min(v.lowlink, w.index);
++        }
++    }
++
++    // If v is a root node, pop the stack and generate an SCC
++    if (vertex.lowlink==vertex.index){
++        // start a new strongly connected component
++        var vertices = [];
++        var w = null;
++        if (T.stack.length>0){
++            do {
++                w = T.stack.pop();
++                delete S.cache[w.name]
++                // add w to current strongly connected component
++                vertices.push(w);
++            } while (vertex.name != w.name);
++        }
++        // output the current strongly connected components
++        // only if 2 or more components strongly connected
++        if (vertices.length>1)
++            T.scc.push(vertices);
++    }
++};
++utils.tarjan = TJ;
++// file.js
++var E = {};
++var path = require('path');
++E.is_win = /^win/.test(process.platform);
++E.exists = function(path){
++    return fs.existsSync(path); };
++E.is_file = function(path){
++    var stat;
++    try { stat = fs.statSync(path); }
++    catch(e){ return false; }
++    return stat.isFile();
++};
++E.is_dir = function(path){
++    var stat;
++    try { stat = fs.statSync(path); }
++    catch(e){ return false; }
++    return stat.isDirectory();
++};
++if (E.is_win)
++{
++    E.cygwin_root = E.is_dir('C:/cygwin') ? 'C:/cygwin' :
++	E.is_dir('D:/cygwin') ? 'D:/cygwin' : null;
++}
++E.cyg2unix = function(path){
++    if (!E.is_win)
++	return path;
++    // /cygdrive/X/yyy --> X:/yyy
++    path = path.replace(/^\/cygdrive\/(.)(\/(.*))?$/, "$1:/$3");
++    // /xxx --> c:/cygwin/xxx
++    path = path.replace(/^\//, E.cygwin_root.toLowerCase()+'/');
++    return path;
++};
++E.unix2win = function(path){
++    if (!E.is_win)
++	return path;
++    // c:/xxx -> C:/xxx
++    path = path.replace(/^[cd]:/, function(s){ return s.toUpperCase(); });
++    // C:/xxx/yyy -> C:\xxx\yyy
++    path = path.replace(/\//g, '\\');
++    return path;
++};
++E.win2unix = function(path, force)
++{
++    if (!force && !E.is_win)
++        return path;
++    // C:\xxx\yyy --> C:/xxx/yyy
++    path = path.replace(/\\/g, '/');
++    // C:/ --> c:/
++    path = path.replace(/^[cd]:/i, function(s){ return s.toLowerCase(); });
++    return path;
++};
++E.win2cyg = function(path){
++    if (!E.is_win)
++	return path;
++    path = E.win2unix(path);
++    var escaped_root = E.cygwin_root.replace(/([\?\\\/\[\]+*])/g, '\\$1');
++    path = path.replace(new RegExp("^"+escaped_root+"/?", "i"), '/');
++    path = path.replace(/^[cd]:/i, function(s){
++	return "/cygdrive/"+s[0].toLowerCase(); });
++    return path;
++};
++E.is_absolute = function(path){
++    return /^(\/|([cd]:))/i.test(path); };
++E.absolutize = function(p, d1, d2){
++    if (!p||E.is_absolute(p))
++        return p;
++    if (d2&&E.exists(d2+'/'+p))
++        return d2+'/'+p;
++    d1 = d1||process.cwd();
++    return d1+'/'+p;
++};
++E.normalize = function(p){
++    return E.cyg2unix(E.win2unix(path.normalize(p))); };
++utils.mixin(utils.file, E);
+ 
+ module.exports = utils;
+ 
+diff -u -r -N '--exclude=.git' '--exclude=.gitignore' '--exclude=.jshintignore' '--exclude=.jshintrc' '--exclude=changelog.md' '--exclude=docs' '--exclude=LICENSE' '--exclude=*.swp' '--exclude=node_modules' '--exclude=site' '--exclude=.travis.yml' '--exclude=patcher.sh' '--exclude=jake' '--exclude=jake.bat' '--exclude=npm-debug.log' jake.o/lib/utils/logger.js jake/lib/utils/logger.js
+--- jake.o/lib/utils/logger.js	2014-10-04 00:22:15.000000000 +0600
++++ jake/lib/utils/logger.js	2015-04-09 23:07:15.000000000 +0500
+@@ -1,24 +1,32 @@
++'use strict'; /*jslint node:true*//*global jake:false*/
+ var util = require('util');
+-
+-var logger = new (function () {
+-  var _output = function (type, out) {
+-    var quiet = typeof jake != 'undefined' && jake.program &&
+-        jake.program.opts && jake.program.opts.quiet
+-      , msg;
+-    if (!quiet) {
+-      msg = typeof out == 'string' ? out : util.inspect(out);
+-      console[type](msg);
++var E = module.exports = function(level, args){
++    if (!E.is(level))
++        return;
++    if (!E.is(L.DEBUG))
++        console[level<=L.WARN ? 'error' : 'log'].apply(console, args);
++    else {
++        // console is hardly buffered, write to stdio directly in debug mode
++        var output = '';
++        for (var i=0; i<args.length; i++){
++            output += (i ? ' ' : '')+(typeof args[i]=='string' ?
++                args[i] : util.inspect(args[i]));
++        }
++        process[level<=L.WARN ? 'stderr' : 'stdout'].write(output+'\n');
+     }
+-  };
+-
+-  this.log = function (out) {
+-    _output('log', out);
+-  };
+-
+-  this.error = function (out) {
+-    _output('error', out);
+-  };
+-
+-})();
+-
+-module.exports = logger;
++};
++E.set_level = function(l){
++    var opts = jake && jake.program ? jake.program.opts : {};
++    E.level = l!==undefined ? l : opts.quiet ? 0 :
++        'verbose' in opts ? parseInt(opts.verbose) : L.LOG;
++};
++E.is = function(level){
++    if (E.level===undefined)
++        E.set_level();
++    return level<=E.level;
++};
++var L = E.L = {ERR: 1, ERROR: 1, WARN: 2, LOG: 3, INFO: 4, DEBUG: 5, TRACE: 6};
++Object.keys(L).forEach(function(l){
++    var level = L[l];
++    E[l.toLowerCase()] = function(){ return E(level, arguments); };
++});
+\ No newline at end of file

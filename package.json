@@ -1,34 +1,47 @@
 {
-  "name": "jake",
+  "author": "Matthew Eernisse <mde@fleegix.org> (http://fleegix.org)",
+  "bin": {
+    "jake": "bin/cli.js"
+  },
+  "bugs": {
+    "url": "https://github.com/mde/jake/issues"
+  },
+  "dependencies": {
+    "async": "0.9.x",
+    "chalk": "0.4.x",
+    "filelist": "0.0.x",
+    "minimatch": "0.2.x",
+    "utilities": "1.0.x"
+  },
+  "deprecated": false,
   "description": "JavaScript build tool, similar to Make or Rake",
+  "devDependencies": {
+    "q": "0.9.x"
+  },
+  "engines": {
+    "node": "*"
+  },
+  "homepage": "https://github.com/mde/jake#readme",
   "keywords": [
     "build",
     "cli",
     "make",
     "rake"
   ],
-  "version": "8.0.10",
-  "author": "Matthew Eernisse <mde@fleegix.org> (http://fleegix.org)",
-  "bin": {
-    "jake": "./bin/cli.js"
-  },
   "main": "./lib/jake.js",
+  "name": "@luminati-io/jake",
+  "preferGlobal": true,
   "repository": {
     "type": "git",
     "url": "git://github.com/mde/jake.git"
   },
-  "preferGlobal": true,
-  "dependencies": {
-    "filelist": "0.0.x",
-    "minimatch": "0.2.x",
-    "chalk": "0.4.x",
-    "utilities": "1.0.x",
-    "async": "0.9.x"
+  "version": "8.0.10-lum.1",
+  "directories": {
+    "lib": "lib",
+    "test": "test"
   },
-  "devDependencies": {
-    "q": "0.9.x"
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "engines": {
-    "node": "*"
-  }
+  "license": "ISC"
 }

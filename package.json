@@ -35,7 +35,7 @@
     "type": "git",
     "url": "git://github.com/mde/jake.git"
   },
-  "version": "8.0.10-lum.1",
+  "version": "8.0.10-lum.2",
   "directories": {
     "lib": "lib",
     "test": "test"

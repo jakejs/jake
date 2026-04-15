@@ -1,0 +1,9 @@
+site/
+docs/
+changelog.md
+.jshintignore
+.jshintrc
+.travis.yml
+jake
+jake.bat
+*.tgz

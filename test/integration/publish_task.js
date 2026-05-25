@@ -29,4 +29,20 @@ suite('publishTask', function () {
     assert.equal('Cleaned up package', out);
   });
 
+  test('package can be used as a prerequisite', function () {
+    let out = exec(`${JAKE_CMD} -q packageAsPrereq`, {timeout: 2000})
+      .toString().trim();
+    let expected = [
+      'Created package for zerb v0.0.1'
+      , 'true'
+    ].join('\n');
+    assert.equal(expected, out);
+  });
+
+  test('createPackage returns a promise for package completion', function () {
+    let out = exec(`${JAKE_CMD} -q createPackagePromise`, {timeout: 2000})
+      .toString().trim();
+    assert.equal('true', out);
+  });
+
 });

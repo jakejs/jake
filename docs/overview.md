@@ -1106,6 +1106,30 @@ following steps:
 6. Publish it to NPM
 7. Clean up the package
 
+The generated `publish:package` task waits for package archive creation to
+finish before completing, so it can be used as a prerequisite for other tasks.
+The `PublishTask` instance also exposes `createPackage`, which returns a
+promise that resolves after the archive has been created:
+
+```javascript
+var pub = publishTask('foo', function () {
+  this.packageFiles.include([
+    'index.js'
+  , 'package.json'
+    ]);
+});
+
+task('test:packaging', ['publish:package'], function () {
+  // The package archive exists here.
+});
+
+task('test:packaging:direct', function () {
+  return pub.createPackage().then(function () {
+    // The package archive exists here.
+  });
+});
+```
+
 If you want to publish to a private NPM repository, you can specify a custom publishing command:
 
 ```javascript
@@ -1184,4 +1208,3 @@ This is also a JavaScript port of Rake, which runs on the Narwhal platform.
 
 Licensed under the Apache License, Version 2.0
 (<http://www.apache.org/licenses/LICENSE-2.0>)
-

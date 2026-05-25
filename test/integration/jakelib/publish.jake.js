@@ -25,7 +25,7 @@ fs.writeFileSync('package.json', '{"version": "0.0.1"}');
 mkdirP('tmp_publish');
 fs.writeFileSync('tmp_publish/foo.txt', 'FOO');
 
-publishTask('zerb', function () {
+let pub = publishTask('zerb', function () {
   this.packageFiles.include([
     'package.json'
     , 'tmp_publish/**'
@@ -39,6 +39,8 @@ publishTask('zerb', function () {
     return 'v0.0';
   };
 });
+
+let packagePath = './pkg/zerb-v0.0.1.tar.gz';
 
 jake.setTaskTimeout(5000);
 
@@ -61,4 +63,21 @@ task('cleanupUsesDoneEvent', function () {
     cleanup.once('_done', resolve);
     cleanup.invoke();
   });
+});
+
+task('packageAsPrereq', ['publish:package'], function () {
+  console.log(fs.existsSync(packagePath));
+  rmRf('pkg', {silent: true});
+  rmRf('tmp_publish', {silent: true});
+  rmRf('package.json', {silent: true});
+});
+
+task('createPackagePromise', function () {
+  return pub.createPackage()
+    .then(function () {
+      console.log(fs.existsSync(packagePath));
+      rmRf('pkg', {silent: true});
+      rmRf('tmp_publish', {silent: true});
+      rmRf('package.json', {silent: true});
+    });
 });

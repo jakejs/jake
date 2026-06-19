@@ -22,7 +22,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/jakejs/jake.git"
+    "url": "git+https://github.com/jakejs/jake.git"
   },
   "preferGlobal": true,
   "dependencies": {

@@ -19,6 +19,7 @@
 const PROJECT_DIR = process.env.PROJECT_DIR;
 
 let fs = require('fs');
+let exec = require('child_process').execSync;
 let { publishTask, rmRf, mkdirP } = require(`${PROJECT_DIR}/lib/jake`);
 
 fs.writeFileSync('package.json', '{"version": "0.0.1"}');
@@ -30,7 +31,12 @@ let pub = publishTask('zerb', function () {
     'package.json'
     , 'tmp_publish/**'
   ]);
-  this.publishCmd = 'node -p -e "\'%filename\'"';
+  if (process.env.ZERB_FAIL) {
+    this.publishCmd = 'node -e "process.exit(1)"';
+  }
+  else {
+    this.publishCmd = 'node -p -e "\'%filename\'"';
+  }
   this.gitCmd = 'echo';
   this.scheduleDelay = 0;
 
@@ -44,10 +50,16 @@ let packagePath = './pkg/zerb-v0.0.1.tar.gz';
 
 jake.setTaskTimeout(5000);
 
-jake.Task['publish'].on('complete', function () {
+let cleanupFixture = function () {
+  rmRf('pkg', {silent: true});
   rmRf('tmp_publish', {silent: true});
   rmRf('package.json', {silent: true});
-});
+};
+
+jake.Task['publish'].on('complete', cleanupFixture);
+if (process.env.ZERB_FAIL) {
+  process.on('exit', cleanupFixture);
+}
 
 task('cleanupUsesDoneEvent', function () {
   let cleanup = jake.Task['publish:cleanup'];
@@ -67,6 +79,14 @@ task('cleanupUsesDoneEvent', function () {
 
 task('packageAsPrereq', ['publish:package'], function () {
   console.log(fs.existsSync(packagePath));
+  rmRf('pkg', {silent: true});
+  rmRf('tmp_publish', {silent: true});
+  rmRf('package.json', {silent: true});
+});
+
+task('listPackage', ['publish:package'], function () {
+  let out = exec('tar -tzvf ' + packagePath).toString();
+  console.log(out.trim());
   rmRf('pkg', {silent: true});
   rmRf('tmp_publish', {silent: true});
   rmRf('package.json', {silent: true});

@@ -942,6 +942,7 @@ directory.
  - `archiveNoBaseDir` {Boolean=false} Simple option for performing the archive on the contents of the directory instead of the directory itself
  - `archiveChangeDir` {String=null} Equivalent to the '-C' command for the `tar` and `jar` commands. ("Change to this directory before adding files.")
  - `archiveContentDir` {String=null} Specifies the files and directories to include in the package-archive. If unset, this will default to the main package directory -- i.e., name + version.
+ - `archiveRootDir` {String=null} If set, tar archives put every file under a single top-level directory with this name instead of name + version, and contain only file entries. Set it to 'package' to create tarballs the NPM registry accepts (PublishTask does this by default). Takes precedence over `archiveNoBaseDir`, `archiveChangeDir`, and `archiveContentDir` for tar archives.
 
 ### Windows-specific warning
 
@@ -1099,12 +1100,23 @@ The PublishTask will automatically create a `publish` task which performs the
 following steps:
 
 1. Bump the version number in your package.json
-2. Commit change in git, push it to GitHub
-3. Create a git tag for the version
-4. Push the tag to GitHub
-5. Package the new version of your project
-6. Publish it to NPM
-7. Clean up the package
+2. Commit the change in git, and create a git tag for the version
+3. Package the new version of your project
+4. Publish it to NPM
+5. Clean up the package
+6. Push the commit and the tag to GitHub
+
+The commit and tag are pushed only after the publish succeeds, so a failed
+publish doesn't leave a public tag without a matching release. If packaging or
+publishing fails, Jake prints the commands to retry the release (`jake
+publishExisting`, then push) or to abandon the version.
+
+The publish command runs in your terminal, so NPM can prompt for two-factor
+authentication (a one-time password or a browser login). Run `jake publish`
+from a terminal, logged in with `npm login`.
+
+The published archive, `pkg/<name>-v<version>.tar.gz`, puts every file under a
+top-level `package/` directory, as the NPM registry requires.
 
 The generated `publish:package` task waits for package archive creation to
 finish before completing, so it can be used as a prerequisite for other tasks.

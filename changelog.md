@@ -1,3 +1,10 @@
+### v12
++ `archiveRootDir` option for PackageTask, to set the top-level directory in tar archives
+* PublishTask tarballs use the `package/` root the NPM registry requires
+* PublishTask runs the publish command in the terminal, so NPM can prompt for 2FA
+* PublishTask pushes the version commit and tag only after a successful publish
+* No AppleDouble files or extended attributes in tar archives on macOS
+
 ### v10
 + Support for generic exported functions as tasks
 + Experimental `series` function for composing tasks

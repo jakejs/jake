@@ -1,4 +1,4 @@
-### v12
+### v13
 + `archiveRootDir` option for PackageTask, to set the top-level directory in tar archives
 * PublishTask tarballs use the `package/` root the NPM registry requires
 * PublishTask runs the publish command in the terminal, so NPM can prompt for 2FA

@@ -26,7 +26,12 @@ fs.writeFileSync('package.json', '{"version": "0.0.1"}');
 mkdirP('tmp_publish');
 fs.writeFileSync('tmp_publish/foo.txt', 'FOO');
 
-let pub = publishTask('zerb', function () {
+// Like EJS, whose publish prereqs run `clobber` before `publish:cleanup` runs it again
+let zerbPrereqs = process.env.ZERB_CLOBBER_FIRST ? ['zerbClean'] : [];
+
+task('zerbClean', ['clobber']);
+
+let pub = publishTask('zerb', zerbPrereqs, function () {
   this.packageFiles.include([
     'package.json'
     , 'tmp_publish/**'

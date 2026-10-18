@@ -55,6 +55,14 @@ suite('publishTask', function () {
     });
   });
 
+  test('cleanup can rerun clobber after a prereq already ran it', function () {
+    let out = exec(`${JAKE_CMD} -q publishExisting`, {
+      env: Object.assign({}, process.env, {ZERB_CLOBBER_FIRST: '1'}),
+      timeout: 5000
+    }).toString().trim();
+    assert.ok(out.endsWith('Cleaned up package'), out);
+  });
+
   test('cleanup resolves on _done without a complete event', function () {
     let out = exec(`${JAKE_CMD} -q cleanupUsesDoneEvent`, {timeout: 2000})
       .toString().trim();
